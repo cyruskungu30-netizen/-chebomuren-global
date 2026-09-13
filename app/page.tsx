@@ -192,6 +192,101 @@ const paths = [
   },
 ];
 
+
+const storyScenes = [
+  {
+    image: "/images/women-1.jpg.webp",
+    kicker: "THE WOMAN",
+    title: "She carries more than a name.",
+    text: "She carries the courage of those before her and the possibility of those who come after.",
+    quote: "Her journey is part of our story.",
+  },
+  {
+    image: "/images/leader.jpg.webp",
+    kicker: "THE LEADER",
+    title: "She turns courage into direction.",
+    text: "In boardrooms, classrooms, communities and homes, she creates space for others to rise.",
+    quote: "When she rises, possibility rises with her.",
+  },
+  {
+    image: "/images/woman-leader.jpg.webp",
+    kicker: "THE VISIONARY",
+    title: "She sees beyond the moment.",
+    text: "Her dreams are not only about where she can go, but about the doors she can open for another woman.",
+    quote: "A dream becomes a legacy when it makes room for others.",
+  },
+  {
+    image: "/images/community-1.jpg.webp",
+    kicker: "THE SISTER",
+    title: "She does not walk alone.",
+    text: "Connection turns individual strength into collective power — across families, communities and continents.",
+    quote: "Together, we become more than the sum of our journeys.",
+  },
+  {
+    image: "/images/culture-2.jpg.webp",
+    kicker: "THE LEGACY",
+    title: "She carries tomorrow with her.",
+    text: "Culture, wisdom and ambition move forward through women who choose to build something that lasts.",
+    quote: "What she builds today can inspire generations tomorrow.",
+  },
+];
+
+
+const legacyWomen = [
+  {
+    name: "The Woman Who Leads",
+    field: "Leadership",
+    image: "/images/leader.jpg.webp",
+    statement: "She creates direction where others see uncertainty.",
+    impact: "She leads with courage, purpose and a willingness to make room for others.",
+  },
+  {
+    name: "The Woman Who Builds",
+    field: "Community",
+    image: "/images/community-1.jpg.webp",
+    statement: "She turns connection into something that lasts.",
+    impact: "She strengthens families, communities and relationships through service and compassion.",
+  },
+  {
+    name: "The Woman Who Inspires",
+    field: "Excellence",
+    image: "/images/woman-leader.jpg.webp",
+    statement: "Her journey becomes permission for another woman to dream bigger.",
+    impact: "She transforms personal achievement into encouragement for the generation coming behind her.",
+  },
+  {
+    name: "The Woman Who Carries Culture",
+    field: "Heritage",
+    image: "/images/culture-2.jpg.webp",
+    statement: "She carries yesterday into tomorrow without losing herself.",
+    impact: "She keeps identity, wisdom and heritage alive while creating space for a changing future.",
+  },
+];
+
+const lightChoices = [
+  { icon: "💡", title: "Knowledge", text: "I will pass knowledge forward." },
+  { icon: "❤️", title: "Courage", text: "I will remind another woman she can." },
+  { icon: "🌱", title: "Opportunity", text: "I will open a door for someone else." },
+  { icon: "👑", title: "Leadership", text: "I will lead with purpose and integrity." },
+  { icon: "🤝", title: "Community", text: "I will strengthen the women around me." },
+  { icon: "✨", title: "Inspiration", text: "I will leave hope wherever I go." },
+];
+
+const voiceLines = [
+  {
+    title: "Her voice.",
+    text: "Every Kalenjin woman has a story, a purpose, and the power to inspire change.",
+  },
+  {
+    title: "Her story.",
+    text: "Different journeys can still become one powerful story of courage, connection and possibility.",
+  },
+  {
+    title: "Her future.",
+    text: "When women connect, achievement becomes opportunity and legacy becomes something we build together.",
+  },
+];
+
 function ScrollProgress() {
   const [progress, setProgress] = useState(0);
 
@@ -249,6 +344,12 @@ function FloatingOrb({
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("kenya");
+  const [storyIndex, setStoryIndex] = useState(0);
+  const [storyPlaying, setStoryPlaying] = useState(true);
+  const [legacyIndex, setLegacyIndex] = useState(0);
+  const [lightChoice, setLightChoice] = useState<number | null>(null);
+  const [voiceIndex, setVoiceIndex] = useState(0);
+  const [voicePlaying, setVoicePlaying] = useState(false);
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
   const [newsletterSent, setNewsletterSent] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
@@ -322,6 +423,56 @@ export default function Home() {
       document.body.style.overflow = "";
     };
   }, [selectedImage]);
+
+  useEffect(() => {
+    if (!storyPlaying) return;
+
+    const storyTimer = window.setInterval(() => {
+      setStoryIndex((current) => (current + 1) % storyScenes.length);
+    }, 5600);
+
+    return () => window.clearInterval(storyTimer);
+  }, [storyPlaying]);
+
+  useEffect(() => {
+    if (!voicePlaying || typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(voiceLines[voiceIndex].text);
+    utterance.rate = 0.88;
+    utterance.pitch = 1.02;
+    utterance.volume = 1;
+    utterance.onend = () => {
+      setVoiceIndex((current) => (current + 1) % voiceLines.length);
+    };
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, [voicePlaying, voiceIndex]);
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleVoiceToggle = () => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      if (voicePlaying) {
+        window.speechSynthesis.cancel();
+        setVoicePlaying(false);
+      } else {
+        setVoicePlaying(true);
+      }
+    }
+  };
 
   const handleMouseMove = (event: ReactMouseEvent<HTMLElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -398,6 +549,13 @@ export default function Home() {
             </a>
 
             <a
+              href="#legacy-wall"
+              className="nav-link text-xs uppercase tracking-[0.18em] text-white/60 transition hover:text-[#e8bd72]"
+            >
+              Legacy
+            </a>
+
+            <a
               href="#stories"
               className="nav-link text-xs uppercase tracking-[0.18em] text-white/60 transition hover:text-[#e8bd72]"
             >
@@ -454,6 +612,9 @@ export default function Home() {
                 ["Global Sisterhood", "#sisterhood"],
                 ["Trailblazing Women", "/women"],
                 ["Her Story", "#her-story"],
+                ["Legacy Wall", "#legacy-wall"],
+                ["Hear Her Voice", "#hear-her-voice"],
+                ["Leave Your Light", "#leave-your-light"],
                 ["Stories", "#stories"],
                 ["Gallery", "#gallery"],
                 ["Gala", "#gala"],
@@ -862,34 +1023,58 @@ export default function Home() {
               </div>
             </div>
 
-            {/* CONSTELLATION */}
+            {/* GLOBAL NETWORK GLOBE */}
             <div className="relative mx-auto aspect-square w-full max-w-[720px]">
-              <div className="absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#e8bd72]/10" />
+              <div className="absolute inset-[7%] rounded-full bg-[radial-gradient(circle_at_35%_28%,rgba(232,189,114,0.22),transparent_25%),radial-gradient(circle_at_center,#32151e_0%,#16090d_52%,#080406_100%)] shadow-[0_0_120px_rgba(213,168,92,0.12)]" />
 
-              <div className="absolute left-1/2 top-1/2 h-[56%] w-[56%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#e8bd72]/10" />
+              <div className="global-globe absolute left-1/2 top-1/2 aspect-square w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#e8bd72]/25" />
+              <div className="global-globe global-globe-reverse absolute left-1/2 top-1/2 aspect-[0.48] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-[#e8bd72]/15" />
+              <div className="global-globe global-globe-tilt absolute left-1/2 top-1/2 aspect-[0.48] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-white/10" />
+              <div className="absolute left-1/2 top-1/2 h-[72%] w-[1px] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-[#e8bd72]/20 to-transparent" />
+              <div className="absolute left-1/2 top-1/2 h-[72%] w-[1px] -translate-x-1/2 -translate-y-1/2 rotate-90 bg-gradient-to-b from-transparent via-[#e8bd72]/15 to-transparent" />
 
-              <div className="absolute left-1/2 top-1/2 h-[35%] w-[35%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#e8bd72]/15" />
+              <svg
+                className="pointer-events-none absolute inset-0 z-10 h-full w-full overflow-visible"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                {regions.map((region, index) => (
+                  <line
+                    key={region.id}
+                    x1="50"
+                    y1="50"
+                    x2={region.x.replace("%", "")}
+                    y2={region.y.replace("%", "")}
+                    stroke="#e8bd72"
+                    strokeOpacity={selectedRegion === region.id ? "0.65" : "0.14"}
+                    strokeWidth={selectedRegion === region.id ? "0.35" : "0.18"}
+                    strokeDasharray="1.2 1.2"
+                    className={selectedRegion === region.id ? "network-line-active" : ""}
+                    style={{ animationDelay: `${index * 0.4}s` }}
+                  />
+                ))}
+              </svg>
 
-              <div className="absolute left-1/2 top-1/2 z-10 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#e8bd72]/30 bg-[#241017] shadow-[0_0_80px_rgba(213,168,92,0.15)]">
+              <div className="absolute left-1/2 top-1/2 z-30 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#e8bd72]/40 bg-[#241017]/90 shadow-[0_0_80px_rgba(213,168,92,0.22)] backdrop-blur-xl">
+                <div className="absolute inset-[-12px] rounded-full border border-[#e8bd72]/15 animate-[pulse_3s_ease-in-out_infinite]" />
                 <div className="text-center">
                   <div className="text-3xl">👑</div>
-
                   <p className="mt-2 text-[8px] font-bold uppercase tracking-[0.3em] text-[#e8bd72]">
                     Chebomuren
                   </p>
-
                   <p className="text-[7px] uppercase tracking-[0.3em] text-white/30">
-                    Global
+                    One sisterhood
                   </p>
                 </div>
               </div>
 
-              {/* connection lines */}
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-px w-[75%] -translate-x-1/2 rotate-[12deg] bg-gradient-to-r from-transparent via-[#e8bd72]/20 to-transparent" />
-
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-px w-[72%] -translate-x-1/2 -rotate-[30deg] bg-gradient-to-r from-transparent via-[#e8bd72]/20 to-transparent" />
-
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-px w-[70%] -translate-x-1/2 rotate-[72deg] bg-gradient-to-r from-transparent via-[#e8bd72]/20 to-transparent" />
+              <div className="absolute left-1/2 top-[8%] z-20 -translate-x-1/2 rounded-full border border-white/10 bg-black/30 px-4 py-2 backdrop-blur-xl">
+                <span className="flex items-center gap-2 text-[8px] uppercase tracking-[0.28em] text-white/40">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#e8bd72] shadow-[0_0_12px_3px_rgba(232,189,114,0.45)]" />
+                  Global signal live
+                </span>
+              </div>
 
               {regions.map((region) => {
                 const selected = selectedRegion === region.id;
@@ -900,44 +1085,47 @@ export default function Home() {
                     type="button"
                     onClick={() => setSelectedRegion(region.id)}
                     aria-label={`Explore ${region.name}`}
-                    className="absolute z-20 -translate-x-1/2 -translate-y-1/2"
-                    style={{
-                      left: region.x,
-                      top: region.y,
-                    }}
+                    className="absolute z-40 -translate-x-1/2 -translate-y-1/2"
+                    style={{ left: region.x, top: region.y }}
                   >
-                    <div
-                      className={`flex h-14 w-14 items-center justify-center rounded-full border text-xl transition duration-500 sm:h-16 sm:w-16 ${
+                    <span
+                      className={`absolute left-1/2 top-1/2 h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#e8bd72]/30 ${selected ? "animate-ping" : "opacity-0"}`}
+                    />
+                    <span
+                      className={`relative flex h-14 w-14 items-center justify-center rounded-full border text-xl transition duration-500 sm:h-16 sm:w-16 ${
                         selected
-                          ? "scale-125 border-[#e8bd72] bg-[#d5a85c] text-[#241817] shadow-[0_0_50px_rgba(213,168,92,0.35)]"
+                          ? "scale-125 border-[#e8bd72] bg-[#d5a85c] text-[#241817] shadow-[0_0_55px_rgba(213,168,92,0.4)]"
                           : "border-white/15 bg-white/[0.05] backdrop-blur hover:scale-110 hover:border-[#e8bd72]/50"
                       }`}
                     >
                       {region.flag}
-                    </div>
-
-                    <div
-                      className={`mt-2 text-[8px] uppercase tracking-[0.2em] ${
+                    </span>
+                    <span
+                      className={`mt-2 block text-[8px] uppercase tracking-[0.2em] ${
                         selected ? "text-[#e8bd72]" : "text-white/30"
                       }`}
                     >
                       {region.name}
-                    </div>
+                    </span>
                   </button>
                 );
               })}
 
-              {Array.from({ length: 18 }).map((_, index) => (
+              {Array.from({ length: 28 }).map((_, index) => (
                 <span
                   key={index}
-                  className="absolute h-1 w-1 animate-pulse rounded-full bg-[#e8bd72]/40"
+                  className="absolute h-1 w-1 rounded-full bg-[#e8bd72]/40 animate-[twinkle_3.5s_ease-in-out_infinite]"
                   style={{
-                    left: `${8 + ((index * 37) % 84)}%`,
-                    top: `${7 + ((index * 53) % 84)}%`,
-                    animationDelay: `${index * 0.35}s`,
+                    left: `${6 + ((index * 29) % 88)}%`,
+                    top: `${5 + ((index * 47) % 88)}%`,
+                    animationDelay: `${index * 0.18}s`,
                   }}
                 />
               ))}
+
+              <div className="absolute bottom-[4%] left-1/2 z-30 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/10 bg-black/35 px-5 py-2.5 text-[8px] uppercase tracking-[0.28em] text-white/35 backdrop-blur-xl">
+                <span className="text-[#e8bd72]">{regions.length}</span> connected regions · one identity
+              </div>
             </div>
           </div>
         </div>
@@ -1175,151 +1363,475 @@ export default function Home() {
 
 
       {/* =========================================================
-          SHE IS CHEBOMUREN — CINEMATIC IDENTITY EXPERIENCE
+          HER STORY — CINEMATIC STORY REEL
       ========================================================= */}
 
       <section
         id="her-story"
-        className="she-is-chebomuren relative isolate flex min-h-[100svh] items-center overflow-hidden bg-[#080406] text-white"
+        className="her-story-reel relative overflow-hidden bg-[#080406] px-6 py-28 text-white sm:px-10 lg:px-16 lg:py-36"
       >
-        <Image
-          src="/images/women-1.jpg.webp"
-          alt="Kalenjin women"
-          fill
-          sizes="100vw"
-          className="absolute inset-0 -z-20 object-cover object-center scale-105"
-        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_45%,rgba(232,189,114,0.14),transparent_25%),radial-gradient(circle_at_15%_85%,rgba(111,53,66,0.18),transparent_30%)]" />
+        <div className="absolute -left-40 top-20 h-80 w-80 rounded-full border border-[#e8bd72]/10 animate-[float_10s_ease-in-out_infinite]" />
+        <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full border border-white/5" />
 
-        <div className="absolute inset-0 -z-10 bg-[#080406]/65" />
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#080406_0%,rgba(8,4,6,0.82)_30%,rgba(8,4,6,0.38)_65%,#080406_100%)]" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_70%_50%,rgba(232,189,114,0.22),transparent_28%)]" />
-
-        <div className="absolute left-[8%] top-[15%] h-40 w-40 rounded-full border border-[#e8bd72]/10 animate-[pulse_5s_ease-in-out_infinite]" />
-        <div className="absolute right-[8%] top-[20%] h-64 w-64 rounded-full border border-white/10" />
-        <div className="absolute bottom-[8%] left-[45%] h-72 w-72 rounded-full border border-[#e8bd72]/10" />
-
-        {[
-          ["8%", "20%", "0s"],
-          ["18%", "72%", "-2s"],
-          ["38%", "12%", "-4s"],
-          ["67%", "18%", "-1s"],
-          ["82%", "65%", "-3s"],
-          ["92%", "32%", "-5s"],
-          ["57%", "82%", "-2.5s"],
-          ["28%", "42%", "-1.5s"],
-        ].map(([top, left, delay], index) => (
-          <span
-            key={index}
-            className="absolute h-1 w-1 rounded-full bg-[#e8bd72] shadow-[0_0_18px_5px_rgba(232,189,114,0.25)] animate-[float_7s_ease-in-out_infinite]"
-            style={{ top, left, animationDelay: delay }}
-          />
-        ))}
-
-        <div className="relative mx-auto grid w-full max-w-[1450px] items-center px-6 py-28 sm:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:px-16 lg:py-36">
-          <div className="max-w-3xl">
-            <div className="mb-8 flex items-center gap-4">
-              <span className="h-px w-16 bg-[#e8bd72]" />
-              <p className="text-[9px] font-bold uppercase tracking-[0.45em] text-[#e8bd72]">
-                The woman behind the movement
-              </p>
-            </div>
-
-            <div className="space-y-1 font-serif text-[clamp(3.5rem,8vw,8rem)] font-medium leading-[0.86] tracking-[-0.045em]">
-              {[
-                "A mother.",
-                "A student.",
-                "A founder.",
-                "A leader.",
-                "A creator.",
-                "A daughter.",
-                "A woman with a dream.",
-              ].map((line, index) => (
-                <p
-                  key={line}
-                  className={`cinematic-line ${
-                    index === 6 ? "text-[#e8bd72]" : "text-white/80"
-                  }`}
-                >
-                  {line}
+        <div className="relative mx-auto max-w-[1450px]">
+          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+            <div>
+              <div className="mb-7 flex items-center gap-4">
+                <span className="h-px w-14 bg-[#e8bd72]" />
+                <p className="text-[9px] font-bold uppercase tracking-[0.45em] text-[#e8bd72]">
+                  Her Story · Her Voice · Her Legacy
                 </p>
-              ))}
+              </div>
+
+              <h2 className="max-w-5xl font-serif text-[clamp(3.5rem,7vw,8rem)] leading-[0.82] tracking-[-0.045em]">
+                Every woman
+                <br />
+                <span className="text-[#e8bd72]">is a story.</span>
+              </h2>
             </div>
 
-            <div className="mt-12 max-w-xl border-l border-[#e8bd72]/40 pl-6">
-              <p className="text-base leading-7 text-white/50 sm:text-lg">
-                Different journeys. Different dreams. Different destinations.
-                But one shared identity connects us.
+            <div className="max-w-sm lg:pb-2">
+              <p className="text-sm leading-7 text-white/40">
+                Press play. Explore the many faces of courage, leadership,
+                connection and legacy that make the sisterhood extraordinary.
               </p>
-            </div>
-
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a
-                href="/nominate"
-                className="group rounded-full bg-[#d5a85c] px-7 py-4 text-sm font-bold text-[#241817] shadow-[0_20px_70px_rgba(213,168,92,0.18)] transition duration-500 hover:-translate-y-1 hover:bg-[#edca8c]"
-              >
-                Tell Us Her Story
-                <span className="ml-3 inline-block transition-transform duration-300 group-hover:translate-x-1">
-                  →
-                </span>
-              </a>
-
-              <a
-                href="/stories"
-                className="rounded-full border border-white/15 bg-white/[0.04] px-7 py-4 text-sm font-bold text-white backdrop-blur-xl transition duration-500 hover:border-[#e8bd72]/50 hover:text-[#e8bd72]"
-              >
-                Explore Her Stories
-              </a>
             </div>
           </div>
 
-          <div className="relative mt-16 hidden h-[620px] lg:block">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative h-[510px] w-[390px] overflow-hidden rounded-[48%_48%_10%_10%] border border-white/15 shadow-[0_40px_140px_rgba(0,0,0,0.7)]">
+          <div className="mt-16 grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-stretch">
+            <div className="relative min-h-[560px] overflow-hidden rounded-[3rem] border border-white/10 bg-[#14090d]">
+              <div className="absolute inset-0">
                 <Image
-                  src="/images/women-1.jpg.webp"
-                  alt="Kalenjin woman representing the Chebomuren sisterhood"
+                  key={storyScenes[storyIndex].image}
+                  src={storyScenes[storyIndex].image}
+                  alt={storyScenes[storyIndex].title}
                   fill
-                  sizes="390px"
-                  className="object-cover object-center transition duration-[2500ms] hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="story-image object-cover object-center"
+                  priority={storyIndex === 0}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#080406] via-transparent to-black/10" />
               </div>
 
-              <div className="absolute -left-4 top-16 rounded-3xl border border-white/10 bg-black/35 px-6 py-5 backdrop-blur-xl">
-                <p className="text-[8px] uppercase tracking-[0.35em] text-white/35">
-                  One identity
-                </p>
-                <p className="mt-2 font-serif text-xl text-[#e8bd72]">
-                  Many journeys.
-                </p>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#080406] via-[#080406]/15 to-black/10" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_15%,rgba(8,4,6,0.32)_75%)]" />
+
+              <div className="absolute left-7 top-7 flex items-center gap-3 rounded-full border border-white/10 bg-black/25 px-4 py-2.5 backdrop-blur-xl">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#e8bd72]" />
+                <span className="text-[8px] uppercase tracking-[0.3em] text-white/55">
+                  Story {String(storyIndex + 1).padStart(2, "0")} / {String(storyScenes.length).padStart(2, "0")}
+                </span>
               </div>
 
-              <div className="absolute -right-3 bottom-20 rounded-3xl border border-[#e8bd72]/20 bg-[#241017]/80 px-6 py-5 backdrop-blur-xl">
-                <p className="text-[8px] uppercase tracking-[0.35em] text-[#e8bd72]">
-                  Chebomuren
-                </p>
-                <p className="mt-2 font-serif text-xl">
-                  Her story matters.
-                </p>
-              </div>
-
-              <div className="absolute -bottom-5 left-1/2 flex h-28 w-28 -translate-x-1/2 items-center justify-center rounded-full border border-[#e8bd72]/30 bg-[#12070b]/80 text-center shadow-[0_0_70px_rgba(232,189,114,0.12)] backdrop-blur-xl">
+              <div className="absolute bottom-7 left-7 right-7 flex items-end justify-between gap-6">
                 <div>
-                  <div className="text-2xl text-[#e8bd72]">✦</div>
-                  <p className="mt-1 text-[7px] uppercase tracking-[0.3em] text-white/40">
-                    Global
+                  <p className="text-[8px] uppercase tracking-[0.35em] text-[#e8bd72]">
+                    {storyScenes[storyIndex].kicker}
                   </p>
+                  <p className="mt-2 max-w-xl font-serif text-3xl leading-tight sm:text-4xl">
+                    {storyScenes[storyIndex].quote}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setStoryPlaying((playing) => !playing)}
+                  className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/35 text-[#e8bd72] backdrop-blur-xl transition hover:scale-110 hover:border-[#e8bd72]/50 sm:flex"
+                  aria-label={storyPlaying ? "Pause story reel" : "Play story reel"}
+                >
+                  {storyPlaying ? "Ⅱ" : "▶"}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-col rounded-[3rem] border border-white/10 bg-white/[0.035] p-7 backdrop-blur-xl sm:p-9 lg:p-11">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] uppercase tracking-[0.35em] text-[#e8bd72]">
+                  {storyScenes[storyIndex].kicker}
+                </span>
+                <span className="font-serif text-2xl text-white/20">
+                  {String(storyIndex + 1).padStart(2, "0")}
+                </span>
+              </div>
+
+              <div className="mt-12 flex-1">
+                <h3 className="max-w-xl font-serif text-[clamp(2.7rem,5vw,5.5rem)] leading-[0.9] tracking-[-0.03em]">
+                  {storyScenes[storyIndex].title}
+                </h3>
+
+                <p className="mt-8 max-w-lg text-base leading-8 text-white/45 sm:text-lg">
+                  {storyScenes[storyIndex].text}
+                </p>
+
+                <div className="mt-10 border-l border-[#e8bd72]/35 pl-5">
+                  <p className="font-serif text-xl text-white/75">
+                    “{storyScenes[storyIndex].quote}”
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-12">
+                <div className="mb-5 flex items-center justify-between text-[8px] uppercase tracking-[0.28em] text-white/25">
+                  <span>Explore her dimensions</span>
+                  <button
+                    type="button"
+                    onClick={() => setStoryPlaying((playing) => !playing)}
+                    className="text-[#e8bd72] transition hover:text-white sm:hidden"
+                  >
+                    {storyPlaying ? "Pause" : "Play"}
+                  </button>
+                </div>
+
+                <div className="flex gap-2">
+                  {storyScenes.map((scene, index) => (
+                    <button
+                      key={scene.kicker}
+                      type="button"
+                      onClick={() => {
+                        setStoryIndex(index);
+                        setStoryPlaying(false);
+                      }}
+                      className="group relative h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"
+                      aria-label={`Show ${scene.kicker} story`}
+                    >
+                      <span
+                        className={`absolute inset-y-0 left-0 rounded-full bg-[#e8bd72] transition-all duration-500 ${
+                          index === storyIndex ? "w-full" : "w-0 group-hover:w-full"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <a
+                    href="/nominate"
+                    className="group rounded-full bg-[#d5a85c] px-7 py-4 text-sm font-bold text-[#241817] shadow-[0_20px_70px_rgba(213,168,92,0.16)] transition hover:-translate-y-1 hover:bg-[#edca8c]"
+                  >
+                    Tell Her Story
+                    <span className="ml-3 inline-block transition-transform group-hover:translate-x-1">
+                      →
+                    </span>
+                  </a>
+                  <a
+                    href="/stories"
+                    className="rounded-full border border-white/15 px-7 py-4 text-sm font-bold text-white/75 transition hover:border-[#e8bd72]/50 hover:text-[#e8bd72]"
+                  >
+                    Explore Stories
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </section>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
-          <div className="mx-auto h-12 w-px bg-gradient-to-b from-[#e8bd72] to-transparent" />
-          <p className="mt-3 text-[8px] uppercase tracking-[0.45em] text-white/30">
-            Keep discovering
+      {/* =========================================================
+          LEGACY WALL — INTERACTIVE RECOGNITION
+      ========================================================= */}
+
+      <section
+        id="legacy-wall"
+        className="relative overflow-hidden bg-[#12070b] px-6 py-32 text-white sm:px-10 lg:px-16 lg:py-40"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(232,189,114,0.12),transparent_26%),radial-gradient(circle_at_80%_80%,rgba(111,53,66,0.2),transparent_30%)]" />
+        <div className="absolute -right-40 top-20 h-96 w-96 rounded-full border border-[#e8bd72]/10" />
+
+        <div className="relative mx-auto max-w-[1450px]">
+          <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.4em] text-[#e8bd72]">
+                The Legacy Wall
+              </p>
+              <h2 className="mt-6 font-serif text-[clamp(3.5rem,6vw,7.5rem)] leading-[0.82] tracking-[-0.045em]">
+                She changed
+                <br />
+                <span className="text-[#e8bd72]">something.</span>
+              </h2>
+              <p className="mt-8 max-w-xl text-lg leading-8 text-white/45">
+                Every achievement creates a ripple. Every woman who opens a door makes the path wider for the woman behind her.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between gap-6 lg:pb-2">
+              <p className="max-w-md text-sm leading-7 text-white/35">
+                Explore the kinds of women we celebrate — leaders, builders, visionaries and culture carriers.
+              </p>
+              <div className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[#e8bd72]/30 bg-[#e8bd72]/10 text-[#e8bd72] sm:flex">
+                ✦
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 grid gap-6 lg:grid-cols-[0.72fr_1.28fr]">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
+              {legacyWomen.map((woman, index) => (
+                <button
+                  key={woman.name}
+                  type="button"
+                  onClick={() => setLegacyIndex(index)}
+                  className={`group relative overflow-hidden rounded-[1.8rem] border text-left transition duration-700 ${
+                    legacyIndex === index
+                      ? "border-[#e8bd72]/70 bg-[#e8bd72]/10"
+                      : "border-white/10 bg-white/[0.03] hover:border-[#e8bd72]/30"
+                  }`}
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <Image
+                      src={woman.image}
+                      alt={woman.name}
+                      fill
+                      sizes="(max-width: 1024px) 25vw, 30vw"
+                      className={`object-cover transition duration-1000 ${legacyIndex === index ? "scale-110" : "group-hover:scale-105"}`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#080406] via-transparent to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <p className="text-[8px] uppercase tracking-[0.25em] text-[#e8bd72]">{woman.field}</p>
+                      <p className="mt-1 font-serif text-lg text-white">{woman.name}</p>
+                    </div>
+                    {legacyIndex === index && (
+                      <div className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#e8bd72] text-xs text-[#241817]">
+                        ✦
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="relative min-h-[540px] overflow-hidden rounded-[3rem] border border-white/10 bg-[#1a0a10]">
+              <Image
+                key={legacyWomen[legacyIndex].image}
+                src={legacyWomen[legacyIndex].image}
+                alt={legacyWomen[legacyIndex].name}
+                fill
+                sizes="(max-width: 1024px) 100vw, 70vw"
+                className="legacy-feature-image object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#080406] via-[#080406]/35 to-transparent" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(232,189,114,0.16),transparent_30%)]" />
+
+              <div className="absolute left-6 right-6 top-6 flex items-center justify-between">
+                <span className="rounded-full border border-white/15 bg-black/25 px-4 py-2 text-[8px] uppercase tracking-[0.3em] text-white/55 backdrop-blur-xl">
+                  {String(legacyIndex + 1).padStart(2, "0")} / {String(legacyWomen.length).padStart(2, "0")}
+                </span>
+                <span className="rounded-full border border-[#e8bd72]/30 bg-[#e8bd72]/10 px-4 py-2 text-[8px] uppercase tracking-[0.25em] text-[#e8bd72] backdrop-blur-xl">
+                  {legacyWomen[legacyIndex].field}
+                </span>
+              </div>
+
+              <div className="absolute bottom-0 left-0 right-0 p-7 sm:p-10 lg:p-12">
+                <p className="text-[10px] uppercase tracking-[0.4em] text-[#e8bd72]">{legacyWomen[legacyIndex].field}</p>
+                <h3 className="mt-4 max-w-3xl font-serif text-[clamp(2.8rem,5vw,5.8rem)] leading-[0.86]">
+                  {legacyWomen[legacyIndex].statement}
+                </h3>
+                <p className="mt-7 max-w-2xl text-sm leading-7 text-white/50 sm:text-base">
+                  {legacyWomen[legacyIndex].impact}
+                </p>
+                <a
+                  href="/nominate"
+                  className="mt-8 inline-flex rounded-full bg-[#d5a85c] px-6 py-4 text-sm font-bold text-[#241817] transition hover:-translate-y-1 hover:bg-[#edca8c]"
+                >
+                  Put Her On The Wall →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          HEAR HER VOICE — BROWSER VOICE EXPERIENCE
+      ========================================================= */}
+
+      <section
+        id="hear-her-voice"
+        className="relative overflow-hidden bg-[#eadfd2] px-6 py-32 sm:px-10 lg:px-16 lg:py-40"
+      >
+        <div className="absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_15%_25%,rgba(213,168,92,0.24),transparent_25%),radial-gradient(circle_at_85%_75%,rgba(111,53,66,0.12),transparent_28%)]" />
+        <div className="relative mx-auto max-w-[1450px]">
+          <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.4em] text-[#8b6326]">Hear Her Voice</p>
+              <h2 className="mt-6 font-serif text-[clamp(3.5rem,6vw,7.5rem)] leading-[0.82] tracking-[-0.045em]">
+                A story is
+                <br />
+                <span className="text-[#6f3542]">meant to be heard.</span>
+              </h2>
+              <p className="mt-8 max-w-xl text-lg leading-8 text-black/45">
+                Press play and let the browser speak a rotating Chebomuren message. No extra app, no new page — just her voice carrying the movement forward.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                {voiceLines.map((line, index) => (
+                  <button
+                    key={line.title}
+                    type="button"
+                    onClick={() => {
+                      if (voicePlaying && typeof window !== "undefined" && "speechSynthesis" in window) {
+                        window.speechSynthesis.cancel();
+                      }
+                      setVoiceIndex(index);
+                      setVoicePlaying(true);
+                    }}
+                    className={`rounded-full border px-4 py-2.5 text-xs transition ${
+                      voiceIndex === index
+                        ? "border-[#6f3542] bg-[#6f3542] text-white"
+                        : "border-black/10 bg-white/40 text-black/50 hover:border-[#6f3542]/40 hover:text-[#6f3542]"
+                    }`}
+                  >
+                    {line.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[3rem] border border-black/10 bg-[#241017] p-7 text-white shadow-[0_35px_100px_rgba(36,16,23,0.16)] sm:p-10 lg:p-14">
+              <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-[#e8bd72]/15" />
+              <div className="absolute -bottom-24 -left-20 h-72 w-72 rounded-full border border-white/5" />
+
+              <div className="relative">
+                <div className="flex items-center justify-between gap-5">
+                  <span className="text-[9px] uppercase tracking-[0.35em] text-[#e8bd72]">Chebomuren Audio Letter</span>
+                  <span className={`h-2.5 w-2.5 rounded-full ${voicePlaying ? "animate-pulse bg-[#e8bd72]" : "bg-white/20"}`} />
+                </div>
+
+                <div className="mt-14 grid grid-cols-18 items-end gap-1.5 sm:gap-2" aria-hidden="true">
+                  {Array.from({ length: 36 }).map((_, index) => (
+                    <span
+                      key={index}
+                      className={`voice-bar ${voicePlaying ? "voice-bar-active" : ""}`}
+                      style={{ animationDelay: `${index * 55}ms`, height: `${18 + ((index * 17) % 62)}px` }}
+                    />
+                  ))}
+                </div>
+
+                <p className="mt-12 text-[9px] uppercase tracking-[0.3em] text-white/30">{voiceLines[voiceIndex].title}</p>
+                <h3 className="mt-4 max-w-3xl font-serif text-[clamp(2.5rem,5vw,5rem)] leading-[0.9]">
+                  {voiceLines[voiceIndex].text}
+                </h3>
+
+                <button
+                  type="button"
+                  onClick={handleVoiceToggle}
+                  className="mt-10 flex items-center gap-4 rounded-full bg-[#d5a85c] px-7 py-4 font-bold text-[#241817] transition hover:-translate-y-1 hover:bg-[#edca8c]"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#241817]/10">
+                    {voicePlaying ? "❚❚" : "▶"}
+                  </span>
+                  {voicePlaying ? "Pause Her Voice" : "Hear Her Voice"}
+                </button>
+
+                <p className="mt-5 max-w-lg text-[10px] leading-5 text-white/25">
+                  Uses your device&apos;s built-in browser voice. If speech synthesis is unavailable, the visual experience still works.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          LEAVE YOUR LIGHT — PARTICIPATION EXPERIENCE
+      ========================================================= */}
+
+      <section
+        id="leave-your-light"
+        className="relative overflow-hidden bg-[#080406] px-6 py-32 text-white sm:px-10 lg:px-16 lg:py-40"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(232,189,114,0.14),transparent_30%)]" />
+        <div className="absolute inset-0 light-grid opacity-40" />
+
+        <div className="relative mx-auto max-w-[1450px] text-center">
+          <p className="text-[10px] uppercase tracking-[0.45em] text-[#e8bd72]">Leave Your Light</p>
+          <h2 className="mx-auto mt-6 max-w-6xl font-serif text-[clamp(3.5rem,7vw,8rem)] leading-[0.82] tracking-[-0.05em]">
+            What will you leave
+            <br />
+            <span className="text-[#e8bd72]">for the next woman?</span>
+          </h2>
+          <p className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-white/40">
+            Choose the light you want to carry. Your choice becomes part of this living digital sisterhood.
           </p>
+
+          <div className="mx-auto mt-14 grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {lightChoices.map((choice, index) => (
+              <button
+                key={choice.title}
+                type="button"
+                onClick={() => setLightChoice(index)}
+                className={`group relative overflow-hidden rounded-[1.8rem] border p-6 text-left transition duration-500 ${
+                  lightChoice === index
+                    ? "border-[#e8bd72]/80 bg-[#e8bd72]/10 shadow-[0_0_60px_rgba(232,189,114,0.12)]"
+                    : "border-white/10 bg-white/[0.03] hover:-translate-y-1 hover:border-[#e8bd72]/35 hover:bg-white/[0.05]"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-3xl transition duration-500 group-hover:scale-125">{choice.icon}</span>
+                  <span className="text-[9px] uppercase tracking-[0.25em] text-white/20">0{index + 1}</span>
+                </div>
+                <h3 className="mt-8 font-serif text-2xl">{choice.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-white/35">{choice.text}</p>
+              </button>
+            ))}
+          </div>
+
+          <div className="relative mx-auto mt-16 flex min-h-[360px] max-w-5xl items-center justify-center overflow-hidden rounded-[3rem] border border-white/10 bg-[#11070b]">
+            {Array.from({ length: 42 }).map((_, index) => {
+              const angle = (index / 42) * Math.PI * 2;
+              const radius = 90 + ((index * 37) % 150);
+              const left = 50 + Math.cos(angle) * (radius / 4.5);
+              const top = 50 + Math.sin(angle) * (radius / 4.5);
+              return (
+                <span
+                  key={index}
+                  className={`light-particle absolute h-1.5 w-1.5 rounded-full ${lightChoice !== null && index % 3 === lightChoice % 3 ? "light-particle-bright" : ""}`}
+                  style={{ left: `${left}%`, top: `${top}%`, animationDelay: `${index * 90}ms` }}
+                />
+              );
+            })}
+
+            {lightChoice !== null && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="light-burst absolute h-40 w-40 rounded-full border border-[#e8bd72]/60" />
+                <div className="light-burst absolute h-56 w-56 rounded-full border border-[#e8bd72]/25" style={{ animationDelay: "180ms" }} />
+                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-[#e8bd72] text-4xl text-[#241817] shadow-[0_0_100px_rgba(232,189,114,0.6)]">
+                  {lightChoices[lightChoice].icon}
+                </div>
+              </div>
+            )}
+
+            <div className="relative z-10 max-w-xl px-6">
+              {lightChoice === null ? (
+                <>
+                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-[#e8bd72]/20 bg-[#e8bd72]/5 text-3xl text-[#e8bd72] shadow-[0_0_80px_rgba(232,189,114,0.08)]">
+                    ✦
+                  </div>
+                  <p className="mt-7 font-serif text-3xl sm:text-4xl">Choose your light.</p>
+                  <p className="mt-3 text-sm leading-6 text-white/30">Then watch it join the sisterhood.</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-[9px] uppercase tracking-[0.35em] text-[#e8bd72]">Your light is part of the movement</p>
+                  <p className="mt-5 font-serif text-4xl sm:text-5xl">{lightChoices[lightChoice].title}.</p>
+                  <p className="mt-4 text-sm leading-7 text-white/40">{lightChoices[lightChoice].text} Together, we leave something brighter for the woman who comes next.</p>
+                  <button
+                    type="button"
+                    onClick={() => setLightChoice(null)}
+                    className="mt-7 rounded-full border border-white/15 px-5 py-3 text-xs text-white/60 transition hover:border-[#e8bd72]/40 hover:text-[#e8bd72]"
+                  >
+                    Choose another light
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-12 flex flex-wrap justify-center gap-3 text-[9px] uppercase tracking-[0.3em] text-white/20">
+            <span>One woman</span>
+            <span className="text-[#e8bd72]">✦</span>
+            <span>One light</span>
+            <span className="text-[#e8bd72]">✦</span>
+            <span>One future</span>
+          </div>
         </div>
       </section>
 
@@ -2159,6 +2671,50 @@ export default function Home() {
           isolation: isolate;
         }
 
+        .global-globe {
+          animation: globeSpin 18s linear infinite;
+          transform-style: preserve-3d;
+        }
+
+        .global-globe-reverse {
+          animation-direction: reverse;
+          animation-duration: 23s;
+          transform: translate(-50%, -50%) rotate(20deg);
+        }
+
+        .global-globe-tilt {
+          animation-duration: 30s;
+          transform: translate(-50%, -50%) rotate(-28deg);
+        }
+
+        .network-line-active {
+          animation: networkSignal 1.8s ease-in-out infinite;
+        }
+
+        .story-image {
+          animation: storyImageIn 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes globeSpin {
+          from { transform: translate(-50%, -50%) rotate(0deg); }
+          to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes networkSignal {
+          0%, 100% { stroke-opacity: 0.2; stroke-dashoffset: 0; }
+          50% { stroke-opacity: 0.9; stroke-dashoffset: -5; }
+        }
+
+        @keyframes storyImageIn {
+          from { opacity: 0; transform: scale(1.08); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.18; transform: scale(0.7); }
+          50% { opacity: 1; transform: scale(1.8); }
+        }
+
         .cinematic-line {
           opacity: 0;
           transform: translateY(24px);
@@ -2179,6 +2735,76 @@ export default function Home() {
             transform: translateY(0);
           }
         }
+
+        .legacy-feature-image {
+          animation: legacyImageIn 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes legacyImageIn {
+          from {
+            opacity: 0;
+            transform: scale(1.08);
+            filter: saturate(0.75);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+            filter: saturate(1);
+          }
+        }
+
+        .voice-bar {
+          display: block;
+          width: 100%;
+          min-height: 8px;
+          border-radius: 999px;
+          background: rgba(232, 189, 114, 0.18);
+          transform-origin: bottom;
+        }
+
+        .voice-bar-active {
+          animation: voiceWave 900ms ease-in-out infinite alternate;
+        }
+
+        @keyframes voiceWave {
+          from { transform: scaleY(0.35); opacity: 0.35; }
+          to { transform: scaleY(1); opacity: 1; }
+        }
+
+        .light-grid {
+          background-image:
+            linear-gradient(rgba(232, 189, 114, 0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(232, 189, 114, 0.045) 1px, transparent 1px);
+          background-size: 55px 55px;
+          mask-image: radial-gradient(circle at center, black, transparent 75%);
+        }
+
+        .light-particle {
+          background: rgba(232, 189, 114, 0.28);
+          box-shadow: 0 0 10px rgba(232, 189, 114, 0.12);
+          animation: lightFloat 4.5s ease-in-out infinite;
+        }
+
+        .light-particle-bright {
+          background: rgba(232, 189, 114, 0.95);
+          box-shadow: 0 0 18px rgba(232, 189, 114, 0.75);
+        }
+
+        @keyframes lightFloat {
+          0%, 100% { transform: translate3d(0, 0, 0) scale(0.7); opacity: 0.25; }
+          50% { transform: translate3d(0, -14px, 0) scale(1.35); opacity: 0.95; }
+        }
+
+        .light-burst {
+          animation: lightBurst 2.2s ease-out infinite;
+        }
+
+        @keyframes lightBurst {
+          0% { transform: scale(0.5); opacity: 0; }
+          30% { opacity: 0.8; }
+          100% { transform: scale(1.5); opacity: 0; }
+        }
+
 
         @keyframes shimmer {
           0% {

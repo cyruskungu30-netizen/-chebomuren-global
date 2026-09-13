@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
@@ -48,6 +48,16 @@ const countries = [
 
 export default function JoinPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+
+  const toggleInterest = (interest: string) => {
+    setSelectedInterests((current) =>
+      current.includes(interest)
+        ? current.filter((item) => item !== interest)
+        : [...current, interest]
+    );
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -55,17 +65,35 @@ export default function JoinPage() {
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f8f3eb] text-[#241817]">
+    <>
+      <style jsx global>{`
+        .join-grid {
+          background-image: linear-gradient(rgba(134,101,47,.055) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(134,101,47,.055) 1px, transparent 1px);
+          background-size: 42px 42px;
+        }
+        .join-orbit { animation: joinOrbit 18s linear infinite; }
+        .join-orbit-reverse { animation: joinOrbit 25s linear infinite reverse; }
+        .join-pulse { animation: joinPulse 2.6s ease-in-out infinite; }
+        .join-card { transition: transform .4s ease, border-color .4s ease, box-shadow .4s ease; }
+        .join-card:hover { transform: translateY(-8px); border-color: rgba(214,173,104,.5); box-shadow: 0 25px 70px rgba(4,17,13,.14); }
+        .role-selected { border-color: rgba(134,101,47,.65) !important; background: rgba(214,173,104,.14) !important; box-shadow: 0 10px 30px rgba(134,101,47,.1); }
+        @keyframes joinOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes joinPulse { 0%,100% { transform: scale(.92); opacity:.45 } 50% { transform: scale(1.08); opacity:1 } }
+        @media (prefers-reduced-motion: reduce) { .join-orbit,.join-orbit-reverse,.join-pulse { animation:none!important; } }
+      `}</style>
+
+    <main className="min-h-screen overflow-x-hidden bg-[#f6f2e9] text-[#241817]">
 
       {/* NAVIGATION */}
 
-      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#190a0f]/90 text-white backdrop-blur-xl">
+      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#061710]/90 text-white backdrop-blur-xl">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
 
           <Link href="/" className="leading-none">
 
-            <div className="font-serif text-2xl font-bold tracking-wide text-[#e8bd72]">
+            <div className="font-serif text-2xl font-bold tracking-wide text-[#e8c987]">
               Chebomuren
             </div>
 
@@ -79,35 +107,35 @@ export default function JoinPage() {
 
             <Link
               href="/about"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#e8c987]"
             >
               About
             </Link>
 
             <Link
               href="/gala"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#e8c987]"
             >
               Gala
             </Link>
 
             <Link
               href="/women"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#e8c987]"
             >
               Women
             </Link>
 
             <Link
               href="/nominate"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#e8c987]"
             >
               Nominate
             </Link>
 
             <Link
               href="/contact"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#e8c987]"
             >
               Contact
             </Link>
@@ -116,7 +144,7 @@ export default function JoinPage() {
 
           <Link
             href="/join"
-            className="hidden rounded-full bg-[#d5a85c] px-6 py-3 text-sm font-bold text-[#241817] transition hover:-translate-y-1 hover:bg-[#edca8c] md:block"
+            className="hidden rounded-full bg-[#d6ad68] px-6 py-3 text-sm font-bold text-[#241817] transition hover:-translate-y-1 hover:bg-[#edca8c] md:block"
           >
             Join the Movement
           </Link>
@@ -124,28 +152,45 @@ export default function JoinPage() {
         </div>
       </nav>
 
+      <div className="fixed left-0 right-0 top-[73px] z-40 overflow-x-auto border-b border-white/10 bg-[#061710]/95 px-4 py-3 text-white backdrop-blur-xl md:hidden">
+        <div className="mx-auto flex min-w-max gap-2">
+          {[
+            ["About", "/about"],
+            ["Gala", "/gala"],
+            ["Women", "/women"],
+            ["Global", "/global"],
+            ["Nominate", "/nominate"],
+            ["Contact", "/contact"],
+          ].map(([label, href]) => (
+            <Link key={href} href={href} className="rounded-full border border-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.18em] text-white/60">
+              {label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* HERO */}
 
-      <section className="relative min-h-[85vh] overflow-hidden bg-[#190a0f] pt-28 text-white">
+      <section className="join-grid relative min-h-[85vh] overflow-hidden bg-[#061710] pt-28 text-white">
 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,rgba(213,168,92,0.2),transparent_35%)]" />
 
-        <div className="absolute -right-48 -top-40 h-[600px] w-[600px] rounded-full border border-[#d5a85c]/10" />
+        <div className="absolute -right-48 -top-40 h-[600px] w-[600px] rounded-full border border-[#d6ad68]/10" />
 
-        <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#6f3542]/20 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#1f5a4a]/20 blur-3xl" />
 
         <div className="relative mx-auto flex min-h-[75vh] max-w-7xl items-center px-6 py-24 lg:px-10">
 
           <div className="max-w-5xl">
 
-            <p className="hero-reveal text-xs uppercase tracking-[0.4em] text-[#e8bd72]">
+            <p className="hero-reveal text-xs uppercase tracking-[0.4em] text-[#e8c987]">
               Join Chebomuren Global
             </p>
 
             <h1 className="hero-reveal hero-delay-1 mt-6 font-serif text-6xl font-bold leading-[0.9] sm:text-7xl lg:text-[100px]">
               Your place in
               <br />
-              <span className="text-[#e8bd72]">
+              <span className="text-[#e8c987]">
                 the sisterhood.
               </span>
             </h1>
@@ -160,7 +205,7 @@ export default function JoinPage() {
 
               <a
                 href="#membership"
-                className="premium-button rounded-full bg-[#d5a85c] px-8 py-4 font-bold text-[#241017]"
+                className="premium-button rounded-full bg-[#d6ad68] px-8 py-4 font-bold text-[#0b211b]"
               >
                 Become a Member ↓
               </a>
@@ -189,7 +234,7 @@ export default function JoinPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
                 Why Join?
               </p>
 
@@ -198,7 +243,7 @@ export default function JoinPage() {
                 <br />
                 creates
                 <br />
-                <span className="text-[#6f3542]">
+                <span className="text-[#1f5a4a]">
                   opportunity.
                 </span>
               </h2>
@@ -243,7 +288,7 @@ export default function JoinPage() {
                 className="premium-card rounded-3xl border border-black/10 bg-white p-7"
               >
 
-                <span className="text-xs text-[#a77a32]">
+                <span className="text-xs text-[#86652f]">
                   {number}
                 </span>
 
@@ -268,7 +313,7 @@ export default function JoinPage() {
 
       <section
         id="membership"
-        className="bg-[#eadfd2] px-6 py-24 lg:px-10"
+        className="bg-[#e9e3d6] px-6 py-24 lg:px-10"
       >
 
         <div className="mx-auto max-w-7xl">
@@ -279,14 +324,14 @@ export default function JoinPage() {
 
             <div className="lg:sticky lg:top-32">
 
-              <p className="text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
                 Become Part of It
               </p>
 
               <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-6xl">
                 Tell us
                 <br />
-                <span className="text-[#6f3542]">
+                <span className="text-[#1f5a4a]">
                   about you.
                 </span>
               </h2>
@@ -296,9 +341,9 @@ export default function JoinPage() {
                 Global sisterhood.
               </p>
 
-              <div className="mt-10 rounded-3xl bg-[#241017] p-7 text-white">
+              <div className="mt-10 rounded-3xl bg-[#0b211b] p-7 text-white">
 
-                <p className="text-xs uppercase tracking-[0.25em] text-[#e8bd72]">
+                <p className="text-xs uppercase tracking-[0.25em] text-[#e8c987]">
                   Remember
                 </p>
 
@@ -322,11 +367,11 @@ export default function JoinPage() {
 
                 <div className="flex min-h-[600px] flex-col items-center justify-center text-center">
 
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#d5a85c] text-3xl text-[#241017]">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#d6ad68] text-3xl text-[#0b211b]">
                     ✓
                   </div>
 
-                  <p className="mt-8 text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+                  <p className="mt-8 text-xs uppercase tracking-[0.35em] text-[#86652f]">
                     Welcome to the Movement
                   </p>
 
@@ -344,14 +389,14 @@ export default function JoinPage() {
 
                     <Link
                       href="/women"
-                      className="premium-button rounded-full bg-[#241017] px-7 py-4 font-bold text-white"
+                      className="premium-button rounded-full bg-[#0b211b] px-7 py-4 font-bold text-white"
                     >
                       Meet the Women →
                     </Link>
 
                     <Link
                       href="/gala"
-                      className="rounded-full border border-black/10 px-7 py-4 font-bold transition hover:border-[#d5a85c]"
+                      className="rounded-full border border-black/10 px-7 py-4 font-bold transition hover:border-[#d6ad68]"
                     >
                       Explore the Gala
                     </Link>
@@ -373,7 +418,7 @@ export default function JoinPage() {
 
                     <div className="flex items-center gap-4">
 
-                      <span className="text-xs text-[#a77a32]">
+                      <span className="text-xs text-[#86652f]">
                         01
                       </span>
 
@@ -484,7 +529,7 @@ export default function JoinPage() {
 
                     <div className="flex items-center gap-4">
 
-                      <span className="text-xs text-[#a77a32]">
+                      <span className="text-xs text-[#86652f]">
                         02
                       </span>
 
@@ -562,7 +607,7 @@ export default function JoinPage() {
 
                     <div className="flex items-center gap-4">
 
-                      <span className="text-xs text-[#a77a32]">
+                      <span className="text-xs text-[#86652f]">
                         03
                       </span>
 
@@ -612,7 +657,7 @@ export default function JoinPage() {
 
                         <label
                           key={role}
-                          className="group flex cursor-pointer items-center gap-3 rounded-xl border border-black/10 bg-[#faf8f5] p-4 transition hover:border-[#d5a85c]"
+                          className={`group flex cursor-pointer items-center gap-3 rounded-xl border border-black/10 bg-[#faf8f5] p-4 transition hover:border-[#d6ad68] ${selectedRole === role ? "role-selected" : ""}`}
                         >
 
                           <input
@@ -620,10 +665,12 @@ export default function JoinPage() {
                             name="role"
                             value={role}
                             required
-                            className="h-4 w-4 accent-[#241017]"
+                            className="h-4 w-4 accent-[#0b211b]"
+                            checked={selectedRole === role}
+                            onChange={() => setSelectedRole(role)}
                           />
 
-                          <span className="text-sm text-black/60 group-hover:text-[#241017]">
+                          <span className="text-sm text-black/60 group-hover:text-[#0b211b]">
                             {role}
                           </span>
 
@@ -641,7 +688,7 @@ export default function JoinPage() {
 
                     <div className="flex items-center gap-4">
 
-                      <span className="text-xs text-[#a77a32]">
+                      <span className="text-xs text-[#86652f]">
                         04
                       </span>
 
@@ -671,17 +718,19 @@ export default function JoinPage() {
 
                         <label
                           key={interest}
-                          className="group flex cursor-pointer items-center gap-3 rounded-xl border border-black/10 bg-[#faf8f5] p-4 transition hover:border-[#d5a85c]"
+                          className={`group flex cursor-pointer items-center gap-3 rounded-xl border border-black/10 bg-[#faf8f5] p-4 transition hover:border-[#d6ad68] ${selectedInterests.includes(interest) ? "interest-selected" : ""}`}
                         >
 
                           <input
                             type="checkbox"
                             name="interests"
                             value={interest}
-                            className="h-4 w-4 accent-[#241017]"
+                            className="h-4 w-4 accent-[#0b211b]"
+                            checked={selectedInterests.includes(interest)}
+                            onChange={() => toggleInterest(interest)}
                           />
 
-                          <span className="text-sm text-black/60 group-hover:text-[#241017]">
+                          <span className="text-sm text-black/60 group-hover:text-[#0b211b]">
                             {interest}
                           </span>
 
@@ -699,7 +748,7 @@ export default function JoinPage() {
 
                     <div className="flex items-center gap-4">
 
-                      <span className="text-xs text-[#a77a32]">
+                      <span className="text-xs text-[#86652f]">
                         05
                       </span>
 
@@ -796,14 +845,14 @@ export default function JoinPage() {
 
                   {/* CONSENT */}
 
-                  <div className="rounded-2xl border border-black/10 bg-[#f8f3eb] p-5">
+                  <div className="rounded-2xl border border-black/10 bg-[#f6f2e9] p-5">
 
                     <label className="flex cursor-pointer gap-4">
 
                       <input
                         type="checkbox"
                         required
-                        className="mt-1 h-5 w-5 accent-[#241017]"
+                        className="mt-1 h-5 w-5 accent-[#0b211b]"
                       />
 
                       <span className="text-sm leading-6 text-black/55">
@@ -819,7 +868,7 @@ export default function JoinPage() {
 
                   <button
                     type="submit"
-                    className="premium-button w-full rounded-full bg-[#241017] px-8 py-5 text-sm font-bold uppercase tracking-[0.15em] text-white"
+                    className="premium-button w-full rounded-full bg-[#0b211b] px-8 py-5 text-sm font-bold uppercase tracking-[0.15em] text-white"
                   >
                     Join Chebomuren Global →
                   </button>
@@ -841,9 +890,45 @@ export default function JoinPage() {
 
       </section>
 
+      {/* MEMBERSHIP JOURNEY */}
+
+      <section className="join-grid px-6 py-28 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-14 lg:grid-cols-[.8fr_1.2fr] lg:items-end">
+            <div>
+              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">The Journey</p>
+              <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
+                You join.
+                <br />
+                <span className="text-[#1f5a4a]">We grow together.</span>
+              </h2>
+            </div>
+            <p className="max-w-2xl text-lg leading-8 text-black/55">
+              Membership is the beginning of a relationship. Connect with women, exchange ideas,
+              discover opportunities, contribute your strengths, and help another woman rise.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-4 md:grid-cols-4">
+            {[
+              ["01","Enter","Introduce yourself and find your place in the movement."],
+              ["02","Connect","Meet women whose experiences, ambitions, and interests intersect with yours."],
+              ["03","Contribute","Share knowledge, opportunities, stories, support, and collaboration."],
+              ["04","Multiply","Use your growth to open doors for another woman and the next generation."],
+            ].map(([number,title,text]) => (
+              <div key={number} className="join-card rounded-3xl border border-black/10 bg-white p-7">
+                <span className="text-xs text-[#86652f]">{number}</span>
+                <h3 className="mt-12 font-serif text-3xl">{title}</h3>
+                <p className="mt-4 text-sm leading-7 text-black/45">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* OUR PROMISE */}
 
-      <section className="bg-[#241017] px-6 py-28 text-white lg:px-10">
+      <section className="bg-[#0b211b] px-6 py-28 text-white lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -851,7 +936,7 @@ export default function JoinPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.35em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#e8c987]">
                 Our Promise
               </p>
 
@@ -886,7 +971,7 @@ export default function JoinPage() {
 
                   <span
                     key={item}
-                    className="rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-xs uppercase tracking-[0.15em] text-[#e8bd72]"
+                    className="rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-xs uppercase tracking-[0.15em] text-[#e8c987]"
                   >
                     {item}
                   </span>
@@ -904,11 +989,11 @@ export default function JoinPage() {
 
       {/* FINAL CTA */}
 
-      <section className="bg-[#d5a85c] px-6 py-28 lg:px-10">
+      <section className="bg-[#d6ad68] px-6 py-28 lg:px-10">
 
         <div className="mx-auto max-w-5xl text-center">
 
-          <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#4d2924]">
+          <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#183d32]">
             The Movement Is Growing
           </p>
 
@@ -918,7 +1003,7 @@ export default function JoinPage() {
             Make your impact.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#3d2822]/60">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#173a30]/60">
             There is room for your voice, your experience, your ideas, and
             your dreams.
           </p>
@@ -927,14 +1012,14 @@ export default function JoinPage() {
 
             <a
               href="#membership"
-              className="premium-button rounded-full bg-[#241017] px-8 py-4 font-bold text-white"
+              className="premium-button rounded-full bg-[#0b211b] px-8 py-4 font-bold text-white"
             >
               Join the Sisterhood ↑
             </a>
 
             <Link
               href="/nominate"
-              className="rounded-full border border-[#4d2924]/30 px-8 py-4 font-bold text-[#241017] transition hover:bg-white/30"
+              className="rounded-full border border-[#183d32]/30 px-8 py-4 font-bold text-[#0b211b] transition hover:bg-white/30"
             >
               Nominate a Woman
             </Link>
@@ -947,7 +1032,7 @@ export default function JoinPage() {
 
       {/* FOOTER */}
 
-      <footer className="bg-[#16090d] px-6 py-14 text-white lg:px-10">
+      <footer className="bg-[#04110d] px-6 py-14 text-white lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -957,7 +1042,7 @@ export default function JoinPage() {
 
               <Link
                 href="/"
-                className="font-serif text-3xl text-[#e8bd72]"
+                className="font-serif text-3xl text-[#e8c987]"
               >
                 Chebomuren Global
               </Link>
@@ -970,7 +1055,7 @@ export default function JoinPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.25em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#e8c987]">
                 Explore
               </p>
 
@@ -1010,7 +1095,7 @@ export default function JoinPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.25em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#e8c987]">
                 Connect
               </p>
 
@@ -1051,6 +1136,7 @@ export default function JoinPage() {
 
       </footer>
 
-    </main>
+      </main>
+    </>
   );
 }

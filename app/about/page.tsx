@@ -1,6 +1,7 @@
-"use client";
+ "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
 const values = [
   {
@@ -35,17 +36,44 @@ const values = [
   },
 ];
 
+
+const pillars = [
+  { number: "01", title: "Celebrate", text: "We make remarkable journeys visible and give women the recognition their work deserves." },
+  { number: "02", title: "Connect", text: "We create bridges between women, communities, professions, generations, and countries." },
+  { number: "03", title: "Empower", text: "We encourage confidence, leadership, ambition, and the courage to pursue more." },
+  { number: "04", title: "Inspire", text: "We turn real stories of resilience and excellence into fuel for the next generation." },
+];
+
+const principles = [
+  ["Recognition", "When women are seen, possibility becomes visible to others."],
+  ["Connection", "When women connect, knowledge and opportunity move further."],
+  ["Unity", "When women stand together, individual success becomes collective strength."],
+  ["Legacy", "When women open doors, the next generation walks through them with confidence."],
+];
+
 export default function AboutPage() {
+  const [activePillar, setActivePillar] = useState(0);
+  const [activePrinciple, setActivePrinciple] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setProgress((value) => (value + 1) % 101), 70);
+    return () => clearInterval(timer);
+  }, []);
+
+  const selectedPillar = pillars[activePillar];
+  const selectedPrinciple = principles[activePrinciple];
+
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f8f3eb] text-[#241817]">
+    <main className="min-h-screen overflow-x-hidden bg-[#f6f2e9] text-[#0b211b]">
 
       {/* NAVIGATION */}
-      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#190a0f]/90 text-white backdrop-blur-xl">
+      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#061710]/90 text-white backdrop-blur-xl">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
 
           <Link href="/" className="leading-none">
-            <div className="font-serif text-2xl font-bold tracking-wide text-[#e8bd72]">
+            <div className="font-serif text-2xl font-bold tracking-wide text-[#d6ad68]">
               Chebomuren
             </div>
 
@@ -58,35 +86,42 @@ export default function AboutPage() {
 
             <Link
               href="/about"
-              className="text-sm text-[#e8bd72]"
+              className="text-sm text-[#d6ad68]"
             >
               About
             </Link>
 
             <Link
               href="/gala"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
             >
               Gala
             </Link>
 
             <Link
               href="/women"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
             >
               Women
             </Link>
 
             <Link
+              href="/global"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
+            >
+              Global
+            </Link>
+
+            <Link
               href="/nominate"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
             >
               Nominate
             </Link>
 
             <Link
               href="/contact"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
             >
               Contact
             </Link>
@@ -95,7 +130,7 @@ export default function AboutPage() {
 
           <Link
             href="/join"
-            className="hidden rounded-full bg-[#d5a85c] px-6 py-3 text-sm font-bold text-[#241817] transition hover:-translate-y-1 hover:bg-[#edca8c] md:block"
+            className="hidden rounded-full bg-[#d6ad68] px-6 py-3 text-sm font-bold text-[#0b211b] transition hover:-translate-y-1 hover:bg-[#e8c987] md:block"
           >
             Join the Movement
           </Link>
@@ -105,26 +140,26 @@ export default function AboutPage() {
 
       {/* HERO */}
 
-      <section className="relative flex min-h-[75vh] items-center overflow-hidden bg-[#241017] pt-28">
+      <section className="relative flex min-h-[75vh] items-center overflow-hidden bg-[#0b211b] pt-28">
 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(213,168,92,0.2),transparent_35%)]" />
 
-        <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full border border-[#d5a85c]/10" />
+        <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full border border-[#d6ad68]/10" />
 
-        <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#6f3542]/20 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#1f5a4a]/20 blur-3xl" />
 
         <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24 lg:px-10">
 
           <div className="max-w-5xl">
 
-            <p className="hero-reveal text-xs font-bold uppercase tracking-[0.4em] text-[#e8bd72]">
+            <p className="hero-reveal text-xs font-bold uppercase tracking-[0.4em] text-[#d6ad68]">
               About Chebomuren Global
             </p>
 
             <h1 className="hero-reveal hero-delay-1 mt-7 font-serif text-6xl font-bold leading-[0.9] text-white sm:text-7xl lg:text-[100px]">
               A movement
               <br />
-              <span className="text-[#e8bd72]">
+              <span className="text-[#d6ad68]">
                 built on women.
               </span>
             </h1>
@@ -141,6 +176,85 @@ export default function AboutPage() {
 
       </section>
 
+
+      {/* MOVEMENT SIGNAL */}
+      <section className="relative overflow-hidden bg-[#061710] px-6 py-8 text-white lg:px-10">
+        <div className="global-grid absolute inset-0 opacity-40" />
+        <div className="relative mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <span className="relative flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#d6ad68]/50" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-[#d6ad68]" />
+            </span>
+            <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">A global movement in motion</p>
+          </div>
+          <p className="text-xs text-white/35">Heritage • Sisterhood • Leadership • Legacy</p>
+        </div>
+      </section>
+
+      {/* THE MOVEMENT */}
+      <section className="relative overflow-hidden bg-[#f6f2e9] px-6 py-28 lg:px-10">
+        <div className="absolute -right-40 top-20 h-96 w-96 rounded-full bg-[#1f5a4a]/10 blur-3xl" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+            <div>
+              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">The idea</p>
+              <h2 className="mt-5 font-serif text-5xl leading-[0.95] lg:text-7xl">
+                Not just a group.
+                <br /><span className="text-[#1f5a4a]">A movement.</span>
+              </h2>
+            </div>
+            <p className="max-w-2xl text-xl leading-9 text-black/55">
+              Chebomuren Global exists because extraordinary women should not have to be extraordinary in silence.
+              We bring visibility, connection, encouragement, and opportunity into one global sisterhood.
+            </p>
+          </div>
+          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {pillars.map((pillar, index) => (
+              <button key={pillar.number} onClick={() => setActivePillar(index)}
+                className={`community-card rounded-3xl border p-7 text-left ${activePillar === index ? "border-[#d6ad68]/70 bg-[#0b2b22] text-white shadow-2xl" : "border-black/10 bg-white/70"}`}>
+                <span className={`text-xs ${activePillar === index ? "text-[#d6ad68]" : "text-[#86652f]"}`}>{pillar.number}</span>
+                <h3 className="mt-12 font-serif text-3xl">{pillar.title}</h3>
+                <p className={`mt-4 text-sm leading-7 ${activePillar === index ? "text-white/55" : "text-black/50"}`}>{pillar.text}</p>
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 rounded-3xl border border-[#d6ad68]/20 bg-[#0b2b22] p-7 text-white sm:p-9">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div><p className="text-[10px] uppercase tracking-[0.3em] text-[#d6ad68]">Current focus</p><p className="mt-2 font-serif text-2xl">{selectedPillar.title}</p></div>
+              <p className="max-w-2xl text-sm leading-7 text-white/50">{selectedPillar.text}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOUR PRINCIPLES */}
+      <section className="relative overflow-hidden bg-[#0b2b22] px-6 py-28 text-white lg:px-10">
+        <div className="global-grid absolute inset-0 opacity-50" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">What we believe</p>
+              <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">One woman rises.<br /><span className="text-[#d6ad68]">We all rise.</span></h2>
+              <p className="mt-7 max-w-xl text-lg leading-8 text-white/50">Our work is built around simple truths that turn individual achievement into shared possibility.</p>
+            </div>
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-7 sm:p-10">
+              <div className="flex flex-wrap gap-2">
+                {principles.map((item, index) => (
+                  <button key={item[0]} onClick={() => setActivePrinciple(index)}
+                    className={`rounded-full px-4 py-2 text-xs transition ${activePrinciple === index ? "bg-[#d6ad68] text-[#0b211b]" : "border border-white/10 text-white/50 hover:text-white"}`}>{item[0]}</button>
+                ))}
+              </div>
+              <div className="mt-12">
+                <p className="text-6xl font-serif text-[#d6ad68]">0{activePrinciple + 1}</p>
+                <h3 className="mt-4 font-serif text-4xl">{selectedPrinciple[0]}</h3>
+                <p className="mt-5 text-lg leading-8 text-white/50">{selectedPrinciple[1]}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* INTRODUCTION */}
 
       <section className="px-6 py-28 lg:px-10">
@@ -151,7 +265,7 @@ export default function AboutPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
                 Who We Are
               </p>
 
@@ -160,7 +274,7 @@ export default function AboutPage() {
                 <br />
                 Heard.
                 <br />
-                <span className="text-[#6f3542]">
+                <span className="text-[#1f5a4a]">
                   Celebrated.
                 </span>
               </h2>
@@ -198,7 +312,7 @@ export default function AboutPage() {
 
       {/* PURPOSE */}
 
-      <section className="bg-[#eadfd2] px-6 py-28 lg:px-10">
+      <section className="bg-[#e9e3d6] px-6 py-28 lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -206,7 +320,7 @@ export default function AboutPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
                 Our Purpose
               </p>
 
@@ -215,7 +329,7 @@ export default function AboutPage() {
                 <br />
                 creates
                 <br />
-                <span className="text-[#6f3542]">
+                <span className="text-[#1f5a4a]">
                   encouragement.
                 </span>
               </h2>
@@ -249,20 +363,20 @@ export default function AboutPage() {
 
       {/* MISSION */}
 
-      <section className="bg-[#241017] px-6 py-28 text-white lg:px-10">
+      <section className="bg-[#0b211b] px-6 py-28 text-white lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
           <div className="max-w-4xl">
 
-            <p className="text-xs uppercase tracking-[0.35em] text-[#e8bd72]">
+            <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">
               Our Mission
             </p>
 
             <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
               Empower Kalenjin women
               <br />
-              <span className="text-[#e8bd72]">
+              <span className="text-[#d6ad68]">
                 to do more.
               </span>
             </h2>
@@ -290,7 +404,7 @@ export default function AboutPage() {
                 className="premium-card rounded-2xl border border-white/10 bg-white/[0.04] p-6"
               >
 
-                <div className="text-xs text-[#e8bd72]">
+                <div className="text-xs text-[#d6ad68]">
                   0{index + 1}
                 </div>
 
@@ -312,9 +426,9 @@ export default function AboutPage() {
 
         <div className="mx-auto max-w-7xl">
 
-          <div className="rounded-[2rem] bg-[#d5a85c] p-8 sm:p-12 lg:p-20">
+          <div className="rounded-[2rem] bg-[#d6ad68] p-8 sm:p-12 lg:p-20">
 
-            <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#4d2924]">
+            <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#183d32]">
               Our Vision
             </p>
 
@@ -331,13 +445,13 @@ export default function AboutPage() {
 
       {/* VALUES */}
 
-      <section className="bg-[#f1e7da] px-6 py-28 lg:px-10">
+      <section className="bg-[#edf0e8] px-6 py-28 lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
           <div className="text-center">
 
-            <p className="text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+            <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
               What Guides Us
             </p>
 
@@ -357,11 +471,11 @@ export default function AboutPage() {
 
                 <div className="flex items-center justify-between">
 
-                  <span className="text-sm text-[#a77a32]">
+                  <span className="text-sm text-[#86652f]">
                     {value.number}
                   </span>
 
-                  <span className="text-xl text-[#d5a85c]">
+                  <span className="text-xl text-[#d6ad68]">
                     ✦
                   </span>
 
@@ -385,7 +499,7 @@ export default function AboutPage() {
 
       {/* GLOBAL */}
 
-      <section className="bg-[#190a0f] px-6 py-28 text-white lg:px-10">
+      <section className="bg-[#061710] px-6 py-28 text-white lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -393,14 +507,14 @@ export default function AboutPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.35em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">
                 Our Reach
               </p>
 
               <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
                 One identity.
                 <br />
-                <span className="text-[#e8bd72]">
+                <span className="text-[#d6ad68]">
                   Many destinations.
                 </span>
               </h2>
@@ -446,13 +560,58 @@ export default function AboutPage() {
         </div>
       </section>
 
+
+      {/* HERITAGE TO FUTURE */}
+      <section className="relative overflow-hidden bg-[#f6f2e9] px-6 py-28 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr]">
+            <div>
+              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">Heritage → Future</p>
+              <h2 className="mt-5 font-serif text-5xl leading-[0.95] lg:text-7xl">Rooted in who we are.<br /><span className="text-[#1f5a4a]">Built for who we become.</span></h2>
+            </div>
+            <div className="space-y-5 text-lg leading-8 text-black/55">
+              <p>Our identity carries stories of strength, community, perseverance, culture, and generations of women who came before us.</p>
+              <p>Chebomuren Global carries that spirit forward — creating a modern space where women can connect across borders while honouring where they come from.</p>
+            </div>
+          </div>
+          <div className="mt-16 grid gap-4 md:grid-cols-3">
+            {[
+              ["THEN", "Honour the women whose journeys laid the foundation."],
+              ["NOW", "Celebrate women leading, creating, serving, and building today."],
+              ["NEXT", "Open doors for the girls and women who will shape tomorrow."]
+            ].map(([title,text]) => (
+              <div key={title} className="rounded-3xl border border-black/10 bg-white p-7">
+                <p className="text-xs tracking-[0.3em] text-[#86652f]">{title}</p>
+                <p className="mt-8 font-serif text-2xl leading-8">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* MOVEMENT MOMENTUM */}
+      <section className="bg-[#04110d] px-6 py-20 text-white lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">The future is collective</p>
+              <h2 className="mt-4 font-serif text-4xl lg:text-5xl">There is room for every woman.</h2>
+            </div>
+            <div className="w-full max-w-md">
+              <div className="mb-3 flex justify-between text-[10px] uppercase tracking-[0.25em] text-white/30"><span>Movement momentum</span><span>{progress}%</span></div>
+              <div className="h-1 overflow-hidden rounded-full bg-white/10"><div className="h-full bg-[#d6ad68] transition-[width] duration-75" style={{ width: `${progress}%` }} /></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CALL TO ACTION */}
 
-      <section className="bg-[#d5a85c] px-6 py-28 lg:px-10">
+      <section className="bg-[#d6ad68] px-6 py-28 lg:px-10">
 
         <div className="mx-auto max-w-5xl text-center">
 
-          <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#4d2924]">
+          <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#183d32]">
             You Belong Here
           </p>
 
@@ -460,7 +619,7 @@ export default function AboutPage() {
             Your story matters.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#3d2822]/60">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#173a30]/60">
             Chebomuren Global exists to remind every Kalenjin woman that
             she has a place, a purpose, and a powerful contribution to make.
           </p>
@@ -469,14 +628,14 @@ export default function AboutPage() {
 
             <Link
               href="/join"
-              className="premium-button rounded-full bg-[#241017] px-8 py-4 font-bold text-white"
+              className="premium-button rounded-full bg-[#0b211b] px-8 py-4 font-bold text-white"
             >
               Join the Sisterhood →
             </Link>
 
             <Link
               href="/nominate"
-              className="rounded-full border border-[#4d2924]/30 px-8 py-4 font-bold text-[#241017] transition hover:bg-white/30"
+              className="rounded-full border border-[#183d32]/30 px-8 py-4 font-bold text-[#0b211b] transition hover:bg-white/30"
             >
               Nominate a Woman
             </Link>
@@ -488,7 +647,7 @@ export default function AboutPage() {
 
       {/* FOOTER */}
 
-      <footer className="bg-[#16090d] px-6 py-14 text-white lg:px-10">
+      <footer className="bg-[#04110d] px-6 py-14 text-white lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -496,7 +655,7 @@ export default function AboutPage() {
 
             <div className="lg:col-span-2">
 
-              <Link href="/" className="font-serif text-3xl text-[#e8bd72]">
+              <Link href="/" className="font-serif text-3xl text-[#d6ad68]">
                 Chebomuren Global
               </Link>
 
@@ -508,7 +667,7 @@ export default function AboutPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.25em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#d6ad68]">
                 Explore
               </p>
 
@@ -536,7 +695,7 @@ export default function AboutPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.25em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#d6ad68]">
                 Connect
               </p>
 

@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
@@ -40,17 +40,17 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f8f3eb] text-[#241817]">
+    <main className="min-h-screen overflow-x-hidden bg-[#f6f2e9] text-[#0b211b]">
 
       {/* NAVIGATION */}
 
-      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#190a0f]/90 text-white backdrop-blur-xl">
+      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#061710]/90 text-white backdrop-blur-xl">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
 
           <Link href="/" className="leading-none">
 
-            <div className="font-serif text-2xl font-bold tracking-wide text-[#e8bd72]">
+            <div className="font-serif text-2xl font-bold tracking-wide text-[#d6ad68]">
               Chebomuren
             </div>
 
@@ -64,35 +64,35 @@ export default function ContactPage() {
 
             <Link
               href="/about"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
             >
               About
             </Link>
 
             <Link
               href="/gala"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
             >
               Gala
             </Link>
 
             <Link
               href="/women"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
             >
               Women
             </Link>
 
             <Link
               href="/nominate"
-              className="text-sm text-white/70 transition hover:text-[#e8bd72]"
+              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
             >
               Nominate
             </Link>
 
             <Link
               href="/contact"
-              className="text-sm text-[#e8bd72]"
+              className="text-sm text-[#d6ad68]"
             >
               Contact
             </Link>
@@ -101,7 +101,7 @@ export default function ContactPage() {
 
           <Link
             href="/join"
-            className="hidden rounded-full bg-[#d5a85c] px-6 py-3 text-sm font-bold text-[#241817] transition hover:-translate-y-1 hover:bg-[#edca8c] md:block"
+            className="hidden rounded-full bg-[#bd8d45] px-6 py-3 text-sm font-bold text-[#0b211b] transition hover:-translate-y-1 hover:bg-[#edca8c] md:block"
           >
             Join the Movement
           </Link>
@@ -111,26 +111,32 @@ export default function ContactPage() {
 
       {/* HERO */}
 
-      <section className="relative min-h-[72vh] overflow-hidden bg-[#190a0f] pt-28 text-white">
+      <section className="relative min-h-[78vh] overflow-hidden bg-[#061710] pt-28 text-white">
+
+        <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(214,173,104,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(214,173,104,0.06)_1px,transparent_1px)] [background-size:70px_70px]" />
+
+        <div className="pointer-events-none absolute left-[8%] top-[22%] h-2 w-2 rounded-full bg-[#d6ad68] shadow-[0_0_30px_8px_rgba(214,173,104,0.35)] animate-pulse" />
+        <div className="pointer-events-none absolute right-[16%] top-[34%] h-1.5 w-1.5 rounded-full bg-[#8fc7ae] shadow-[0_0_25px_7px_rgba(143,199,174,0.3)] animate-pulse" />
+        <div className="pointer-events-none absolute bottom-[16%] right-[28%] h-1 w-1 rounded-full bg-[#d6ad68] shadow-[0_0_20px_6px_rgba(214,173,104,0.3)] animate-pulse" />
 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_25%,rgba(213,168,92,0.2),transparent_35%)]" />
 
-        <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full border border-[#d5a85c]/10" />
+        <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full border border-[#bd8d45]/10" />
 
-        <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#6f3542]/20 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#1f5a4a]/20 blur-3xl" />
 
         <div className="relative mx-auto flex min-h-[65vh] max-w-7xl items-center px-6 py-28 lg:px-10">
 
           <div className="max-w-5xl">
 
-            <p className="hero-reveal text-xs uppercase tracking-[0.4em] text-[#e8bd72]">
+            <p className="hero-reveal text-xs uppercase tracking-[0.4em] text-[#d6ad68]">
               Let&apos;s Connect
             </p>
 
             <h1 className="hero-reveal hero-delay-1 mt-6 font-serif text-6xl font-bold leading-[0.9] sm:text-7xl lg:text-[100px]">
               Start a
               <br />
-              <span className="text-[#e8bd72]">
+              <span className="text-[#d6ad68]">
                 conversation.
               </span>
             </h1>
@@ -156,11 +162,11 @@ export default function ContactPage() {
 
             <div className="premium-card rounded-3xl border border-black/10 bg-white p-7">
 
-              <div className="text-2xl text-[#d5a85c]">
+              <div className="text-2xl text-[#bd8d45]">
                 ✉
               </div>
 
-              <p className="mt-7 text-xs uppercase tracking-[0.25em] text-[#a77a32]">
+              <p className="mt-7 text-xs uppercase tracking-[0.25em] text-[#86652f]">
                 Email
               </p>
 
@@ -176,11 +182,11 @@ export default function ContactPage() {
 
             <div className="premium-card rounded-3xl border border-black/10 bg-white p-7">
 
-              <div className="text-2xl text-[#d5a85c]">
+              <div className="text-2xl text-[#bd8d45]">
                 ☎
               </div>
 
-              <p className="mt-7 text-xs uppercase tracking-[0.25em] text-[#a77a32]">
+              <p className="mt-7 text-xs uppercase tracking-[0.25em] text-[#86652f]">
                 Phone
               </p>
 
@@ -196,11 +202,11 @@ export default function ContactPage() {
 
             <div className="premium-card rounded-3xl border border-black/10 bg-white p-7">
 
-              <div className="text-2xl text-[#d5a85c]">
+              <div className="text-2xl text-[#bd8d45]">
                 ◎
               </div>
 
-              <p className="mt-7 text-xs uppercase tracking-[0.25em] text-[#a77a32]">
+              <p className="mt-7 text-xs uppercase tracking-[0.25em] text-[#86652f]">
                 Location
               </p>
 
@@ -216,21 +222,21 @@ export default function ContactPage() {
 
             <div className="premium-card rounded-3xl border border-black/10 bg-white p-7">
 
-              <div className="text-2xl text-[#d5a85c]">
+              <div className="text-2xl text-[#bd8d45]">
                 ✦
               </div>
 
-              <p className="mt-7 text-xs uppercase tracking-[0.25em] text-[#a77a32]">
+              <p className="mt-7 text-xs uppercase tracking-[0.25em] text-[#86652f]">
                 Social
               </p>
 
               <div className="mt-3 flex gap-4 text-sm font-semibold">
 
-                <span className="hover:text-[#6f3542]">
+                <span className="hover:text-[#1f5a4a]">
                   Facebook
                 </span>
 
-                <span className="hover:text-[#6f3542]">
+                <span className="hover:text-[#1f5a4a]">
                   Instagram
                 </span>
 
@@ -249,7 +255,7 @@ export default function ContactPage() {
 
       {/* CONTACT FORM */}
 
-      <section className="bg-[#eadfd2] px-6 py-24 lg:px-10">
+      <section className="bg-[#e9e3d6] px-6 py-24 lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -259,7 +265,7 @@ export default function ContactPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
                 Send Us A Message
               </p>
 
@@ -274,9 +280,9 @@ export default function ContactPage() {
                 you would like to share with us?
               </p>
 
-              <div className="mt-10 border-l-2 border-[#d5a85c] pl-6">
+              <div className="mt-10 border-l-2 border-[#bd8d45] pl-6">
 
-                <p className="font-serif text-2xl leading-9 text-[#6f3542]">
+                <p className="font-serif text-2xl leading-9 text-[#1f5a4a]">
                   &quot;Together, we celebrate our past, strengthen our
                   present, and inspire our future.&quot;
                 </p>
@@ -293,11 +299,11 @@ export default function ContactPage() {
 
                 <div className="flex min-h-[500px] flex-col items-center justify-center text-center">
 
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#d5a85c] text-3xl">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#bd8d45] text-3xl">
                     ✓
                   </div>
 
-                  <p className="mt-8 text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+                  <p className="mt-8 text-xs uppercase tracking-[0.35em] text-[#86652f]">
                     Message Sent
                   </p>
 
@@ -504,14 +510,14 @@ export default function ContactPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.35em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">
                 Partnerships
               </p>
 
               <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
                 Let&apos;s create
                 <br />
-                <span className="text-[#e8bd72]">
+                <span className="text-[#d6ad68]">
                   impact together.
                 </span>
               </h2>
@@ -541,7 +547,7 @@ export default function ContactPage() {
                     key={item}
                     className="rounded-xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/60"
                   >
-                    <span className="mr-3 text-[#e8bd72]">
+                    <span className="mr-3 text-[#d6ad68]">
                       ✦
                     </span>
                     {item}
@@ -566,7 +572,7 @@ export default function ContactPage() {
 
           <div className="text-center">
 
-            <p className="text-xs uppercase tracking-[0.35em] text-[#a77a32]">
+            <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
               Frequently Asked Questions
             </p>
 
@@ -588,14 +594,14 @@ export default function ContactPage() {
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-serif text-xl">
 
                   <span>
-                    <span className="mr-4 text-sm text-[#a77a32]">
+                    <span className="mr-4 text-sm text-[#86652f]">
                       0{index + 1}
                     </span>
 
                     {faq.question}
                   </span>
 
-                  <span className="text-2xl text-[#d5a85c] transition group-open:rotate-45">
+                  <span className="text-2xl text-[#bd8d45] transition group-open:rotate-45">
                     +
                   </span>
 
@@ -616,11 +622,11 @@ export default function ContactPage() {
 
       {/* FINAL CTA */}
 
-      <section className="bg-[#d5a85c] px-6 py-28 lg:px-10">
+      <section className="bg-[#bd8d45] px-6 py-28 lg:px-10">
 
         <div className="mx-auto max-w-5xl text-center">
 
-          <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#4d2924]">
+          <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#183d32]">
             Stay Connected
           </p>
 
@@ -630,7 +636,7 @@ export default function ContactPage() {
             in this movement.
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#3d2822]/60">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#173a30]/60">
             Join a global sisterhood celebrating Kalenjin women and
             inspiring the generations that follow.
           </p>
@@ -646,7 +652,7 @@ export default function ContactPage() {
 
             <Link
               href="/nominate"
-              className="rounded-full border border-[#4d2924]/30 px-8 py-4 font-bold text-[#241017] transition hover:bg-white/30"
+              className="rounded-full border border-[#183d32]/30 px-8 py-4 font-bold text-[#241017] transition hover:bg-white/30"
             >
               Nominate a Woman
             </Link>
@@ -658,7 +664,7 @@ export default function ContactPage() {
 
       {/* FOOTER */}
 
-      <footer className="bg-[#16090d] px-6 py-14 text-white lg:px-10">
+      <footer className="bg-[#04110d] px-6 py-14 text-white lg:px-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -668,7 +674,7 @@ export default function ContactPage() {
 
               <Link
                 href="/"
-                className="font-serif text-3xl text-[#e8bd72]"
+                className="font-serif text-3xl text-[#d6ad68]"
               >
                 Chebomuren Global
               </Link>
@@ -681,7 +687,7 @@ export default function ContactPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.25em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#d6ad68]">
                 Explore
               </p>
 
@@ -721,7 +727,7 @@ export default function ContactPage() {
 
             <div>
 
-              <p className="text-xs uppercase tracking-[0.25em] text-[#e8bd72]">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#d6ad68]">
                 Connect
               </p>
 
