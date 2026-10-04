@@ -1,732 +1,1480 @@
- "use client";
+  // app/about/page.tsx
+"use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+type StoryChapter = {
+  id: string;
+  number: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  location: string;
+  image: string;
+  secondaryImage: string;
+  quote: string;
+  paragraphs: string[];
+  tags: string[];
+};
+
+const chapters: StoryChapter[] = [
+  {
+    id: "origins",
+    number: "01",
+    eyebrow: "THE BEGINNING",
+    title: "A Mother's Journey of Courage",
+    subtitle: "A story that began in a small village in Kenya.",
+    location: "Kenya",
+    image: "/images/ubuntu-brand-portrait.jpeg",
+    secondaryImage: "/images/elders-path-lookbook.jpeg",
+    quote:
+      "Courage begins when circumstances tell you to stop—and you choose to continue.",
+    paragraphs: [
+      "Born in a small village in Kenya, a life shaped by community, tradition, resilience, and determination became the beginning of a remarkable journey.",
+      "She was raised with a deep connection to community and tradition, while carrying dreams that reached beyond the circumstances around her.",
+      "Her journey eventually took her to Australia, where she rose through leadership and community service while creating opportunities for others.",
+    ],
+    tags: ["Kenya", "Heritage", "Community", "Courage"],
+  },
+  {
+    id: "recovery",
+    number: "02",
+    eyebrow: "THE TURNING POINT",
+    title: "When Survival Became Strength",
+    subtitle: "A devastating stroke changed everything.",
+    location: "Australia",
+    image: "/images/elders-path-lookbook.jpeg",
+    secondaryImage: "/images/ubuntu-brand-portrait.jpeg",
+    quote: "What was meant to become an ending became another beginning.",
+    paragraphs: [
+      "A devastating stroke changed everything. Recovery demanded extraordinary courage and a determination to reclaim independence step by step.",
+      "When many believed she might never walk, speak, read, or write again, she faced recovery with extraordinary courage.",
+      "Step by step, she reclaimed independence and transformed survival into advocacy, service, and hope.",
+    ],
+    tags: ["Recovery", "Resilience", "Hope", "Strength"],
+  },
+  {
+    id: "advocacy",
+    number: "03",
+    eyebrow: "THE MISSION",
+    title: "A Life Turned Toward Others",
+    subtitle: "Personal recovery became a wider mission.",
+    location: "International",
+    image: "/images/ubuntu-global-lookbook.jpeg",
+    secondaryImage: "/images/maasai-jewellery-editorial.jpeg",
+    quote:
+      "Strength becomes meaningful when it creates room for someone else to rise.",
+    paragraphs: [
+      "Her journey became larger than her own recovery. She became an advocate for women, girls, families, migrants, and people with disability.",
+      "Her work received international recognition across London, New York, Singapore, and Australia.",
+      "She received the highest honour awarded to an Australian civilian, bestowed by King Charles.",
+      "Her advocacy also included protecting girls from female genital mutilation, with advocacy helping save more than 5,000 girls.",
+    ],
+    tags: ["Women", "Girls", "Advocacy", "Leadership"],
+  },
+  {
+    id: "daughter",
+    number: "04",
+    eyebrow: "THE NEXT CHAPTER",
+    title: "A Daughter's Journey Through Sport",
+    subtitle: "From Atlanta to South Australia.",
+    location: "Atlanta → South Australia",
+    image: "/images/ubuntu-brand-board.jpeg",
+    secondaryImage: "/images/hero-couture-yellow.jpeg",
+    quote: "Her mother's strength became part of her own language.",
+    paragraphs: [
+      "Born in Atlanta, Georgia, and raised in South Australia, the daughter grew up carrying the strength of her mother and the richness of her African heritage.",
+      "Her education in Miami and her experience as an accomplished tennis player developed discipline, focus, confidence, and an international outlook.",
+      "Sport became more than competition. It became a doorway into storytelling and a platform through which she could connect people, cultures, and ideas.",
+    ],
+    tags: ["Atlanta", "Miami", "Tennis", "Heritage"],
+  },
+  {
+    id: "storytelling",
+    number: "05",
+    eyebrow: "THE VOICE",
+    title: "From The Court To The World",
+    subtitle: "Sport became a platform for storytelling.",
+    location: "Global",
+    image: "/images/hero-couture-yellow.jpeg",
+    secondaryImage: "/images/couture-brown-front.jpeg",
+    quote: "Every platform can become a place to tell a better story.",
+    paragraphs: [
+      "Her journey expanded into sports journalism, covering Formula 1, FIFA, and professional tennis.",
+      "Through international sport, she discovered the power of storytelling—the ability to bring people into experiences they might never otherwise encounter.",
+      "Her work also developed into international youth advocacy, speaking against female genital mutilation and advocating for the rights, safety, and future of girls.",
+    ],
+    tags: ["Formula 1", "FIFA", "Tennis", "Journalism"],
+  },
+  {
+    id: "ubuntu",
+    number: "06",
+    eyebrow: "THE HOUSE",
+    title: "A Shared Passion Becomes A House Of Heritage",
+    subtitle: "Two journeys converge through Ubuntu Couture House.",
+    location: "East Africa → The World",
+    image: "/images/maasai-jewellery-editorial.jpeg",
+    secondaryImage: "/images/royal-headpiece-gold.jpeg",
+    quote: "I am because we are.",
+    paragraphs: [
+      "Their journeys now come together through Ubuntu Couture House.",
+      "The house brings together couture fashion, contemporary fashion jewellery, rare gems from Kenya, Tanzania, Ethiopia, Rwanda, and Burundi, ethically sourced cow horn jewellery, reimagined Maasai beadwork, and royal headpieces inspired by dignity, leadership, and African majesty.",
+      "Every creation honours East African heritage while expressing modern elegance, allowing heritage to become wearable and personal history to become art.",
+    ],
+    tags: ["Ubuntu", "East Africa", "Couture", "Legacy"],
+  },
+];
+
+const milestones = [
+  {
+    number: "01",
+    title: "A Village In Kenya",
+    description:
+      "The story begins with community, tradition, resilience, and dreams that reached beyond circumstances.",
+  },
+  {
+    number: "02",
+    title: "A New Chapter In Australia",
+    description:
+      "Leadership and community service created new opportunities while carrying heritage across continents.",
+  },
+  {
+    number: "03",
+    title: "The Stroke",
+    description:
+      "A devastating moment became a profound chapter of recovery, determination, and courage.",
+  },
+  {
+    number: "04",
+    title: "Advocacy",
+    description:
+      "Recovery became service to women, girls, families, migrants, and people with disability.",
+  },
+  {
+    number: "05",
+    title: "A Daughter Is Born",
+    description:
+      "Atlanta became the beginning of another journey carrying the strength and heritage of the generation before.",
+  },
+  {
+    number: "06",
+    title: "Sport & Storytelling",
+    description:
+      "Tennis, journalism, international sport, and youth advocacy created a new platform for the story.",
+  },
+  {
+    number: "07",
+    title: "Ubuntu Couture House",
+    description:
+      "Mother and daughter bring their journeys together through heritage, fashion, jewellery, and purpose.",
+  },
+];
 
 const values = [
   {
     number: "01",
-    title: "Unity",
-    text: "We are stronger when we stand together, support one another, and celebrate our shared identity.",
+    title: "Courage",
+    statement: "We honour the courage required to begin again.",
   },
   {
     number: "02",
-    title: "Empowerment",
-    text: "We encourage women to believe in themselves, use their voices, and pursue their ambitions.",
+    title: "Heritage",
+    statement: "We carry heritage forward rather than leaving it behind.",
   },
   {
     number: "03",
-    title: "Recognition",
-    text: "We honour the achievements, sacrifices, leadership, and contributions of Kalenjin women everywhere.",
+    title: "Identity",
+    statement: "We create pieces that allow women to express who they are.",
   },
   {
     number: "04",
-    title: "Inclusion",
-    text: "We welcome Kalenjin women from every background, profession, generation, and country.",
+    title: "Community",
+    statement: "We believe individual beauty becomes greater through connection.",
   },
   {
     number: "05",
-    title: "Integrity",
-    text: "We lead with honesty, respect, responsibility, and sincerity.",
+    title: "Purpose",
+    statement: "We believe luxury can carry meaning beyond appearance.",
+  },
+];
+
+const creations = [
+  {
+    title: "Couture Fashion",
+    description:
+      "Modern silhouettes with heritage soul—crafted for confidence and identity.",
+    image: "/images/hero-couture-yellow.jpeg",
   },
   {
-    number: "06",
-    title: "Legacy",
-    text: "We celebrate the women who came before us and create opportunities for those who will come after us.",
+    title: "Contemporary Jewellery",
+    description:
+      "Sculptural statement designs transforming natural materials into luxury.",
+    image: "/images/cow-horn-jewellery.jpeg",
+  },
+  {
+    title: "Rare Gems",
+    description:
+      "Natural beauty selected with intention—symbols of resilience and strength.",
+    image: "/images/rare-gem-neckpiece.jpeg",
+  },
+  {
+    title: "Reimagined Maasai Beadwork",
+    description:
+      "Living heritage reinterpreted through contemporary design.",
+    image: "/images/maasai-jewellery-editorial.jpeg",
+  },
+  {
+    title: "Royal Headpieces",
+    description:
+      "Designed to celebrate presence, dignity, and leadership.",
+    image: "/images/royal-headpiece-gold.jpeg",
   },
 ];
 
-
-const pillars = [
-  { number: "01", title: "Celebrate", text: "We make remarkable journeys visible and give women the recognition their work deserves." },
-  { number: "02", title: "Connect", text: "We create bridges between women, communities, professions, generations, and countries." },
-  { number: "03", title: "Empower", text: "We encourage confidence, leadership, ambition, and the courage to pursue more." },
-  { number: "04", title: "Inspire", text: "We turn real stories of resilience and excellence into fuel for the next generation." },
-];
-
-const principles = [
-  ["Recognition", "When women are seen, possibility becomes visible to others."],
-  ["Connection", "When women connect, knowledge and opportunity move further."],
-  ["Unity", "When women stand together, individual success becomes collective strength."],
-  ["Legacy", "When women open doors, the next generation walks through them with confidence."],
+const recognition = [
+  "London",
+  "New York",
+  "Singapore",
+  "Australia",
 ];
 
 export default function AboutPage() {
-  const [activePillar, setActivePillar] = useState(0);
-  const [activePrinciple, setActivePrinciple] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const [activeChapter, setActiveChapter] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isStoryMode, setIsStoryMode] = useState(false);
+  const [activeValue, setActiveValue] = useState(0);
+  const [activeCreation, setActiveCreation] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
-  useEffect(() => {
-    const timer = setInterval(() => setProgress((value) => (value + 1) % 101), 70);
-    return () => clearInterval(timer);
+  const chapter = chapters[activeChapter];
+
+  const storyProgress = useMemo(
+    () => ((activeChapter + 1) / chapters.length) * 100,
+    [activeChapter],
+  );
+
+  const nextChapter = useCallback(() => {
+    setActiveChapter((current) =>
+      current >= chapters.length - 1 ? 0 : current + 1,
+    );
   }, []);
 
-  const selectedPillar = pillars[activePillar];
-  const selectedPrinciple = principles[activePrinciple];
+  const previousChapter = useCallback(() => {
+    setActiveChapter((current) =>
+      current <= 0 ? chapters.length - 1 : current - 1,
+    );
+  }, []);
+
+  const selectChapter = (index: number) => {
+    setActiveChapter(index);
+    setIsPlaying(false);
+  };
+
+  useEffect(() => {
+    if (!isPlaying || isStoryMode) return;
+
+    const timer = window.setInterval(() => {
+      setActiveChapter((current) =>
+        current >= chapters.length - 1 ? 0 : current + 1,
+      );
+    }, 9000);
+
+    return () => window.clearInterval(timer);
+  }, [isPlaying, isStoryMode]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight") nextChapter();
+      if (event.key === "ArrowLeft") previousChapter();
+
+      if (event.key === "Escape") {
+        setIsStoryMode(false);
+      }
+
+      if (event.key === " ") {
+        if (isStoryMode) {
+          event.preventDefault();
+          setIsPlaying((current) => !current);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isStoryMode, nextChapter, previousChapter]);
+
+  const handleTouchStart = (event: React.TouchEvent) => {
+    setTouchStart(event.touches[0]?.clientX ?? null);
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    if (touchStart === null) return;
+
+    const end = event.changedTouches[0]?.clientX ?? touchStart;
+    const distance = touchStart - end;
+
+    if (Math.abs(distance) > 60) {
+      if (distance > 0) {
+        nextChapter();
+      } else {
+        previousChapter();
+      }
+    }
+
+    setTouchStart(null);
+  };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f6f2e9] text-[#0b211b]">
+    <>
+      <main className="min-h-screen bg-[#f4efe7] text-[#191613]">
+        {/* =========================================================
+            CINEMATIC HERO
+        ========================================================== */}
+        <section className="relative min-h-[100svh] overflow-hidden bg-[#120e0b] text-white">
+          <div className="absolute inset-0">
+            <Image
+              src="/images/ubuntu-brand-portrait.jpeg"
+              alt="Ubuntu Couture House"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center opacity-60"
+            />
 
-      {/* NAVIGATION */}
-      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#061710]/90 text-white backdrop-blur-xl">
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,7,5,0.94)_0%,rgba(10,7,5,0.7)_42%,rgba(10,7,5,0.12)_100%)]" />
 
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-
-          <Link href="/" className="leading-none">
-            <div className="font-serif text-2xl font-bold tracking-wide text-[#d6ad68]">
-              Chebomuren
-            </div>
-
-            <div className="mt-1 text-[9px] uppercase tracking-[0.4em] text-white/50">
-              Global
-            </div>
-          </Link>
-
-          <div className="hidden items-center gap-8 md:flex">
-
-            <Link
-              href="/about"
-              className="text-sm text-[#d6ad68]"
-            >
-              About
-            </Link>
-
-            <Link
-              href="/gala"
-              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
-            >
-              Gala
-            </Link>
-
-            <Link
-              href="/women"
-              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
-            >
-              Women
-            </Link>
-
-            <Link
-              href="/global"
-              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
-            >
-              Global
-            </Link>
-
-            <Link
-              href="/nominate"
-              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
-            >
-              Nominate
-            </Link>
-
-            <Link
-              href="/contact"
-              className="text-sm text-white/70 transition hover:text-[#d6ad68]"
-            >
-              Contact
-            </Link>
-
+            <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(10,7,5,0.9)_0%,transparent_45%,rgba(10,7,5,0.3)_100%)]" />
           </div>
 
-          <Link
-            href="/join"
-            className="hidden rounded-full bg-[#d6ad68] px-6 py-3 text-sm font-bold text-[#0b211b] transition hover:-translate-y-1 hover:bg-[#e8c987] md:block"
-          >
-            Join the Movement
-          </Link>
-
-        </div>
-      </nav>
-
-      {/* HERO */}
-
-      <section className="relative flex min-h-[75vh] items-center overflow-hidden bg-[#0b211b] pt-28">
-
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(213,168,92,0.2),transparent_35%)]" />
-
-        <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full border border-[#d6ad68]/10" />
-
-        <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#1f5a4a]/20 blur-3xl" />
-
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24 lg:px-10">
-
-          <div className="max-w-5xl">
-
-            <p className="hero-reveal text-xs font-bold uppercase tracking-[0.4em] text-[#d6ad68]">
-              About Chebomuren Global
-            </p>
-
-            <h1 className="hero-reveal hero-delay-1 mt-7 font-serif text-6xl font-bold leading-[0.9] text-white sm:text-7xl lg:text-[100px]">
-              A movement
-              <br />
-              <span className="text-[#d6ad68]">
-                built on women.
-              </span>
-            </h1>
-
-            <p className="hero-reveal hero-delay-2 mt-8 max-w-2xl text-lg leading-8 text-white/60">
-              Chebomuren Global is a worldwide movement created to celebrate,
-              connect, and empower Kalenjin women who are making a difference
-              across families, communities, professions, and countries.
-            </p>
-
+          <div className="absolute inset-0 opacity-40">
+            <div className="absolute left-[15%] top-[25%] h-px w-[30vw] bg-gradient-to-r from-transparent via-[#d5b36a] to-transparent" />
+            <div className="absolute right-[10%] top-[60%] h-px w-[20vw] bg-gradient-to-r from-transparent via-[#d5b36a] to-transparent" />
           </div>
 
-        </div>
+          <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1500px] items-end px-6 pb-20 pt-40 sm:px-10 lg:px-16 lg:pb-24">
+            <div className="max-w-6xl">
+              <div className="mb-7 flex items-center gap-4">
+                <span className="h-px w-12 bg-[#d5b36a]" />
 
-      </section>
+                <span className="text-[9px] font-semibold uppercase tracking-[0.5em] text-[#d5b36a]">
+                  The House / Our Story
+                </span>
+              </div>
 
+              <h1 className="ubuntu-serif text-[3.6rem] leading-[0.86] tracking-[-0.055em] sm:text-7xl md:text-8xl lg:text-[9.5rem]">
+                A story of
+                <br />
+                <span className="italic text-[#d5b36a]">courage.</span>
+              </h1>
 
-      {/* MOVEMENT SIGNAL */}
-      <section className="relative overflow-hidden bg-[#061710] px-6 py-8 text-white lg:px-10">
-        <div className="global-grid absolute inset-0 opacity-40" />
-        <div className="relative mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <span className="relative flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#d6ad68]/50" />
-              <span className="relative inline-flex h-3 w-3 rounded-full bg-[#d6ad68]" />
+              <div className="mt-9 grid max-w-4xl gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+                <p className="max-w-2xl text-sm leading-7 text-white/65 sm:text-base sm:leading-8">
+                  Ubuntu Couture House is a mother-and-daughter vision rooted
+                  in courage, heritage, and purpose—built from lived
+                  experience, international recognition, and a shared
+                  commitment to empowerment.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    document
+                      .getElementById("story-engine")
+                      ?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="luxury-button w-fit"
+                >
+                  Enter The Story
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute bottom-8 right-6 z-20 hidden items-center gap-5 lg:flex">
+            <span className="text-[8px] uppercase tracking-[0.4em] text-white/30">
+              Scroll
             </span>
-            <p className="text-[10px] uppercase tracking-[0.32em] text-white/50">A global movement in motion</p>
+            <span className="h-16 w-px bg-gradient-to-b from-[#d5b36a] to-transparent" />
           </div>
-          <p className="text-xs text-white/35">Heritage • Sisterhood • Leadership • Legacy</p>
-        </div>
-      </section>
+        </section>
 
-      {/* THE MOVEMENT */}
-      <section className="relative overflow-hidden bg-[#f6f2e9] px-6 py-28 lg:px-10">
-        <div className="absolute -right-40 top-20 h-96 w-96 rounded-full bg-[#1f5a4a]/10 blur-3xl" />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+        {/* =========================================================
+            INTRODUCTION
+        ========================================================== */}
+        <section className="border-b border-black/10 bg-[#f4efe7] px-6 py-24 sm:px-10 lg:px-16 lg:py-36">
+          <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
             <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">The idea</p>
-              <h2 className="mt-5 font-serif text-5xl leading-[0.95] lg:text-7xl">
-                Not just a group.
-                <br /><span className="text-[#1f5a4a]">A movement.</span>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#9b7637]">
+                Ubuntu Couture House
+              </p>
+
+              <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.96] tracking-[-0.04em] sm:text-7xl">
+                Two journeys.
+                <br />
+                <span className="italic text-[#9b7637]">
+                  One enduring legacy.
+                </span>
               </h2>
             </div>
-            <p className="max-w-2xl text-xl leading-9 text-black/55">
-              Chebomuren Global exists because extraordinary women should not have to be extraordinary in silence.
-              We bring visibility, connection, encouragement, and opportunity into one global sisterhood.
-            </p>
-          </div>
-          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {pillars.map((pillar, index) => (
-              <button key={pillar.number} onClick={() => setActivePillar(index)}
-                className={`community-card rounded-3xl border p-7 text-left ${activePillar === index ? "border-[#d6ad68]/70 bg-[#0b2b22] text-white shadow-2xl" : "border-black/10 bg-white/70"}`}>
-                <span className={`text-xs ${activePillar === index ? "text-[#d6ad68]" : "text-[#86652f]"}`}>{pillar.number}</span>
-                <h3 className="mt-12 font-serif text-3xl">{pillar.title}</h3>
-                <p className={`mt-4 text-sm leading-7 ${activePillar === index ? "text-white/55" : "text-black/50"}`}>{pillar.text}</p>
-              </button>
-            ))}
-          </div>
-          <div className="mt-6 rounded-3xl border border-[#d6ad68]/20 bg-[#0b2b22] p-7 text-white sm:p-9">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-              <div><p className="text-[10px] uppercase tracking-[0.3em] text-[#d6ad68]">Current focus</p><p className="mt-2 font-serif text-2xl">{selectedPillar.title}</p></div>
-              <p className="max-w-2xl text-sm leading-7 text-white/50">{selectedPillar.text}</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* FOUR PRINCIPLES */}
-      <section className="relative overflow-hidden bg-[#0b2b22] px-6 py-28 text-white lg:px-10">
-        <div className="global-grid absolute inset-0 opacity-50" />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">What we believe</p>
-              <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">One woman rises.<br /><span className="text-[#d6ad68]">We all rise.</span></h2>
-              <p className="mt-7 max-w-xl text-lg leading-8 text-white/50">Our work is built around simple truths that turn individual achievement into shared possibility.</p>
-            </div>
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-7 sm:p-10">
-              <div className="flex flex-wrap gap-2">
-                {principles.map((item, index) => (
-                  <button key={item[0]} onClick={() => setActivePrinciple(index)}
-                    className={`rounded-full px-4 py-2 text-xs transition ${activePrinciple === index ? "bg-[#d6ad68] text-[#0b211b]" : "border border-white/10 text-white/50 hover:text-white"}`}>{item[0]}</button>
+            <div className="max-w-3xl">
+              <p className="text-lg leading-8 text-black/60 sm:text-xl sm:leading-9">
+                Ubuntu Couture House is a mother-and-daughter vision rooted in
+                courage, heritage, and purpose—built from lived experience,
+                international recognition, and a shared commitment to
+                empowerment.
+              </p>
+
+              <div className="mt-10 grid grid-cols-2 border-l border-t border-black/10 sm:grid-cols-4">
+                {[
+                  ["01", "Mother"],
+                  ["02", "Daughter"],
+                  ["03", "Heritage"],
+                  ["04", "Legacy"],
+                ].map(([number, label]) => (
+                  <div
+                    key={label}
+                    className="border-b border-r border-black/10 p-5 sm:p-6"
+                  >
+                    <span className="text-[8px] tracking-[0.25em] text-[#9b7637]">
+                      {number}
+                    </span>
+
+                    <p className="ubuntu-serif mt-3 text-xl">{label}</p>
+                  </div>
                 ))}
               </div>
-              <div className="mt-12">
-                <p className="text-6xl font-serif text-[#d6ad68]">0{activePrinciple + 1}</p>
-                <h3 className="mt-4 font-serif text-4xl">{selectedPrinciple[0]}</h3>
-                <p className="mt-5 text-lg leading-8 text-white/50">{selectedPrinciple[1]}</p>
-              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* INTRODUCTION */}
+        {/* =========================================================
+            STORY ENGINE
+        ========================================================== */}
+        <section
+          id="story-engine"
+          className="relative overflow-hidden bg-[#17120f] text-white"
+        >
+          <div className="mx-auto max-w-[1550px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+            <div className="mb-12 flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span className="h-px w-8 bg-[#d5b36a]" />
 
-      <section className="px-6 py-28 lg:px-10">
-
-        <div className="mx-auto max-w-7xl">
-
-          <div className="grid gap-16 lg:grid-cols-2">
-
-            <div>
-
-              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
-                Who We Are
-              </p>
-
-              <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
-                Seen.
-                <br />
-                Heard.
-                <br />
-                <span className="text-[#1f5a4a]">
-                  Celebrated.
-                </span>
-              </h2>
-
-            </div>
-
-            <div className="text-lg leading-8 text-black/60">
-
-              <p>
-                Chebomuren Global is a women&apos;s group and global platform
-                dedicated to celebrating the achievements, strength,
-                resilience, and contributions of Kalenjin women across the
-                world.
-              </p>
-
-              <p className="mt-6">
-                From Kenya to Australia, the United States, the United
-                Kingdom, Africa, and beyond, Kalenjin women are trailblazing
-                in business, leadership, education, health, sports, faith,
-                the arts, public service, community development, and many
-                other fields.
-              </p>
-
-              <p className="mt-6">
-                We provide a space where women can be seen, heard, supported,
-                connected, and celebrated.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* PURPOSE */}
-
-      <section className="bg-[#e9e3d6] px-6 py-28 lg:px-10">
-
-        <div className="mx-auto max-w-7xl">
-
-          <div className="grid items-center gap-16 lg:grid-cols-2">
-
-            <div>
-
-              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
-                Our Purpose
-              </p>
-
-              <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
-                Recognition
-                <br />
-                creates
-                <br />
-                <span className="text-[#1f5a4a]">
-                  encouragement.
-                </span>
-              </h2>
-
-            </div>
-
-            <div>
-
-              <p className="text-xl leading-9 text-black/60">
-                Our purpose is to celebrate Kalenjin women who are
-                trailblazing around the world.
-              </p>
-
-              <p className="mt-6 text-lg leading-8 text-black/50">
-                We believe recognition creates encouragement, connection
-                creates opportunity, and unity creates lasting impact.
-              </p>
-
-              <p className="mt-6 text-lg leading-8 text-black/50">
-                By highlighting the journeys and achievements of Kalenjin
-                women, we inspire the next generation to pursue their dreams
-                with confidence and purpose.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* MISSION */}
-
-      <section className="bg-[#0b211b] px-6 py-28 text-white lg:px-10">
-
-        <div className="mx-auto max-w-7xl">
-
-          <div className="max-w-4xl">
-
-            <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">
-              Our Mission
-            </p>
-
-            <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
-              Empower Kalenjin women
-              <br />
-              <span className="text-[#d6ad68]">
-                to do more.
-              </span>
-            </h2>
-
-            <p className="mt-8 text-lg leading-8 text-white/55">
-              Our mission is to empower Kalenjin women to do more and to
-              remind every woman that she is worthy.
-            </p>
-
-          </div>
-
-          <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-
-            {[
-              "Celebrate women's achievements",
-              "Create opportunities for connection",
-              "Encourage leadership and confidence",
-              "Support women pursuing their goals",
-              "Inspire young women and future generations",
-              "Build a united global sisterhood",
-              "Promote visibility of Kalenjin women",
-            ].map((item, index) => (
-              <div
-                key={item}
-                className="premium-card rounded-2xl border border-white/10 bg-white/[0.04] p-6"
-              >
-
-                <div className="text-xs text-[#d6ad68]">
-                  0{index + 1}
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#d5b36a]">
+                    The Journey
+                  </p>
                 </div>
 
-                <p className="mt-5 font-serif text-xl">
-                  {item}
+                <h2 className="ubuntu-serif mt-5 text-5xl leading-none tracking-[-0.04em] sm:text-7xl">
+                  Chapter by chapter.
+                </h2>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={previousChapter}
+                  className="flex h-11 w-11 items-center justify-center border border-white/10 text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                  aria-label="Previous chapter"
+                >
+                  ←
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsPlaying((current) => !current)}
+                  className="border border-white/10 px-5 py-3 text-[8px] uppercase tracking-[0.35em] text-white/55 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                >
+                  {isPlaying ? "Pause Story" : "Play Story"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={nextChapter}
+                  className="flex h-11 w-11 items-center justify-center border border-white/10 text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                  aria-label="Next chapter"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop timeline */}
+            <div className="relative mb-12 hidden lg:block">
+              <div className="absolute left-0 right-0 top-[9px] h-px bg-white/10" />
+
+              <div
+                className="absolute left-0 top-[9px] h-px bg-[#d5b36a] transition-all duration-700"
+                style={{ width: `${storyProgress}%` }}
+              />
+
+              <div className="relative grid grid-cols-6 gap-5">
+                {chapters.map((item, index) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => selectChapter(index)}
+                    className="group text-left"
+                  >
+                    <span
+                      className={`relative z-10 mb-5 flex h-[19px] w-[19px] items-center justify-center rounded-full border transition-all ${
+                        index <= activeChapter
+                          ? "border-[#d5b36a] bg-[#d5b36a]"
+                          : "border-white/20 bg-[#17120f]"
+                      }`}
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          index <= activeChapter
+                            ? "bg-[#17120f]"
+                            : "bg-white/20"
+                        }`}
+                      />
+                    </span>
+
+                    <span
+                      className={`block text-[8px] uppercase tracking-[0.25em] transition ${
+                        index === activeChapter
+                          ? "text-[#d5b36a]"
+                          : "text-white/30 group-hover:text-white/60"
+                      }`}
+                    >
+                      {item.number} / {item.title}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile chapter selector */}
+            <div className="mb-6 overflow-x-auto lg:hidden">
+              <div className="flex min-w-max gap-2">
+                {chapters.map((item, index) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => selectChapter(index)}
+                    className={`border px-4 py-3 text-[8px] uppercase tracking-[0.25em] transition ${
+                      index === activeChapter
+                        ? "border-[#d5b36a] bg-[#d5b36a] text-[#17120f]"
+                        : "border-white/10 text-white/40"
+                    }`}
+                  >
+                    {item.number} · {item.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div
+              className="overflow-hidden border border-white/10 bg-[#211a15]"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div className="grid lg:grid-cols-[1.12fr_0.88fr]">
+                {/* Story image */}
+                <div className="relative min-h-[600px] overflow-hidden sm:min-h-[700px] lg:min-h-[760px]">
+                  {chapters.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className={`absolute inset-0 transition-all duration-[1200ms] ${
+                        index === activeChapter
+                          ? "scale-100 opacity-100"
+                          : "pointer-events-none scale-[1.06] opacity-0"
+                      }`}
+                    >
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 60vw"
+                        className="object-cover"
+                      />
+
+                      <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.05)_55%,rgba(0,0,0,0.2)_100%)]" />
+
+                      <div className="absolute left-6 right-6 top-6 flex items-start justify-between sm:left-10 sm:right-10 sm:top-10">
+                        <span className="border border-white/20 bg-black/10 px-4 py-2 text-[8px] uppercase tracking-[0.3em] backdrop-blur-md">
+                          {item.location}
+                        </span>
+
+                        <span className="ubuntu-serif text-5xl text-white/30 sm:text-7xl">
+                          {item.number}
+                        </span>
+                      </div>
+
+                      <div className="absolute bottom-8 left-6 right-6 sm:bottom-10 sm:left-10 sm:right-10">
+                        <p className="text-[8px] uppercase tracking-[0.4em] text-[#d5b36a]">
+                          {item.eyebrow}
+                        </p>
+
+                        <p className="ubuntu-serif mt-4 max-w-3xl text-3xl leading-[0.98] sm:text-5xl lg:text-6xl">
+                          “{item.quote}”
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Story copy */}
+                <div className="flex flex-col justify-between p-7 sm:p-10 lg:p-14">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-[8px] uppercase tracking-[0.4em] text-[#d5b36a]">
+                        {chapter.eyebrow}
+                      </p>
+
+                      <p className="text-[8px] uppercase tracking-[0.25em] text-white/25">
+                        {chapter.number} / 06
+                      </p>
+                    </div>
+
+                    <h3 className="ubuntu-serif mt-7 text-4xl leading-[0.94] tracking-[-0.035em] sm:text-5xl lg:text-6xl">
+                      {chapter.title}
+                    </h3>
+
+                    <p className="mt-5 text-xs uppercase tracking-[0.2em] text-white/30">
+                      {chapter.subtitle}
+                    </p>
+
+                    <div className="mt-9 space-y-5">
+                      {chapter.paragraphs.map((paragraph) => (
+                        <p
+                          key={paragraph}
+                          className="text-sm leading-7 text-white/55"
+                        >
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+
+                    <div className="mt-9 flex flex-wrap gap-2">
+                      {chapter.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="border border-white/10 px-3 py-2 text-[8px] uppercase tracking-[0.2em] text-white/35"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-14">
+                    <div className="mb-5 flex items-center justify-between">
+                      <span className="text-[8px] uppercase tracking-[0.3em] text-white/25">
+                        Story progression
+                      </span>
+
+                      <span className="text-[8px] uppercase tracking-[0.3em] text-[#d5b36a]">
+                        {String(activeChapter + 1).padStart(2, "0")} / 06
+                      </span>
+                    </div>
+
+                    <div className="h-px bg-white/10">
+                      <div
+                        className="h-px bg-[#d5b36a] transition-all duration-700"
+                        style={{ width: `${storyProgress}%` }}
+                      />
+                    </div>
+
+                    <div className="mt-7 flex gap-2">
+                      <button
+                        type="button"
+                        onClick={previousChapter}
+                        className="flex h-12 w-12 items-center justify-center border border-white/10 text-white/45 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                        aria-label="Previous chapter"
+                      >
+                        ←
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={nextChapter}
+                        className="flex h-12 flex-1 items-center justify-center border border-[#d5b36a] text-[8px] uppercase tracking-[0.35em] text-[#d5b36a] transition hover:bg-[#d5b36a] hover:text-[#17120f]"
+                      >
+                        Next Chapter →
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsStoryMode(true)}
+                      className="mt-3 w-full border border-white/10 py-3 text-[8px] uppercase tracking-[0.35em] text-white/30 transition hover:border-white/25 hover:text-white/70"
+                    >
+                      Enter Full Story View
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================
+            JOURNEY MILESTONES
+        ========================================================== */}
+        <section className="bg-[#e8dfd2] px-6 py-24 sm:px-10 lg:px-16 lg:py-36">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-14 lg:grid-cols-[0.7fr_1.3fr]">
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#9b7637]">
+                  The Timeline
                 </p>
 
+                <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.95] sm:text-7xl">
+                  From one
+                  <br />
+                  beginning
+                  <br />
+                  <span className="italic text-[#9b7637]">
+                    to another.
+                  </span>
+                </h2>
+
+                <p className="mt-7 max-w-sm text-sm leading-7 text-black/50">
+                  Every chapter built the foundation for the next. Every
+                  transition carried something forward.
+                </p>
               </div>
-            ))}
 
+              <div className="relative border-l border-black/10">
+                {milestones.map((milestone, index) => (
+                  <div
+                    key={milestone.number}
+                    className="group relative border-b border-black/10 py-8 pl-8 first:pt-0 last:border-b-0 sm:pl-12"
+                  >
+                    <span className="absolute -left-[5px] top-10 h-2.5 w-2.5 rounded-full border border-[#9b7637] bg-[#e8dfd2] transition group-hover:bg-[#9b7637] first:top-0" />
+
+                    <div className="grid gap-4 sm:grid-cols-[80px_0.8fr_1fr]">
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#9b7637]">
+                        {milestone.number}
+                      </span>
+
+                      <h3 className="ubuntu-serif text-2xl sm:text-3xl">
+                        {milestone.title}
+                      </h3>
+
+                      <p className="text-sm leading-7 text-black/50">
+                        {milestone.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
+        </section>
 
-        </div>
-      </section>
+        {/* =========================================================
+            INTERNATIONAL RECOGNITION
+        ========================================================== */}
+        <section className="bg-[#f4efe7] px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#9b7637]">
+                  International Recognition
+                </p>
 
-      {/* VISION */}
+                <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.95] sm:text-7xl">
+                  A journey
+                  <br />
+                  that crossed
+                  <br />
+                  <span className="italic text-[#9b7637]">borders.</span>
+                </h2>
+              </div>
 
-      <section className="px-6 py-28 lg:px-10">
+              <div>
+                <p className="max-w-2xl text-base leading-8 text-black/55 sm:text-lg">
+                  Her work received international recognition across London,
+                  New York, Singapore, and Australia, extending a story that
+                  began in a small village in Kenya onto an international
+                  stage.
+                </p>
 
-        <div className="mx-auto max-w-7xl">
+                <div className="mt-12 grid grid-cols-2 border-l border-t border-black/10 sm:grid-cols-4">
+                  {recognition.map((city, index) => (
+                    <div
+                      key={city}
+                      className="border-b border-r border-black/10 p-7 sm:p-9"
+                    >
+                      <span className="text-[8px] tracking-[0.3em] text-[#9b7637]">
+                        0{index + 1}
+                      </span>
 
-          <div className="rounded-[2rem] bg-[#d6ad68] p-8 sm:p-12 lg:p-20">
+                      <p className="ubuntu-serif mt-4 text-2xl sm:text-3xl">
+                        {city}
+                      </p>
 
-            <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#183d32]">
-              Our Vision
-            </p>
-
-            <h2 className="mt-6 max-w-5xl font-serif text-5xl leading-tight lg:text-7xl">
-              A united global community where every Kalenjin woman knows
-              her value, understands her potential, and has the opportunity
-              to thrive.
-            </h2>
-
+                      <p className="mt-2 text-[7px] uppercase tracking-[0.25em] text-black/30">
+                        International
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
+        </section>
 
-        </div>
-      </section>
+        {/* =========================================================
+            MOTHER / DAUGHTER
+        ========================================================== */}
+        <section className="bg-[#17120f] px-6 py-24 text-white sm:px-10 lg:px-16 lg:py-36">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-14 max-w-4xl">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#d5b36a]">
+                Mother & Daughter
+              </p>
 
-      {/* VALUES */}
+              <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.92] tracking-[-0.04em] sm:text-7xl lg:text-8xl">
+                One generation
+                <br />
+                <span className="italic text-[#d5b36a]">
+                  inspires another.
+                </span>
+              </h2>
+            </div>
 
-      <section className="bg-[#edf0e8] px-6 py-28 lg:px-10">
+            <div className="grid gap-5 lg:grid-cols-2">
+              <article className="group relative min-h-[650px] overflow-hidden border border-white/10 bg-black">
+                <Image
+                  src="/images/ubuntu-brand-portrait.jpeg"
+                  alt="Ubuntu Couture House mother and heritage story"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover transition duration-[1800ms] group-hover:scale-105"
+                />
 
-        <div className="mx-auto max-w-7xl">
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
 
-          <div className="text-center">
-
-            <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">
-              What Guides Us
-            </p>
-
-            <h2 className="mt-5 font-serif text-5xl lg:text-7xl">
-              Our Values
-            </h2>
-
-          </div>
-
-          <div className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-
-            {values.map((value) => (
-              <div
-                key={value.number}
-                className="premium-card rounded-3xl border border-[#d9c9b8] bg-white/70 p-8"
-              >
-
-                <div className="flex items-center justify-between">
-
-                  <span className="text-sm text-[#86652f]">
-                    {value.number}
+                <div className="absolute left-7 right-7 top-7 flex justify-between sm:left-10 sm:right-10 sm:top-10">
+                  <span className="border border-white/15 px-3 py-2 text-[8px] uppercase tracking-[0.3em] text-white/60">
+                    Chapter I
                   </span>
 
-                  <span className="text-xl text-[#d6ad68]">
-                    ✦
+                  <span className="text-[8px] uppercase tracking-[0.3em] text-white/35">
+                    Her Mother
+                  </span>
+                </div>
+
+                <div className="absolute bottom-8 left-7 right-7 sm:bottom-10 sm:left-10 sm:right-10">
+                  <p className="text-[8px] uppercase tracking-[0.4em] text-[#d5b36a]">
+                    Courage
+                  </p>
+
+                  <h3 className="ubuntu-serif mt-4 text-4xl leading-none sm:text-5xl">
+                    Courage became a legacy.
+                  </h3>
+
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-white/55">
+                    From Kenya to Australia, through recovery, advocacy,
+                    leadership, and international recognition, her journey
+                    became a foundation for what came next.
+                  </p>
+                </div>
+              </article>
+
+              <article className="group relative min-h-[650px] overflow-hidden border border-white/10 bg-black">
+                <Image
+                  src="/images/ubuntu-global-lookbook.jpeg"
+                  alt="Ubuntu Couture House contemporary heritage story"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover transition duration-[1800ms] group-hover:scale-105"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
+
+                <div className="absolute left-7 right-7 top-7 flex justify-between sm:left-10 sm:right-10 sm:top-10">
+                  <span className="border border-white/15 px-3 py-2 text-[8px] uppercase tracking-[0.3em] text-white/60">
+                    Chapter II
                   </span>
 
+                  <span className="text-[8px] uppercase tracking-[0.3em] text-white/35">
+                    Her Daughter
+                  </span>
                 </div>
 
-                <h3 className="mt-10 font-serif text-3xl">
-                  {value.title}
-                </h3>
+                <div className="absolute bottom-8 left-7 right-7 sm:bottom-10 sm:left-10 sm:right-10">
+                  <p className="text-[8px] uppercase tracking-[0.4em] text-[#d5b36a]">
+                    Vision
+                  </p>
 
-                <p className="mt-4 leading-7 text-black/50">
-                  {value.text}
+                  <h3 className="ubuntu-serif mt-4 text-4xl leading-none sm:text-5xl">
+                    Vision became a voice.
+                  </h3>
+
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-white/55">
+                    From Atlanta to South Australia, through tennis, journalism
+                    and youth advocacy, the next chapter carried the story
+                    forward into a new generation.
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================
+            VALUES
+        ========================================================== */}
+        <section className="bg-[#f4efe7] px-6 py-24 sm:px-10 lg:px-16 lg:py-36">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-16 lg:grid-cols-[0.65fr_1.35fr]">
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#9b7637]">
+                  What We Carry
                 </p>
 
+                <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.95] sm:text-7xl">
+                  The values
+                  <br />
+                  behind
+                  <br />
+                  <span className="italic text-[#9b7637]">
+                    the house.
+                  </span>
+                </h2>
               </div>
-            ))}
 
-          </div>
+              <div>
+                <div className="grid border-l border-t border-black/10 sm:grid-cols-2">
+                  {values.map((value, index) => (
+                    <button
+                      type="button"
+                      key={value.number}
+                      onClick={() => setActiveValue(index)}
+                      className={`group min-h-[190px] border-b border-r border-black/10 p-7 text-left transition sm:p-9 ${
+                        activeValue === index
+                          ? "bg-[#17120f] text-white"
+                          : "hover:bg-[#e8dfd2]"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <span
+                          className={`text-[8px] tracking-[0.3em] ${
+                            activeValue === index
+                              ? "text-[#d5b36a]"
+                              : "text-[#9b7637]"
+                          }`}
+                        >
+                          {value.number}
+                        </span>
 
-        </div>
-      </section>
+                        <span
+                          className={`text-xl transition-transform ${
+                            activeValue === index
+                              ? "translate-x-1 text-[#d5b36a]"
+                              : "text-black/20"
+                          }`}
+                        >
+                          →
+                        </span>
+                      </div>
 
-      {/* GLOBAL */}
+                      <h3 className="ubuntu-serif mt-10 text-3xl">
+                        {value.title}
+                      </h3>
 
-      <section className="bg-[#061710] px-6 py-28 text-white lg:px-10">
+                      <p
+                        className={`mt-3 text-sm leading-6 ${
+                          activeValue === index
+                            ? "text-white/50"
+                            : "text-black/40"
+                        }`}
+                      >
+                        {value.statement}
+                      </p>
+                    </button>
+                  ))}
 
-        <div className="mx-auto max-w-7xl">
+                  <div className="hidden min-h-[190px] border-b border-r border-black/10 p-9 sm:block">
+                    <p className="text-[8px] uppercase tracking-[0.3em] text-black/25">
+                      Our philosophy
+                    </p>
 
-          <div className="grid gap-14 lg:grid-cols-2 lg:items-end">
-
-            <div>
-
-              <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">
-                Our Reach
-              </p>
-
-              <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
-                One identity.
-                <br />
-                <span className="text-[#d6ad68]">
-                  Many destinations.
-                </span>
-              </h2>
-
+                    <p className="ubuntu-serif mt-10 text-4xl italic text-[#9b7637]">
+                      I am because we are.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </section>
 
-            <p className="text-lg leading-8 text-white/50">
-              Wherever Kalenjin women are building, leading, serving,
-              creating, and inspiring, Chebomuren Global believes they
-              belong to one global sisterhood.
+        {/* =========================================================
+            MEANING
+        ========================================================== */}
+        <section className="bg-[#211a15] px-6 py-24 text-white sm:px-10 lg:px-16 lg:py-36">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-14 lg:grid-cols-[0.75fr_1.25fr]">
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#d5b36a]">
+                  Meaning Behind Every Creation
+                </p>
+
+                <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.94] sm:text-7xl">
+                  You don't just
+                  <br />
+                  wear it.
+                  <br />
+                  <span className="italic text-[#d5b36a]">
+                    You live it.
+                  </span>
+                </h2>
+
+                <p className="mt-8 max-w-md text-sm leading-7 text-white/45">
+                  Each piece carries a message—so you don't just wear it. You
+                  live it.
+                </p>
+
+                <div className="mt-10 border-l border-[#d5b36a]/40 pl-5">
+                  <p className="text-sm leading-7 text-white/55">
+                    Fashion represents confidence and self-expression. Gems
+                    represent rarity, strength, and natural beauty. Cow horn
+                    represents resilience, earth, and transformation. Maasai
+                    beadwork represents community, artistry, and living
+                    heritage. Royal headpieces represent dignity, leadership,
+                    and the power of women.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <div className="relative aspect-[4/3] overflow-hidden border border-white/10">
+                  <Image
+                    src={creations[activeCreation].image}
+                    alt={creations[activeCreation].title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    className="object-cover transition-all duration-700"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+                  <div className="absolute bottom-7 left-7 right-7 sm:bottom-10 sm:left-10 sm:right-10">
+                    <p className="text-[8px] uppercase tracking-[0.35em] text-[#d5b36a]">
+                      0{activeCreation + 1}
+                    </p>
+
+                    <h3 className="ubuntu-serif mt-3 text-4xl sm:text-5xl">
+                      {creations[activeCreation].title}
+                    </h3>
+
+                    <p className="mt-3 max-w-xl text-sm leading-6 text-white/55">
+                      {creations[activeCreation].description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid border-l border-t border-white/10 sm:grid-cols-5">
+                  {creations.map((creation, index) => (
+                    <button
+                      type="button"
+                      key={creation.title}
+                      onClick={() => setActiveCreation(index)}
+                      className={`border-b border-r border-white/10 p-4 text-left transition sm:p-5 ${
+                        activeCreation === index
+                          ? "bg-[#d5b36a] text-[#17120f]"
+                          : "text-white/40 hover:bg-white/5 hover:text-white"
+                      }`}
+                    >
+                      <span className="block text-[7px] tracking-[0.3em]">
+                        0{index + 1}
+                      </span>
+
+                      <span className="mt-3 block text-[10px] leading-4">
+                        {creation.title}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================
+            UBUNTU PHILOSOPHY
+        ========================================================== */}
+        <section className="relative overflow-hidden bg-[#d8c39a] px-6 py-28 text-[#17120f] sm:px-10 lg:px-16 lg:py-44">
+          <div className="pointer-events-none absolute -right-44 -top-44 h-[600px] w-[600px] rounded-full border border-black/10" />
+          <div className="pointer-events-none absolute -right-10 -top-10 h-[330px] w-[330px] rounded-full border border-black/10" />
+          <div className="pointer-events-none absolute bottom-[-250px] left-[-200px] h-[500px] w-[500px] rounded-full border border-black/10" />
+
+          <div className="relative mx-auto max-w-6xl text-center">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.55em]">
+              The Philosophy
             </p>
 
+            <h2 className="ubuntu-serif mt-8 text-[5rem] leading-none tracking-[-0.07em] sm:text-9xl lg:text-[13rem]">
+              Ubuntu
+            </h2>
+
+            <div className="mx-auto mt-8 h-px w-20 bg-black/30" />
+
+            <p className="ubuntu-serif mt-8 text-3xl italic sm:text-5xl">
+              “I am because we are.”
+            </p>
+
+            <p className="mx-auto mt-9 max-w-2xl text-sm leading-7 text-black/55 sm:text-base sm:leading-8">
+              Ubuntu Couture House carries this philosophy into every creation:
+              identity is connected to community, heritage gives meaning to
+              modern expression, and individual strength becomes more powerful
+              when it contributes to something greater.
+            </p>
           </div>
+        </section>
 
-          <div className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+        {/* =========================================================
+            THE HOUSE
+        ========================================================== */}
+        <section className="bg-[#f4efe7] px-6 py-24 sm:px-10 lg:px-16 lg:py-36">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
+              <div className="relative aspect-[4/5] overflow-hidden">
+                <Image
+                  src="/images/heritage-floral-headpiece.jpeg"
+                  alt="Ubuntu Couture House heritage headpiece"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
 
-            {[
-              ["🇰🇪", "Kenya"],
-              ["🌍", "Africa"],
-              ["🇬🇧", "United Kingdom"],
-              ["🇺🇸", "United States"],
-              ["🇦🇺", "Australia"],
-              ["🌎", "Worldwide"],
-            ].map(([emoji, location]) => (
-              <div
-                key={location}
-                className="premium-card rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center"
-              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
 
-                <div className="text-3xl">
-                  {emoji}
+                <div className="absolute bottom-7 left-7">
+                  <p className="text-[8px] uppercase tracking-[0.4em] text-white/70">
+                    Ubuntu Couture House
+                  </p>
+
+                  <p className="ubuntu-serif mt-3 text-3xl text-white">
+                    Heritage, reimagined.
+                  </p>
                 </div>
+              </div>
 
-                <p className="mt-3 text-sm text-white/60">
-                  {location}
+              <div className="lg:pl-10">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#9b7637]">
+                  A Shared Passion
                 </p>
 
+                <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.93] tracking-[-0.04em] sm:text-7xl">
+                  A shared passion
+                  <br />
+                  becomes a
+                  <br />
+                  <span className="italic text-[#9b7637]">
+                    house of heritage.
+                  </span>
+                </h2>
+
+                <div className="mt-9 space-y-5 text-sm leading-7 text-black/55">
+                  <p>
+                    Their journeys now come together through Ubuntu Couture
+                    House.
+                  </p>
+
+                  <p>
+                    The house brings together couture fashion, contemporary
+                    fashion jewellery, rare gems from Kenya, Tanzania,
+                    Ethiopia, Rwanda, and Burundi, ethically sourced cow horn
+                    jewellery, reimagined Maasai beadwork, and royal
+                    headpieces inspired by dignity, leadership, and African
+                    majesty.
+                  </p>
+
+                  <p>
+                    Every creation honours East African heritage while
+                    expressing modern elegance, so heritage becomes wearable
+                    and personal history becomes art.
+                  </p>
+                </div>
+
+                <div className="mt-10">
+                  <Link href="/collections" className="luxury-button">
+                    Explore The Collections
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================
+            CREATION CATEGORIES
+        ========================================================== */}
+        <section className="bg-[#e8dfd2] px-6 py-24 sm:px-10 lg:px-16 lg:py-36">
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-14 flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.45em] text-[#9b7637]">
+                  The Language Of The House
+                </p>
+
+                <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.94] sm:text-7xl">
+                  Every creation
+                  <br />
+                  carries a
+                  <br />
+                  <span className="italic text-[#9b7637]">message.</span>
+                </h2>
+              </div>
+
+              <p className="max-w-md text-sm leading-7 text-black/45">
+                Couture, jewellery, gems, beadwork, and headpieces come
+                together as different expressions of one philosophy.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              {creations.map((creation, index) => (
+                <Link
+                  href="/collections"
+                  key={creation.title}
+                  className="group relative min-h-[470px] overflow-hidden bg-black"
+                >
+                  <Image
+                    src={creation.image}
+                    alt={creation.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                    className="object-cover transition duration-[1400ms] group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-black/10" />
+
+                  <div className="absolute left-5 right-5 top-5 flex justify-between">
+                    <span className="text-[8px] tracking-[0.3em] text-white/50">
+                      0{index + 1}
+                    </span>
+
+                    <span className="text-[8px] uppercase tracking-[0.25em] text-white/35">
+                      Explore
+                    </span>
+                  </div>
+
+                  <div className="absolute bottom-6 left-5 right-5">
+                    <h3 className="ubuntu-serif text-2xl leading-none text-white">
+                      {creation.title}
+                    </h3>
+
+                    <p className="mt-3 max-h-0 overflow-hidden text-[11px] leading-5 text-white/60 opacity-0 transition-all duration-500 group-hover:max-h-24 group-hover:opacity-100">
+                      {creation.description}
+                    </p>
+
+                    <span className="mt-4 block text-[8px] uppercase tracking-[0.3em] text-[#d5b36a]">
+                      Discover →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================
+            FINAL CTA
+        ========================================================== */}
+        <section className="relative min-h-[75vh] overflow-hidden bg-[#120e0b] text-white">
+          <div className="absolute inset-0">
+            <Image
+              src="/images/royal-headpiece-gold.jpeg"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover opacity-45"
+            />
+
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,6,5,0.9),rgba(8,6,5,0.45),rgba(8,6,5,0.72))]" />
+          </div>
+
+          <div className="relative z-10 mx-auto flex min-h-[75vh] max-w-6xl items-center justify-center px-6 py-24 text-center sm:px-10">
+            <div>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.55em] text-[#d5b36a]">
+                Become Part Of The Story
+              </p>
+
+              <h2 className="ubuntu-serif mt-8 text-6xl leading-[0.88] tracking-[-0.055em] sm:text-8xl lg:text-[9rem]">
+                Wear your
+                <br />
+                <span className="italic text-[#d5b36a]">story.</span>
+              </h2>
+
+              <p className="mx-auto mt-8 max-w-2xl text-sm leading-7 text-white/55 sm:text-base sm:leading-8">
+                Discover pieces created to honour heritage, celebrate identity,
+                and carry the spirit of Ubuntu into the future.
+              </p>
+
+              <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+                <Link href="/collections" className="luxury-button">
+                  Shop Ubuntu Couture House
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className="luxury-button luxury-button-outline"
+                >
+                  Private Enquiries
+                </Link>
+              </div>
+
+              <p className="mt-12 text-[9px] uppercase tracking-[0.45em] text-white/25">
+                African Elegance and Luxury Reimagined
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* =========================================================
+          FULL SCREEN STORY MODE
+      ========================================================== */}
+      {isStoryMode && (
+        <div
+          className="fixed inset-0 z-[999] bg-[#0b0806] text-white"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="absolute inset-0">
+            {chapters.map((item, index) => (
+              <div
+                key={item.id}
+                className={`absolute inset-0 transition-all duration-1000 ${
+                  index === activeChapter
+                    ? "scale-100 opacity-100"
+                    : "pointer-events-none scale-105 opacity-0"
+                }`}
+              >
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  priority={index === activeChapter}
+                  sizes="100vw"
+                  className="object-cover"
+                />
+
+                <div className="absolute inset-0 bg-black/55" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-black/25" />
               </div>
             ))}
-
           </div>
 
-        </div>
-      </section>
+          <div className="relative z-10 flex h-full flex-col">
+            <header className="flex items-center justify-between px-6 py-6 sm:px-10 lg:px-14">
+              <div>
+                <p className="text-[9px] uppercase tracking-[0.4em] text-[#d5b36a]">
+                  Ubuntu Couture House
+                </p>
 
-
-      {/* HERITAGE TO FUTURE */}
-      <section className="relative overflow-hidden bg-[#f6f2e9] px-6 py-28 lg:px-10">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr]">
-            <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-[#86652f]">Heritage → Future</p>
-              <h2 className="mt-5 font-serif text-5xl leading-[0.95] lg:text-7xl">Rooted in who we are.<br /><span className="text-[#1f5a4a]">Built for who we become.</span></h2>
-            </div>
-            <div className="space-y-5 text-lg leading-8 text-black/55">
-              <p>Our identity carries stories of strength, community, perseverance, culture, and generations of women who came before us.</p>
-              <p>Chebomuren Global carries that spirit forward — creating a modern space where women can connect across borders while honouring where they come from.</p>
-            </div>
-          </div>
-          <div className="mt-16 grid gap-4 md:grid-cols-3">
-            {[
-              ["THEN", "Honour the women whose journeys laid the foundation."],
-              ["NOW", "Celebrate women leading, creating, serving, and building today."],
-              ["NEXT", "Open doors for the girls and women who will shape tomorrow."]
-            ].map(([title,text]) => (
-              <div key={title} className="rounded-3xl border border-black/10 bg-white p-7">
-                <p className="text-xs tracking-[0.3em] text-[#86652f]">{title}</p>
-                <p className="mt-8 font-serif text-2xl leading-8">{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* MOVEMENT MOMENTUM */}
-      <section className="bg-[#04110d] px-6 py-20 text-white lg:px-10">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-[#d6ad68]">The future is collective</p>
-              <h2 className="mt-4 font-serif text-4xl lg:text-5xl">There is room for every woman.</h2>
-            </div>
-            <div className="w-full max-w-md">
-              <div className="mb-3 flex justify-between text-[10px] uppercase tracking-[0.25em] text-white/30"><span>Movement momentum</span><span>{progress}%</span></div>
-              <div className="h-1 overflow-hidden rounded-full bg-white/10"><div className="h-full bg-[#d6ad68] transition-[width] duration-75" style={{ width: `${progress}%` }} /></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CALL TO ACTION */}
-
-      <section className="bg-[#d6ad68] px-6 py-28 lg:px-10">
-
-        <div className="mx-auto max-w-5xl text-center">
-
-          <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#183d32]">
-            You Belong Here
-          </p>
-
-          <h2 className="mt-5 font-serif text-5xl leading-tight lg:text-7xl">
-            Your story matters.
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#173a30]/60">
-            Chebomuren Global exists to remind every Kalenjin woman that
-            she has a place, a purpose, and a powerful contribution to make.
-          </p>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-
-            <Link
-              href="/join"
-              className="premium-button rounded-full bg-[#0b211b] px-8 py-4 font-bold text-white"
-            >
-              Join the Sisterhood →
-            </Link>
-
-            <Link
-              href="/nominate"
-              className="rounded-full border border-[#183d32]/30 px-8 py-4 font-bold text-[#0b211b] transition hover:bg-white/30"
-            >
-              Nominate a Woman
-            </Link>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* FOOTER */}
-
-      <footer className="bg-[#04110d] px-6 py-14 text-white lg:px-10">
-
-        <div className="mx-auto max-w-7xl">
-
-          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-
-            <div className="lg:col-span-2">
-
-              <Link href="/" className="font-serif text-3xl text-[#d6ad68]">
-                Chebomuren Global
-              </Link>
-
-              <p className="mt-4 max-w-md text-sm leading-7 text-white/40">
-                Celebrating Kalenjin Women. Inspiring Our Future.
-              </p>
-
-            </div>
-
-            <div>
-
-              <p className="text-xs uppercase tracking-[0.25em] text-[#d6ad68]">
-                Explore
-              </p>
-
-              <div className="mt-5 space-y-3 text-sm text-white/40">
-
-                <Link className="block hover:text-white" href="/">
-                  Home
-                </Link>
-
-                <Link className="block hover:text-white" href="/about">
-                  About
-                </Link>
-
-                <Link className="block hover:text-white" href="/gala">
-                  Gala
-                </Link>
-
-                <Link className="block hover:text-white" href="/women">
-                  Women
-                </Link>
-
+                <p className="mt-2 text-[8px] uppercase tracking-[0.25em] text-white/30">
+                  The House Story
+                </p>
               </div>
 
-            </div>
+              <button
+                type="button"
+                onClick={() => setIsStoryMode(false)}
+                className="flex h-12 w-12 items-center justify-center border border-white/15 text-xl text-white/60 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                aria-label="Close full story"
+              >
+                ×
+              </button>
+            </header>
 
-            <div>
+            <div className="flex flex-1 items-end px-6 pb-12 sm:px-10 lg:px-14 lg:pb-16">
+              <div className="w-full">
+                <div className="mx-auto max-w-7xl">
+                  <div className="max-w-6xl">
+                    <div className="flex items-center gap-3">
+                      <span className="h-px w-8 bg-[#d5b36a]" />
 
-              <p className="text-xs uppercase tracking-[0.25em] text-[#d6ad68]">
-                Connect
-              </p>
+                      <p className="text-[8px] uppercase tracking-[0.4em] text-[#d5b36a]">
+                        {chapter.eyebrow}
+                      </p>
+                    </div>
 
-              <div className="mt-5 space-y-3 text-sm text-white/40">
+                    <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.9] tracking-[-0.05em] sm:text-7xl lg:text-[8rem]">
+                      {chapter.title}
+                    </h2>
 
-                <Link className="block hover:text-white" href="/join">
-                  Join Us
-                </Link>
+                    <p className="ubuntu-serif mt-7 max-w-4xl text-2xl italic leading-tight text-white/65 sm:text-4xl lg:text-5xl">
+                      “{chapter.quote}”
+                    </p>
 
-                <Link className="block hover:text-white" href="/nominate">
-                  Nominate
-                </Link>
+                    <div className="mt-8 flex flex-wrap gap-2">
+                      {chapter.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="border border-white/15 px-3 py-2 text-[8px] uppercase tracking-[0.2em] text-white/45"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
 
-                <Link className="block hover:text-white" href="/contact">
-                  Contact
-                </Link>
+                    <div className="mt-10 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={previousChapter}
+                        className="border border-white/15 px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                      >
+                        ← Previous
+                      </button>
 
+                      <button
+                        type="button"
+                        onClick={() => setIsPlaying((current) => !current)}
+                        className="border border-white/15 px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                      >
+                        {isPlaying ? "Pause" : "Play"}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={nextChapter}
+                        className="border border-[#d5b36a] px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-[#d5b36a] transition hover:bg-[#d5b36a] hover:text-[#0b0806]"
+                      >
+                        Next Chapter →
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-
             </div>
 
-          </div>
+            <footer className="px-6 pb-5 sm:px-10 lg:px-14">
+              <div className="mx-auto max-w-7xl">
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-[8px] uppercase tracking-[0.3em] text-white/25">
+                    {chapter.number} / 06
+                  </span>
 
-          <div className="mt-12 border-t border-white/10 pt-7 text-xs text-white/25">
-            © 2026 Chebomuren Global. All rights reserved.
-          </div>
+                  <span className="text-[8px] uppercase tracking-[0.3em] text-[#d5b36a]">
+                    {Math.round(storyProgress)}%
+                  </span>
+                </div>
 
+                <div className="h-px bg-white/10">
+                  <div
+                    className="h-px bg-[#d5b36a] transition-all duration-700"
+                    style={{ width: `${storyProgress}%` }}
+                  />
+                </div>
+              </div>
+            </footer>
+          </div>
         </div>
-
-      </footer>
-
-    </main>
+      )}
+    </>
   );
 }

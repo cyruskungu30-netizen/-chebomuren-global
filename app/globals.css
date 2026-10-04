@@ -1,22 +1,41 @@
  @import "tailwindcss";
-
 :root {
-  --cream: #f8f3eb;
-  --cream-light: #fcf9f4;
-  --cream-dark: #eadfd2;
+  --font-ubuntu-serif:
+    "Cormorant Garamond",
+    "Bodoni 72",
+    "Baskerville",
+    "Times New Roman",
+    serif;
 
-  --wine: #241017;
-  --wine-dark: #16090d;
-  --wine-light: #6f3542;
-  --wine-soft: #8d5361;
+  --font-ubuntu-sans:
+    Inter,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+:root {
+  --ivory: #f8f3e9;
+  --cream: #eee4d3;
+  --sand: #d9c8ae;
 
-  --gold: #d5a85c;
-  --gold-light: #e8bd72;
-  --gold-pale: #f3dfba;
+  --espresso: #17110d;
+  --brown: #34251d;
 
-  --text: #241817;
-  --muted: rgba(36, 24, 23, 0.58);
-  --white: #ffffff;
+  --gold: #c9a45d;
+  --gold-light: #e2c785;
+  --gold-dark: #85652e;
+
+  --muted: #76695d;
+
+  --ubuntu-cream: #f7f1e6;
+  --ubuntu-cream-deep: #e9dfcf;
+  --ubuntu-black: #17110d;
+  --ubuntu-black-soft: #211912;
+  --ubuntu-gold: #c9a45d;
+  --ubuntu-gold-light: #e2c785;
+  --ubuntu-gold-dark: #927039;
+  --ubuntu-brown: #5f4735;
+  --ubuntu-muted: #75695d;
 }
 
 * {
@@ -27,22 +46,13 @@ html {
   scroll-behavior: smooth;
 }
 
-html,
 body {
   margin: 0;
-  padding: 0;
-  min-height: 100%;
-}
-
-body {
-  background: var(--cream);
-  color: var(--text);
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
+  background: var(--ivory);
+  color: var(--espresso);
+  font-family: var(--font-ubuntu-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 a {
@@ -61,172 +71,170 @@ button {
   cursor: pointer;
 }
 
+img {
+  display: block;
+}
+
 ::selection {
   background: var(--gold);
-  color: var(--wine);
+  color: var(--espresso);
 }
 
 ::-webkit-scrollbar {
-  width: 9px;
+  width: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--cream);
+  background: var(--ivory);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--wine-light);
-  border-radius: 999px;
+  background: var(--gold-dark);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gold);
-}
-
-/* =========================================================
-   TYPOGRAPHY
-========================================================= */
-
-.font-serif {
+.ubuntu-serif {
   font-family:
+    var(--font-ubuntu-serif),
     Georgia,
     "Times New Roman",
-    Times,
     serif;
-}
-
-.font-display {
-  font-family:
-    Georgia,
-    "Times New Roman",
-    Times,
-    serif;
-  letter-spacing: -0.04em;
+  font-weight: 400;
+  letter-spacing: -0.035em;
 }
 
 /* =========================================================
-   NAVIGATION
+   GLOBAL LUXURY SYSTEM
 ========================================================= */
 
-.nav-link {
-  position: relative;
-  color: rgba(255, 255, 255, 0.7);
-  transition:
-    color 0.3s ease,
-    transform 0.3s ease;
-}
-
-.nav-link:hover {
-  color: var(--gold-light);
-}
-
-.nav-link::after {
-  position: absolute;
-  content: "";
-  left: 0;
-  bottom: -8px;
-  width: 0;
-  height: 1px;
-  background: var(--gold-light);
-  transition: width 0.3s ease;
-}
-
-.nav-link:hover::after {
-  width: 100%;
-}
-
-/* =========================================================
-   PREMIUM BUTTON
-========================================================= */
-
-.premium-button {
+.luxury-image {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    background-color 0.3s ease;
 }
 
-.premium-button::before {
-  position: absolute;
+.luxury-image::after {
   content: "";
-  z-index: -1;
-  top: 0;
-  left: -130%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    100deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.08) 35%,
-    rgba(255, 255, 255, 0.35) 50%,
-    rgba(255, 255, 255, 0.08) 65%,
-    transparent 100%
-  );
-  transition: left 0.7s ease;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 4;
 }
 
-.premium-button:hover::before {
-  left: 130%;
-}
-
-.premium-button:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 15px 35px rgba(36, 16, 23, 0.18),
-    0 5px 12px rgba(213, 168, 92, 0.15);
-}
-
-/* =========================================================
-   PREMIUM CARDS
-========================================================= */
-
-.premium-card {
+.luxury-image img {
   transition:
-    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.5s ease,
-    border-color 0.5s ease;
+    transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.8s ease;
 }
 
-.premium-card:hover {
-  transform: translateY(-8px);
-  box-shadow:
-    0 25px 60px rgba(36, 16, 23, 0.1),
-    0 8px 20px rgba(36, 16, 23, 0.06);
+.luxury-image:hover img {
+  transform: scale(1.055);
+  filter: saturate(1.04) contrast(1.02);
 }
 
-/* =========================================================
-   IMAGE EFFECTS
-========================================================= */
-
-.image-zoom {
+.luxury-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-}
-
-.image-zoom img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  min-height: 50px;
+  padding: 0 28px;
+  border: 1px solid rgba(201, 164, 93, 0.65);
+  color: var(--espresso);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
   transition:
-    transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
-    filter 0.6s ease;
+    color 0.5s ease,
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    transform 0.5s ease;
 }
 
-.image-zoom:hover img {
-  transform: scale(1.08);
-  filter: brightness(1.03);
+.luxury-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--gold);
+  transform: translateY(100%);
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-button:hover {
+  color: var(--espresso);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.luxury-button:hover::before {
+  transform: translateY(0);
+}
+
+.luxury-button-dark {
+  background: var(--espresso);
+  border-color: var(--espresso);
+  color: var(--ivory);
+}
+
+.luxury-button-dark:hover {
+  color: var(--espresso);
+}
+
+.luxury-card {
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+.luxury-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 60px rgba(31, 20, 12, 0.12);
+}
+
+.gold-line {
+  width: 75px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.gold-text {
+  color: var(--gold-light);
+}
+
+.letter-wide {
+  letter-spacing: 0.32em;
 }
 
 /* =========================================================
-   HERO ANIMATIONS
+   ANIMATIONS
 ========================================================= */
 
-@keyframes heroReveal {
+@keyframes slowZoom {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.045);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.hero-zoom {
+  animation: slowZoom 18s ease-in-out infinite;
+}
+
+@keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(35px);
+    transform: translateY(28px);
   }
 
   to {
@@ -235,50 +243,47 @@ button {
   }
 }
 
-.hero-reveal {
-  animation: heroReveal 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+.fade-up {
+  animation: fadeUp 1s ease forwards;
 }
 
-.hero-delay-1 {
-  animation-delay: 0.15s;
+@keyframes ubuntuShimmer {
+  to {
+    background-position: 200% center;
+  }
 }
 
-.hero-delay-2 {
-  animation-delay: 0.3s;
+.ubuntu-shimmer {
+  background:
+    linear-gradient(
+      110deg,
+      #9c783c 20%,
+      #e2c785 40%,
+      #9c783c 60%
+    );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ubuntuShimmer 5s linear infinite;
 }
 
-.hero-delay-3 {
-  animation-delay: 0.45s;
-}
-
-.hero-delay-4 {
-  animation-delay: 0.6s;
-}
-
-/* =========================================================
-   FLOATING
-========================================================= */
-
-@keyframes float {
+@keyframes ubuntuFloat {
   0%,
   100% {
     transform: translateY(0);
   }
 
   50% {
-    transform: translateY(-13px);
+    transform: translateY(-14px);
   }
 }
 
-.animate-float {
-  animation: float 5s ease-in-out infinite;
+.ubuntu-float {
+  animation: ubuntuFloat 7s ease-in-out infinite;
 }
 
-/* =========================================================
-   SLOW ROTATION
-========================================================= */
-
-@keyframes slowSpin {
+@keyframes ubuntuRotate {
   from {
     transform: rotate(0deg);
   }
@@ -288,103 +293,28 @@ button {
   }
 }
 
-.animate-slow-spin {
-  animation: slowSpin 20s linear infinite;
+.ubuntu-rotate {
+  animation: ubuntuRotate 24s linear infinite;
 }
 
-/* =========================================================
-   GOLD PULSE
-========================================================= */
-
-@keyframes goldPulse {
+@keyframes ubuntuPulse {
   0%,
   100% {
     opacity: 0.35;
-    transform: scale(1);
+    transform: scale(0.95);
   }
 
   50% {
-    opacity: 0.85;
-    transform: scale(1.08);
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 }
 
-.animate-gold-pulse {
-  animation: goldPulse 4s ease-in-out infinite;
+.ubuntu-pulse {
+  animation: ubuntuPulse 3s ease-in-out infinite;
 }
 
-/* =========================================================
-   GLOW
-========================================================= */
-
-@keyframes softGlow {
-  0%,
-  100% {
-    box-shadow:
-      0 0 0 rgba(213, 168, 92, 0),
-      0 0 35px rgba(213, 168, 92, 0.08);
-  }
-
-  50% {
-    box-shadow:
-      0 0 20px rgba(213, 168, 92, 0.15),
-      0 0 70px rgba(213, 168, 92, 0.1);
-  }
-}
-
-.soft-glow {
-  animation: softGlow 4s ease-in-out infinite;
-}
-
-/* =========================================================
-   SHIMMER
-========================================================= */
-
-@keyframes shimmer {
-  0% {
-    background-position: -1200px 0;
-  }
-
-  100% {
-    background-position: 1200px 0;
-  }
-}
-
-.shimmer {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.02) 20%,
-      rgba(255, 255, 255, 0.1) 50%,
-      rgba(255, 255, 255, 0.02) 80%
-    );
-  background-size: 1200px 100%;
-  animation: shimmer 3s infinite linear;
-}
-
-/* =========================================================
-   FADE IN
-========================================================= */
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in {
-  animation: fadeIn 1s ease-out both;
-}
-
-/* =========================================================
-   REVEAL UP
-========================================================= */
-
-@keyframes revealUp {
+@keyframes ubuntuReveal {
   from {
     opacity: 0;
     transform: translateY(40px);
@@ -396,34 +326,202 @@ button {
   }
 }
 
-.reveal-up {
-  animation: revealUp 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+.ubuntu-reveal {
+  animation:
+    ubuntuReveal 1s cubic-bezier(0.16, 1, 0.3, 1)
+    both;
 }
 
-.reveal-delay-1 {
-  animation-delay: 0.15s;
+@keyframes ubuntuTextReveal {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.reveal-delay-2 {
-  animation-delay: 0.3s;
+.ubuntu-text-reveal {
+  overflow: hidden;
 }
 
-.reveal-delay-3 {
-  animation-delay: 0.45s;
-}
-
-.reveal-delay-4 {
-  animation-delay: 0.6s;
+.ubuntu-text-reveal > * {
+  animation:
+    ubuntuTextReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1)
+    both;
 }
 
 /* =========================================================
-   SCALE IN
+   HERO
 ========================================================= */
 
-@keyframes scaleIn {
+.ubuntu-hero {
+  --hero-shift: 0px;
+}
+
+.ubuntu-hero-image {
+  transform:
+    translateY(var(--hero-shift))
+    scale(1.04);
+  transition:
+    transform 0.1s linear;
+  animation:
+    ubuntuHeroImage 2s cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+@keyframes ubuntuHeroImage {
   from {
     opacity: 0;
-    transform: scale(0.94);
+    transform: scale(1.12);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+.ubuntu-particle {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: #dfc27c;
+  opacity: 0;
+  box-shadow:
+    0 0 12px rgba(223, 194, 124, 0.7);
+  animation:
+    ubuntuParticleFloat 8s ease-in-out infinite;
+}
+
+@keyframes ubuntuParticleFloat {
+  0% {
+    opacity: 0;
+    transform:
+      translate3d(0, 30px, 0)
+      scale(0.5);
+  }
+
+  20% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.25;
+    transform:
+      translate3d(15px, -40px, 0)
+      scale(1);
+  }
+
+  80% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(-10px, -90px, 0)
+      scale(0.3);
+  }
+}
+
+/* =========================================================
+   HERO ORBIT
+========================================================= */
+
+.ubuntu-hero-orbit {
+  animation:
+    ubuntuHeroOrbit 20s linear infinite;
+}
+
+@keyframes ubuntuHeroOrbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+.ubuntu-audio-bar {
+  height: 14px;
+  animation:
+    ubuntuAudio 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes ubuntuAudio {
+  from {
+    height: 4px;
+  }
+
+  to {
+    height: 18px;
+  }
+}
+
+/* =========================================================
+   MANIFESTO
+========================================================= */
+
+.ubuntu-orbit-decoration {
+  animation:
+    ubuntuManifestoOrbit 25s linear infinite;
+}
+
+@keyframes ubuntuManifestoOrbit {
+  0% {
+    transform:
+      translate(-50%, -50%)
+      rotate(0deg);
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      rotate(360deg);
+  }
+}
+
+/* =========================================================
+   EDITORIAL
+========================================================= */
+
+.ubuntu-editorial-card {
+  overflow: hidden;
+}
+
+.ubuntu-editorial-card img {
+  transition:
+    transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ubuntu-editorial-card:hover img {
+  transform: scale(1.08);
+}
+
+.ubuntu-collection-image {
+  animation:
+    ubuntuCollectionIn 800ms
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+@keyframes ubuntuCollectionIn {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
   }
 
   to {
@@ -432,316 +530,1360 @@ button {
   }
 }
 
-.scale-in {
-  animation: scaleIn 0.8s ease-out both;
-}
-
 /* =========================================================
-   SLIDE FROM LEFT
+   LOOKBOOK
 ========================================================= */
 
-@keyframes slideLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-35px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.ubuntu-lookbook-image {
+  transform-origin: center center;
+  transition:
+    transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.7s ease;
 }
 
-.slide-left {
-  animation: slideLeft 0.9s ease-out both;
+.ubuntu-lookbook-image:hover {
+  transform: scale(1.025);
 }
 
-/* =========================================================
-   SLIDE FROM RIGHT
-========================================================= */
-
-@keyframes slideRight {
-  from {
-    opacity: 0;
-    transform: translateX(35px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.slide-right {
-  animation: slideRight 0.9s ease-out both;
-}
-
-/* =========================================================
-   GOLD LINE
-========================================================= */
-
-.gold-line {
+.ubuntu-lookbook-thumb {
   position: relative;
+  overflow: hidden;
 }
 
-.gold-line::after {
-  display: block;
+.ubuntu-lookbook-thumb::after {
   content: "";
-  width: 60px;
-  height: 2px;
-  margin-top: 18px;
-  background: var(--gold);
-}
-
-/* =========================================================
-   TEXT GRADIENT
-========================================================= */
-
-.gold-text {
-  background: linear-gradient(
-    120deg,
-    var(--gold-light),
-    var(--gold),
-    #f0d49d
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* =========================================================
-   DECORATIVE ORBS
-========================================================= */
-
-.decorative-orb {
-  border-radius: 9999px;
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(
-      circle at 35% 35%,
-      rgba(232, 189, 114, 0.25),
-      rgba(213, 168, 92, 0.04) 55%,
-      transparent 72%
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.4),
+      transparent
     );
-  filter: blur(1px);
+  pointer-events: none;
 }
 
-/* =========================================================
-   GLASS
-========================================================= */
-
-.glass {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-/* =========================================================
-   FORM INPUTS
-========================================================= */
-
-.premium-input {
-  width: 100%;
-  border: 1px solid rgba(36, 24, 23, 0.1);
-  border-radius: 14px;
-  background: #faf8f5;
-  padding: 15px 18px;
-  color: var(--text);
-  outline: none;
+.ubuntu-lookbook-thumb img {
   transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    background-color 0.3s ease;
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.premium-input::placeholder {
-  color: rgba(36, 24, 23, 0.35);
-}
-
-.premium-input:focus {
-  border-color: var(--gold);
-  background: white;
-  box-shadow: 0 0 0 4px rgba(213, 168, 92, 0.1);
-}
-
-/* =========================================================
-   MARQUEE
-========================================================= */
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 25s linear infinite;
-}
-
-/* =========================================================
-   BOUNCE
-========================================================= */
-
-@keyframes gentleBounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(7px);
-  }
-}
-
-.gentle-bounce {
-  animation: gentleBounce 2s ease-in-out infinite;
-}
-
-/* =========================================================
-   ROTATING BORDER
-========================================================= */
-
-.rotating-border {
-  position: relative;
-}
-
-.rotating-border::before {
-  position: absolute;
-  content: "";
-  inset: -1px;
-  border-radius: inherit;
-  background: conic-gradient(
-    from 0deg,
-    transparent,
-    rgba(213, 168, 92, 0.7),
-    transparent,
-    rgba(213, 168, 92, 0.4),
-    transparent
-  );
-  animation: slowSpin 8s linear infinite;
-  z-index: -1;
-}
-
-/* =========================================================
-   HOVER UNDERLINE
-========================================================= */
-
-.hover-underline {
-  position: relative;
-  display: inline-block;
-}
-
-.hover-underline::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 0;
-  height: 1px;
-  background: var(--gold);
-  transition: width 0.3s ease;
-}
-
-.hover-underline:hover::after {
-  width: 100%;
-}
-
-/* =========================================================
-   FLOATING CONTACT BUTTON
-========================================================= */
-
-.floating-contact {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 40;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 62px;
-  height: 62px;
-  border-radius: 9999px;
-  background: var(--gold);
-  color: var(--wine);
-  box-shadow:
-    0 15px 35px rgba(36, 16, 23, 0.2),
-    0 0 0 0 rgba(213, 168, 92, 0.5);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  animation: contactPulse 3s ease-in-out infinite;
-}
-
-.floating-contact:hover {
+.ubuntu-lookbook-thumb:hover img {
   transform: scale(1.1);
 }
 
-@keyframes contactPulse {
-  0%,
-  100% {
-    box-shadow:
-      0 15px 35px rgba(36, 16, 23, 0.2),
-      0 0 0 0 rgba(213, 168, 92, 0.35);
+.ubuntu-lookbook-fullscreen {
+  animation:
+    ubuntuLookbookOpen 700ms
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+@keyframes ubuntuLookbookOpen {
+  from {
+    opacity: 0;
+    transform: scale(1.03);
   }
 
-  50% {
-    box-shadow:
-      0 15px 35px rgba(36, 16, 23, 0.2),
-      0 0 0 12px rgba(213, 168, 92, 0);
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+.ubuntu-lookbook-enter {
+  animation:
+    ubuntuLookbookImageEnter 900ms
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
 
-@media (max-width: 768px) {
-  html {
-    scroll-behavior: smooth;
+@keyframes ubuntuLookbookImageEnter {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
   }
 
-  body {
-    overflow-x: hidden;
-  }
-
-  .floating-contact {
-    right: 18px;
-    bottom: 18px;
-    width: 56px;
-    height: 56px;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
+.ubuntu-lookbook-progress {
+  position: relative;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
 
-@media (max-width: 480px) {
-  .floating-contact {
-    right: 14px;
-    bottom: 14px;
-    width: 52px;
-    height: 52px;
-  }
+.ubuntu-lookbook-progress span {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transition:
+    width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* =========================================================
-   REDUCED MOTION
+   APPOINTMENT
 ========================================================= */
+
+.ubuntu-container {
+  width: min(1380px, calc(100% - 80px));
+  margin: 0 auto;
+}
+
+.ubuntu-eyebrow {
+  display: inline-block;
+  color: var(--ubuntu-gold);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.ubuntu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 54px;
+  padding: 0 30px;
+  border: 1px solid var(--ubuntu-gold);
+  background: transparent;
+  color: var(--ubuntu-black);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    transform 0.35s ease;
+}
+
+.ubuntu-button:hover {
+  background: var(--ubuntu-gold);
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+.ubuntu-button-dark {
+  background: var(--ubuntu-black);
+  border-color: var(--ubuntu-black);
+  color: var(--ubuntu-cream);
+}
+
+.ubuntu-button-dark:hover {
+  background: var(--ubuntu-gold);
+  border-color: var(--ubuntu-gold);
+  color: #fff;
+}
+
+.ubuntu-button-full {
+  width: 100%;
+}
+
+.ubuntu-appointment-section {
+  position: relative;
+  overflow: hidden;
+  padding: 150px 0;
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(185, 154, 97, 0.15),
+      transparent 30%
+    ),
+    var(--ubuntu-cream-deep);
+}
+
+.ubuntu-appointment-glow {
+  position: absolute;
+  width: 550px;
+  height: 550px;
+  right: -260px;
+  bottom: -300px;
+  border: 1px solid rgba(185, 154, 97, 0.35);
+  border-radius: 50%;
+}
+
+.ubuntu-appointment-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 100px;
+  align-items: center;
+}
+
+.ubuntu-appointment-copy h2 {
+  margin: 20px 0 28px;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: clamp(58px, 7vw, 110px);
+  font-weight: 400;
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+}
+
+.ubuntu-appointment-copy h2 em {
+  color: var(--ubuntu-gold);
+  font-weight: 400;
+}
+
+.ubuntu-appointment-copy > p {
+  max-width: 540px;
+  margin: 0;
+  color: var(--ubuntu-muted);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.ubuntu-appointment-details {
+  margin-top: 55px;
+  border-top: 1px solid rgba(52, 39, 30, 0.16);
+}
+
+.ubuntu-appointment-details > div {
+  display: grid;
+  grid-template-columns: 45px 1fr;
+  column-gap: 18px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(52, 39, 30, 0.16);
+}
+
+.ubuntu-appointment-details span {
+  grid-row: span 2;
+  color: var(--ubuntu-gold);
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 22px;
+}
+
+.ubuntu-appointment-details strong {
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.ubuntu-appointment-details p {
+  margin: 4px 0 0;
+  color: var(--ubuntu-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.ubuntu-appointment-card {
+  position: relative;
+  padding: 60px;
+  background: rgba(250, 248, 242, 0.9);
+  border: 1px solid rgba(52, 39, 30, 0.1);
+  box-shadow:
+    0 30px 90px rgba(24, 19, 15, 0.08);
+}
+
+.ubuntu-form-heading {
+  margin-bottom: 42px;
+}
+
+.ubuntu-form-heading h3 {
+  margin: 12px 0 0;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: clamp(42px, 4vw, 65px);
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.ubuntu-form-heading h3 em {
+  color: var(--ubuntu-gold);
+  font-weight: 400;
+}
+
+.ubuntu-appointment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ubuntu-appointment-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ubuntu-appointment-form label > span {
+  color: var(--ubuntu-muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.ubuntu-appointment-form input,
+.ubuntu-appointment-form select,
+.ubuntu-appointment-form textarea {
+  width: 100%;
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(52, 39, 30, 0.16);
+  outline: 0;
+  background: transparent;
+  color: var(--ubuntu-black);
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.ubuntu-appointment-form input:focus,
+.ubuntu-appointment-form select:focus,
+.ubuntu-appointment-form textarea:focus {
+  border-color: var(--ubuntu-gold);
+}
+
+.ubuntu-appointment-form input::placeholder,
+.ubuntu-appointment-form textarea::placeholder {
+  color: #aaa096;
+}
+
+.ubuntu-success-state {
+  min-height: 550px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.ubuntu-success-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  margin-bottom: 30px;
+  border: 1px solid var(--ubuntu-gold);
+  border-radius: 50%;
+  color: var(--ubuntu-gold);
+  font-size: 25px;
+}
+
+.ubuntu-success-state h3 {
+  margin: 18px 0;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: clamp(42px, 4vw, 68px);
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.ubuntu-success-state h3 em {
+  color: var(--ubuntu-gold);
+  font-weight: 400;
+}
+
+.ubuntu-success-state p {
+  max-width: 500px;
+  margin: 0 0 35px;
+  color: var(--ubuntu-muted);
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+/* =========================================================
+   NEWSLETTER
+========================================================= */
+
+.ubuntu-newsletter {
+  position: relative;
+  overflow: hidden;
+  padding: 150px 30px;
+  background: var(--ubuntu-black);
+  color: var(--ubuntu-cream);
+  text-align: center;
+}
+
+.ubuntu-newsletter::before,
+.ubuntu-newsletter::after {
+  position: absolute;
+  content: "";
+  border: 1px solid rgba(216, 195, 155, 0.18);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ubuntu-newsletter::before {
+  width: 600px;
+  height: 600px;
+  left: -330px;
+  top: -250px;
+}
+
+.ubuntu-newsletter::after {
+  width: 500px;
+  height: 500px;
+  right: -250px;
+  bottom: -250px;
+}
+
+.ubuntu-newsletter-inner {
+  position: relative;
+  z-index: 2;
+  width: min(720px, 100%);
+  margin: auto;
+}
+
+.ubuntu-newsletter-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 35px;
+  border: 1px solid var(--ubuntu-gold);
+  color: var(--ubuntu-gold);
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 27px;
+}
+
+.ubuntu-newsletter h2 {
+  margin: 18px 0;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: clamp(48px, 6vw, 82px);
+  font-weight: 400;
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+}
+
+.ubuntu-newsletter h2 em {
+  color: var(--ubuntu-gold-light);
+  font-weight: 400;
+}
+
+.ubuntu-newsletter p {
+  max-width: 550px;
+  margin: 0 auto;
+  color: rgba(250, 248, 242, 0.62);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.ubuntu-newsletter-form {
+  display: flex;
+  max-width: 580px;
+  margin: 45px auto 18px;
+  border-bottom: 1px solid rgba(216, 195, 155, 0.55);
+}
+
+.ubuntu-newsletter-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 17px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ubuntu-cream);
+  font-size: 13px;
+}
+
+.ubuntu-newsletter-form input::placeholder {
+  color: rgba(250, 248, 242, 0.38);
+}
+
+.ubuntu-newsletter-form button {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  border: 0;
+  background: transparent;
+  color: var(--ubuntu-gold-light);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.ubuntu-newsletter-form button span {
+  font-size: 17px;
+}
+
+.ubuntu-newsletter small {
+  display: block;
+  color: rgba(250, 248, 242, 0.3);
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.ubuntu-newsletter-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  max-width: 580px;
+  margin: 45px auto 25px;
+  padding: 20px;
+  border: 1px solid rgba(216, 195, 155, 0.4);
+  color: var(--ubuntu-gold-light);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ubuntu-newsletter-success span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid var(--ubuntu-gold);
+  border-radius: 50%;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.ubuntu-footer {
+  background: #100d0a;
+  color: var(--ubuntu-cream);
+}
+
+.ubuntu-footer-main {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: 60px;
+  width: min(1380px, calc(100% - 80px));
+  margin: 0 auto;
+  padding: 100px 0;
+}
+
+.ubuntu-footer-brand h2 {
+  margin: 0;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 0.8;
+}
+
+.ubuntu-footer-brand h2 em {
+  color: var(--ubuntu-gold-light);
+  font-weight: 400;
+}
+
+.ubuntu-footer-monogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 28px;
+  border: 1px solid var(--ubuntu-gold);
+  color: var(--ubuntu-gold);
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 30px;
+}
+
+.ubuntu-footer-brand p {
+  margin-top: 35px;
+  color: rgba(250, 248, 242, 0.48);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.ubuntu-footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.ubuntu-footer-label {
+  margin-bottom: 12px;
+  color: var(--ubuntu-gold);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.ubuntu-footer-column a {
+  color: rgba(250, 248, 242, 0.6);
+  font-size: 12px;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.ubuntu-footer-column a:hover {
+  color: var(--ubuntu-gold-light);
+  transform: translateX(4px);
+}
+
+.ubuntu-footer-philosophy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  padding: 30px;
+  border-top: 1px solid rgba(250, 248, 242, 0.08);
+  border-bottom: 1px solid rgba(250, 248, 242, 0.08);
+}
+
+.ubuntu-footer-philosophy span {
+  color: var(--ubuntu-gold);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+}
+
+.ubuntu-footer-philosophy p {
+  margin: 0;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 22px;
+}
+
+.ubuntu-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  width: min(1380px, calc(100% - 80px));
+  margin: auto;
+  padding: 25px 0;
+  color: rgba(250, 248, 242, 0.3);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ubuntu-footer-bottom div {
+  display: flex;
+  gap: 25px;
+}
+
+.ubuntu-footer-bottom a:hover {
+  color: var(--ubuntu-gold-light);
+}
+
+/* =========================================================
+   SCROLL TOP
+========================================================= */
+
+.ubuntu-scroll-top {
+  position: fixed;
+  z-index: 80;
+  right: 28px;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(185, 154, 97, 0.7);
+  background: rgba(24, 19, 15, 0.92);
+  color: var(--ubuntu-gold-light);
+  font-size: 18px;
+  backdrop-filter: blur(15px);
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+.ubuntu-scroll-top:hover {
+  background: var(--ubuntu-gold);
+  color: #fff;
+  transform: translateY(-4px);
+}
+
+/* =========================================================
+   LEGAL
+========================================================= */
+
+.ubuntu-legal-page {
+  min-height: 100vh;
+  background: var(--ubuntu-cream);
+}
+
+.ubuntu-legal-hero {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 150px 30px 100px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(24, 19, 15, 0.75),
+      rgba(24, 19, 15, 0.9)
+    ),
+    url("/images/ubuntu-global-lookbook.jpeg") center / cover;
+  color: var(--ubuntu-cream);
+  text-align: center;
+}
+
+.ubuntu-legal-hero h1 {
+  margin: 22px 0 0;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: clamp(70px, 10vw, 150px);
+  font-weight: 400;
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+}
+
+.ubuntu-legal-hero h1 em {
+  color: var(--ubuntu-gold-light);
+  font-weight: 400;
+}
+
+.ubuntu-legal-content {
+  width: min(950px, calc(100% - 50px));
+  margin: auto;
+  padding: 110px 0 140px;
+}
+
+.ubuntu-legal-intro {
+  max-width: 750px;
+  margin: 0 0 90px;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 32px;
+  line-height: 1.25;
+}
+
+.ubuntu-legal-content section {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 30px;
+  padding: 38px 0;
+  border-top: 1px solid rgba(52, 39, 30, 0.16);
+}
+
+.ubuntu-legal-content section > span {
+  color: var(--ubuntu-gold);
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 22px;
+}
+
+.ubuntu-legal-content h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.ubuntu-legal-content section p {
+  max-width: 700px;
+  margin: 0;
+  color: var(--ubuntu-muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+  .ubuntu-appointment-grid {
+    grid-template-columns: 1fr;
+    gap: 70px;
+  }
+
+  .ubuntu-footer-main {
+    grid-template-columns: 1.5fr 1fr 1fr;
+  }
+
+  .ubuntu-footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .ubuntu-container {
+    width: min(100% - 38px, 1380px);
+  }
+
+  .hero-zoom {
+    animation: none;
+  }
+
+  .ubuntu-hero-image {
+    transform: scale(1.08);
+  }
+
+  .ubuntu-hero {
+    min-height: 100svh;
+  }
+
+  .ubuntu-appointment-section {
+    padding: 90px 0;
+  }
+
+  .ubuntu-appointment-copy h2 {
+    font-size: 60px;
+  }
+
+  .ubuntu-appointment-card {
+    padding: 32px 24px;
+  }
+
+  .ubuntu-success-state {
+    min-height: 450px;
+  }
+
+  .ubuntu-newsletter {
+    padding: 100px 20px;
+  }
+
+  .ubuntu-newsletter-form {
+    flex-direction: column;
+    border-bottom: 0;
+    gap: 15px;
+  }
+
+  .ubuntu-newsletter-form input {
+    border-bottom: 1px solid rgba(216, 195, 155, 0.55);
+  }
+
+  .ubuntu-newsletter-form button {
+    min-height: 52px;
+    justify-content: space-between;
+    border: 1px solid rgba(216, 195, 155, 0.45);
+    padding: 0 18px;
+  }
+
+  .ubuntu-footer-main {
+    grid-template-columns: 1fr 1fr;
+    width: calc(100% - 38px);
+    padding: 70px 0;
+    gap: 50px 25px;
+  }
+
+  .ubuntu-footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .ubuntu-footer-brand h2 {
+    font-size: 42px;
+  }
+
+  .ubuntu-footer-philosophy {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ubuntu-footer-bottom {
+    width: calc(100% - 38px);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 25px 0 35px;
+  }
+
+  .ubuntu-footer-bottom div {
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+
+  .ubuntu-legal-hero {
+    min-height: 55vh;
+  }
+
+  .ubuntu-legal-content {
+    padding: 75px 0 100px;
+  }
+
+  .ubuntu-legal-intro {
+    font-size: 25px;
+    margin-bottom: 60px;
+  }
+
+  .ubuntu-legal-content section {
+    grid-template-columns: 40px 1fr;
+    gap: 15px;
+  }
+
+  .ubuntu-legal-content h2 {
+    font-size: 27px;
+  }
+
+  .ubuntu-scroll-top {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .ubuntu-lookbook-image {
+    transition-duration: 900ms;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .ubuntu-particle,
+  .ubuntu-hero-orbit,
+  .ubuntu-audio-bar,
+  .ubuntu-orbit-decoration,
+  .ubuntu-hero-image,
+  .ubuntu-lookbook-image,
+  .ubuntu-lookbook-fullscreen,
+  .ubuntu-lookbook-enter {
+    animation: none !important;
+  }
+
+  .ubuntu-hero-image {
+    transform: none !important;
+  }
+}
+html.ubuntu-reduced-motion *,
+html.ubuntu-reduced-motion *::before,
+html.ubuntu-reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+}
+
+html.ubuntu-high-contrast body {
+  background: #ffffff;
+  color: #090705;
+}
+
+html.ubuntu-high-contrast a,
+html.ubuntu-high-contrast button {
+  outline-offset: 3px;
+}
+
+html.ubuntu-high-contrast a:focus-visible,
+html.ubuntu-high-contrast button:focus-visible,
+html.ubuntu-high-contrast input:focus-visible,
+html.ubuntu-high-contrast textarea:focus-visible,
+html.ubuntu-high-contrast select:focus-visible {
+  outline: 3px solid #000000;
+}
+
+html.ubuntu-high-contrast img {
+  filter: contrast(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid #a98448;
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #b99a5d;
+  color: #17110d;
+}
+
+img {
+  max-width: 100%;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+.ubuntu-data-saver video,
+.ubuntu-slow-network video {
+  display: none;
+}
+
+.ubuntu-slow-network [data-heavy-animation="true"] {
+  animation: none !important;
+  transition: none !important;
+}
+
+.ubuntu-page-ready body {
+  opacity: 1;
+}
+
+html {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+  html {
+    scroll-padding-top: 80px;
+  }
+}
+
+@media (min-width: 1024px) {
+  img {
+    content-visibility: auto;
+  }
+}
+
+@media print {
+  nav,
+  footer,
+  button,
+  video,
+  [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+/* =========================================
+   UBUNTU FINAL PRODUCTION POLISH
+   ========================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: #f7f1e6;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+img {
+  max-width: 100%;
+}
+
+::selection {
+  background: #c9a45d;
+  color: #17110d;
+}
+
+:focus-visible {
+  outline: 2px solid #c9a45d;
+  outline-offset: 4px;
+}
+
+html.ubuntu-reduced-motion *,
+html.ubuntu-reduced-motion *::before,
+html.ubuntu-reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+}
+
+html.ubuntu-high-contrast body {
+  background: #ffffff;
+  color: #000000;
+}
+
+html.ubuntu-high-contrast
+  a:focus-visible,
+html.ubuntu-high-contrast
+  button:focus-visible,
+html.ubuntu-high-contrast
+  input:focus-visible,
+html.ubuntu-high-contrast
+  textarea:focus-visible {
+  outline: 3px solid #000000;
+}
+
+.ubuntu-data-saver video,
+.ubuntu-slow-network video {
+  display: none;
+}
+
+.ubuntu-slow-network [data-heavy-animation="true"] {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    min-width: 320px;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  nav,
+  button,
+  video,
+  [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+/* =========================================================
+   FINAL RESPONSIVE / BUTTON / SOCIAL POLISH
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background: #f7f1e6;
+  color: #17110d;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  text-decoration: none;
+}
+
+::selection {
+  background: #c9a45d;
+  color: #17110d;
+}
+
+/* =========================================================
+   BUTTON SYSTEM
+   ========================================================= */
+
+.luxury-button,
+.luxury-button-dark,
+.ubuntu-header-button {
+  position: relative;
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 0;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.luxury-button:hover,
+.luxury-button-dark:hover,
+.ubuntu-header-button:hover {
+  transform: translateY(-2px);
+}
+
+.luxury-button:active,
+.luxury-button-dark:active,
+.ubuntu-header-button:active {
+  transform: translateY(0);
+}
+
+.luxury-button:focus-visible,
+.luxury-button-dark:focus-visible,
+.ubuntu-header-button:focus-visible {
+  outline: 2px solid #c9a45d;
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   SOCIAL ICONS
+   ========================================================= */
+
+.ubuntu-social-icon {
+  flex: 0 0 auto;
+  backdrop-filter: blur(8px);
+}
+
+.ubuntu-social-icon:hover {
+  box-shadow:
+    0 10px 25px rgba(201, 164, 93, 0.18);
+}
+
+.ubuntu-whatsapp {
+  animation: ubuntuWhatsappPulse 4s ease-in-out infinite;
+}
+
+@keyframes ubuntuWhatsappPulse {
+  0%,
+  70%,
+  100% {
+    box-shadow:
+      0 15px 40px rgba(23, 17, 13, 0.25);
+  }
+
+  80% {
+    box-shadow:
+      0 15px 40px rgba(23, 17, 13, 0.25),
+      0 0 0 8px rgba(201, 164, 93, 0.08);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE CONTAINERS
+   ========================================================= */
+
+section {
+  max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .luxury-button,
+  .luxury-button-dark {
+    min-height: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .luxury-button,
+  .luxury-button-dark {
+    width: 100%;
+    min-height: 52px;
+    padding-left: 18px;
+    padding-right: 18px;
+    white-space: normal;
+  }
+
+  .ubuntu-whatsapp {
+    bottom: 18px;
+    right: 18px;
+    height: 52px;
+    width: 52px;
+  }
+
+  .ubuntu-social-icon {
+    height: 42px;
+    width: 42px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ubuntu-whatsapp {
+    bottom: 14px;
+    right: 14px;
+  }
+
+  .ubuntu-social-icon {
+    height: 40px;
+    width: 40px;
+  }
+}
+
+/* =========================================================
+   MOBILE TEXT SAFETY
+   ========================================================= */
+
+@media (max-width: 640px) {
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    overflow-wrap: break-word;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .ubuntu-whatsapp {
+    animation: none;
   }
 }
