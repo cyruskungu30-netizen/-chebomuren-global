@@ -1,4 +1,4 @@
-export type GlobalStoryChapter = {
+ export type GlobalStoryChapter = {
   id: string;
   number: string;
   place: string;

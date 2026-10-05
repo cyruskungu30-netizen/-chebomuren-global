@@ -1,40 +1,70 @@
-"use client";
+ "use client";
 
 import { useEffect } from "react";
 
+type NetworkInformation = {
+  saveData?: boolean;
+  effectiveType?: string;
+  addEventListener?: (
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+  ) => void;
+  removeEventListener?: (
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+  ) => void;
+};
+
+type PerformanceNavigator = Navigator & {
+  connection?: NetworkInformation;
+  deviceMemory?: number;
+};
+
+function updatePerformanceMode() {
+  const root = document.documentElement;
+  const connection = (navigator as PerformanceNavigator).connection;
+
+  root.classList.toggle("ubuntu-data-saver", Boolean(connection?.saveData));
+
+  root.classList.toggle(
+    "ubuntu-slow-network",
+    connection?.effectiveType === "2g" ||
+      connection?.effectiveType === "slow-2g",
+  );
+}
+
 export default function Performance() {
   useEffect(() => {
-    const connection = (
-      navigator as Navigator & {
-        connection?: {
-          saveData?: boolean;
-          effectiveType?: string;
-        };
-      }
-    ).connection;
+    updatePerformanceMode();
 
-    if (connection?.saveData) {
-      document.documentElement.classList.add(
-        "ubuntu-data-saver"
-      );
-    }
+    const connection = (navigator as PerformanceNavigator).connection;
 
-    if (
-      connection?.effectiveType === "2g" ||
-      connection?.effectiveType === "slow-2g"
-    ) {
-      document.documentElement.classList.add(
-        "ubuntu-slow-network"
-      );
-    }
+    const handleConnectionChange = () => {
+      updatePerformanceMode();
+    };
 
-    const images = document.querySelectorAll("img");
+    connection?.addEventListener?.("change", handleConnectionChange);
+
+    const images = document.querySelectorAll<HTMLImageElement>("img");
 
     images.forEach((image) => {
       if (!image.hasAttribute("decoding")) {
         image.setAttribute("decoding", "async");
       }
+
+      if (!image.hasAttribute("loading") && !image.hasAttribute("fetchpriority")) {
+        image.setAttribute("loading", "lazy");
+      }
     });
+
+    return () => {
+      connection?.removeEventListener?.("change", handleConnectionChange);
+
+      document.documentElement.classList.remove(
+        "ubuntu-data-saver",
+        "ubuntu-slow-network",
+      );
+    };
   }, []);
 
   return null;

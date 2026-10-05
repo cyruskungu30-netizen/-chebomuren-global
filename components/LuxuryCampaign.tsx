@@ -1,8 +1,8 @@
-"use client";
+ "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const campaigns = [
   {
@@ -49,20 +49,60 @@ const campaigns = [
 
 export default function LuxuryCampaign() {
   const [active, setActive] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const campaign = campaigns[active];
 
+  useEffect(() => {
+    return () => {
+      if (transitionTimer.current) {
+        clearTimeout(transitionTimer.current);
+      }
+    };
+  }, []);
+
+  function selectCampaign(index: number) {
+    if (index === active || isTransitioning) {
+      return;
+    }
+
+    setIsTransitioning(true);
+    setActive(index);
+
+    if (transitionTimer.current) {
+      clearTimeout(transitionTimer.current);
+    }
+
+    transitionTimer.current = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 700);
+  }
+
   return (
-    <section className="overflow-hidden bg-[#f7f1e6] text-[#17110d]">
+    <section
+      className="overflow-hidden bg-[#f7f1e6] text-[#17110d]"
+      aria-labelledby="campaign-title"
+    >
       <div className="mx-auto max-w-[1600px]">
         <div className="border-b border-[#17110d]/10 px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
           <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:items-end">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#92713d]">
-                Ubuntu Campaigns
-              </p>
+              <div className="flex items-center gap-4">
+                <span
+                  className="h-px w-12 bg-[#92713d]"
+                  aria-hidden="true"
+                />
 
-              <h2 className="mt-6 max-w-xl font-[var(--font-ubuntu-serif)] text-5xl font-light leading-[0.92] tracking-[-0.03em] sm:text-6xl lg:text-8xl">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#92713d]">
+                  Ubuntu Campaigns
+                </p>
+              </div>
+
+              <h2
+                id="campaign-title"
+                className="mt-6 max-w-xl font-[var(--font-ubuntu-serif)] text-5xl font-light leading-[0.92] tracking-[-0.03em] sm:text-6xl lg:text-8xl"
+              >
                 A house told
                 <br />
                 through image.
@@ -71,9 +111,9 @@ export default function LuxuryCampaign() {
 
             <div className="max-w-xl lg:ml-auto">
               <p className="text-sm leading-7 text-[#62564c] sm:text-base sm:leading-8">
-                Enter the visual world of Ubuntu Couture House—where heritage,
-                craftsmanship, identity, and modern African luxury become
-                editorial stories.
+                Enter the visual world of Ubuntu Couture House—where
+                heritage, craftsmanship, identity, and modern African
+                luxury become editorial stories.
               </p>
             </div>
           </div>
@@ -81,14 +121,14 @@ export default function LuxuryCampaign() {
 
         <div className="grid lg:grid-cols-[0.42fr_1fr]">
           <aside className="border-b border-[#17110d]/10 lg:border-b-0 lg:border-r">
-            <div className="sticky top-24">
+            <div className="lg:sticky lg:top-24">
               <div className="px-5 py-7 sm:px-8 lg:px-10">
                 <p className="text-[9px] uppercase tracking-[0.3em] text-[#92713d]">
-                  Campaign archive
+                  Campaign Archive
                 </p>
               </div>
 
-              <div>
+              <div role="tablist" aria-label="Campaign archive">
                 {campaigns.map((item, index) => {
                   const selected = index === active;
 
@@ -96,8 +136,11 @@ export default function LuxuryCampaign() {
                     <button
                       key={item.id}
                       type="button"
-                      onClick={() => setActive(index)}
-                      className={`group flex w-full items-center border-t border-[#17110d]/10 px-5 py-6 text-left transition-all duration-500 sm:px-8 lg:px-10 ${
+                      role="tab"
+                      aria-selected={selected}
+                      aria-controls={`campaign-panel-${item.id}`}
+                      onClick={() => selectCampaign(index)}
+                      className={`group flex w-full items-center border-t border-[#17110d]/10 px-5 py-6 text-left transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#92713d] sm:px-8 lg:px-10 ${
                         selected
                           ? "bg-[#17110d] text-[#f7f1e6]"
                           : "hover:bg-[#ebe1d2]"
@@ -130,11 +173,12 @@ export default function LuxuryCampaign() {
                       </span>
 
                       <span
-                        className={`text-lg transition-transform duration-300 ${
+                        className={`text-lg transition-all duration-300 ${
                           selected
-                            ? "translate-x-0"
+                            ? "translate-x-0 text-[#c8aa6b]"
                             : "-translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
                         }`}
+                        aria-hidden="true"
                       >
                         →
                       </span>
@@ -145,21 +189,38 @@ export default function LuxuryCampaign() {
             </div>
           </aside>
 
-          <div className="relative min-h-[700px] bg-[#17110d] text-[#f7f1e6] lg:min-h-[820px]">
+          <div
+            id={`campaign-panel-${campaign.id}`}
+            role="tabpanel"
+            aria-label={campaign.season}
+            className="relative min-h-[700px] bg-[#17110d] text-[#f7f1e6] lg:min-h-[820px]"
+          >
             <div
               key={campaign.id}
-              className="absolute inset-0 animate-[campaignFade_700ms_ease-out]"
+              className={`absolute inset-0 ${
+                isTransitioning
+                  ? "animate-[campaignFade_700ms_ease-out]"
+                  : ""
+              }`}
             >
               <Image
                 src={campaign.image}
                 alt={campaign.title}
                 fill
+                priority={active === 0}
                 sizes="(max-width: 1024px) 100vw, 70vw"
                 className="object-cover"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#100c09] via-[#100c09]/20 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#100c09]/40 to-transparent" />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-[#100c09] via-[#100c09]/20 to-transparent"
+                aria-hidden="true"
+              />
+
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-[#100c09]/45 to-transparent"
+                aria-hidden="true"
+              />
             </div>
 
             <div className="absolute right-5 top-5 z-10 hidden h-36 w-28 overflow-hidden border border-white/30 sm:block sm:right-8 sm:top-8">
@@ -168,13 +229,13 @@ export default function LuxuryCampaign() {
                 alt={`${campaign.title} detail`}
                 fill
                 sizes="112px"
-                className="object-cover"
+                className="object-cover transition duration-700 hover:scale-105"
               />
             </div>
 
             <div className="absolute left-5 top-6 z-10 sm:left-8 sm:top-8">
               <span className="border border-[#d6bb82]/60 px-4 py-2 text-[9px] uppercase tracking-[0.28em] text-[#e5ce9d]">
-                Editorial campaign
+                Editorial Campaign
               </span>
             </div>
 
@@ -198,10 +259,14 @@ export default function LuxuryCampaign() {
 
                 <Link
                   href="/collections/catalogue"
-                  className="group mt-8 inline-flex items-center gap-5 border border-[#c8aa6b]/70 px-7 py-4 text-[10px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 hover:bg-[#c8aa6b] hover:text-[#17110d]"
+                  className="group mt-8 inline-flex items-center gap-5 border border-[#c8aa6b]/70 px-7 py-4 text-[10px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 hover:bg-[#c8aa6b] hover:text-[#17110d] focus:outline-none focus:ring-2 focus:ring-[#c8aa6b] focus:ring-offset-2 focus:ring-offset-[#17110d]"
                 >
                   Explore the collection
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">
+
+                  <span
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                    aria-hidden="true"
+                  >
                     →
                   </span>
                 </Link>
@@ -213,9 +278,10 @@ export default function LuxuryCampaign() {
                 <button
                   key={item.id}
                   type="button"
-                  aria-label={`View campaign ${item.id}`}
-                  onClick={() => setActive(index)}
-                  className={`h-px transition-all duration-500 ${
+                  aria-label={`View campaign ${item.id}: ${item.season}`}
+                  aria-current={index === active ? "true" : undefined}
+                  onClick={() => selectCampaign(index)}
+                  className={`h-px transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-[#d8bd82] focus:ring-offset-2 focus:ring-offset-[#17110d] ${
                     index === active
                       ? "w-12 bg-[#d8bd82]"
                       : "w-5 bg-white/40 hover:bg-white"
@@ -231,6 +297,7 @@ export default function LuxuryCampaign() {
             <p className="text-[9px] uppercase tracking-[0.3em] text-[#92713d]">
               Vision
             </p>
+
             <p className="mt-3 font-[var(--font-ubuntu-serif)] text-2xl">
               African elegance, reimagined.
             </p>
@@ -240,6 +307,7 @@ export default function LuxuryCampaign() {
             <p className="text-[9px] uppercase tracking-[0.3em] text-[#92713d]">
               Craft
             </p>
+
             <p className="mt-3 font-[var(--font-ubuntu-serif)] text-2xl">
               Materials with meaning.
             </p>
@@ -249,6 +317,7 @@ export default function LuxuryCampaign() {
             <p className="text-[9px] uppercase tracking-[0.3em] text-[#92713d]">
               Identity
             </p>
+
             <p className="mt-3 font-[var(--font-ubuntu-serif)] text-2xl">
               Wear your story.
             </p>

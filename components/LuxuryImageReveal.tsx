@@ -1,6 +1,7 @@
-"use client";
+ "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 type LuxuryImageRevealProps = {
@@ -26,18 +27,29 @@ export default function LuxuryImageReveal({
   useEffect(() => {
     const element = ref.current;
 
-    if (!element) return;
+    if (!element) {
+      return;
+    }
+
+    if (
+      typeof window !== "undefined" &&
+      !("IntersectionObserver" in window)
+    ) {
+      setVisible(true);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setVisible(true);
           observer.disconnect();
         }
       },
       {
-        threshold: 0.18,
-      }
+        threshold: 0.12,
+        rootMargin: "0px 0px -40px 0px",
+      },
     );
 
     observer.observe(element);
@@ -48,7 +60,7 @@ export default function LuxuryImageReveal({
   const content = (
     <div
       ref={ref}
-      className={`group relative overflow-hidden bg-[#e6dac9] transition-all duration-[1200ms] ${
+      className={`group relative overflow-hidden bg-[#e6dac9] transition-all duration-[1200ms] ease-out ${
         visible
           ? "translate-y-0 opacity-100"
           : "translate-y-8 opacity-0"
@@ -63,9 +75,15 @@ export default function LuxuryImageReveal({
           className="object-cover transition duration-[1400ms] ease-out group-hover:scale-[1.04]"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent opacity-80 transition duration-500 group-hover:opacity-95" />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-80 transition duration-500 group-hover:opacity-95"
+          aria-hidden="true"
+        />
 
-        <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
+        <div
+          className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8"
+          aria-hidden={false}
+        >
           {eyebrow && (
             <p className="text-[9px] uppercase tracking-[0.3em] text-[#d8bc7f]">
               {eyebrow}
@@ -73,7 +91,7 @@ export default function LuxuryImageReveal({
           )}
 
           {title && (
-            <h3 className="mt-3 font-[var(--font-ubuntu-serif)] text-3xl font-light sm:text-4xl">
+            <h3 className="mt-3 font-[var(--font-ubuntu-serif)] text-3xl font-light leading-tight sm:text-4xl">
               {title}
             </h3>
           )}
@@ -87,7 +105,11 @@ export default function LuxuryImageReveal({
           {href && (
             <span className="mt-5 inline-flex items-center gap-4 text-[9px] font-semibold uppercase tracking-[0.25em] text-white">
               Discover
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
+
+              <span
+                className="transition-transform duration-300 group-hover:translate-x-1"
+                aria-hidden="true"
+              >
                 →
               </span>
             </span>
@@ -102,8 +124,16 @@ export default function LuxuryImageReveal({
   }
 
   return (
-    <a href={href} className="block">
+    <Link
+      href={href}
+      className="block focus:outline-none focus:ring-2 focus:ring-[#a17b3c] focus:ring-offset-4"
+      aria-label={
+        title
+          ? `Discover ${title}`
+          : `Discover ${alt}`
+      }
+    >
       {content}
-    </a>
+    </Link>
   );
 }

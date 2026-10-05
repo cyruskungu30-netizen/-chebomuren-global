@@ -7,6 +7,8 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
   "https://ubuntu-couture-house.vercel.app";
 
+const now = new Date();
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     "",
@@ -23,33 +25,40 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/wishlist",
   ];
 
-  const collectionRoutes = getAllProducts().map((product) => ({
-    url: `${siteUrl}/collections/${product.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  const collectionRoutes: MetadataRoute.Sitemap = getAllProducts().map(
+    (product) => ({
+      url: `${siteUrl}/collections/${product.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    }),
+  );
 
-  const journalRoutes = getAllJournalArticles().map((article) => ({
-    url: `${siteUrl}/journal/${article.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  const journalRoutes: MetadataRoute.Sitemap = getAllJournalArticles().map(
+    (article) => ({
+      url: `${siteUrl}/journal/${article.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    }),
+  );
 
-  return [
-    ...staticRoutes.map((route) => ({
+  const staticSitemapRoutes: MetadataRoute.Sitemap = staticRoutes.map(
+    (route) => ({
       url: `${siteUrl}${route}`,
-      lastModified: new Date(),
-      changeFrequency:
-        route === "" ? ("weekly" as const) : ("monthly" as const),
+      lastModified: now,
+      changeFrequency: route === "" ? "weekly" : "monthly",
       priority:
         route === ""
           ? 1
           : route === "/collections/catalogue"
             ? 0.95
             : 0.7,
-    })),
+    }),
+  );
+
+  return [
+    ...staticSitemapRoutes,
     ...collectionRoutes,
     ...journalRoutes,
   ];

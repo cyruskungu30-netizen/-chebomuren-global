@@ -1,6 +1,6 @@
  "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useId, useState } from "react";
 
 type ContactForm = {
   name: string;
@@ -20,6 +20,12 @@ export default function UbuntuContactPanel() {
   const [form, setForm] = useState<ContactForm>(initialForm);
   const [submitted, setSubmitted] = useState(false);
 
+  const nameId = useId();
+  const emailId = useId();
+  const subjectId = useId();
+  const messageId = useId();
+  const successTitleId = useId();
+
   function updateField(
     field: keyof ContactForm,
     value: string,
@@ -32,13 +38,21 @@ export default function UbuntuContactPanel() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     setSubmitted(true);
+  }
+
+  function resetForm() {
+    setForm(initialForm);
+    setSubmitted(false);
   }
 
   if (submitted) {
     return (
-      <section className="bg-[#f7f1e6] px-5 py-20 text-[#15100c] sm:px-8 lg:px-12 lg:py-28">
+      <section
+        className="bg-[#f7f1e6] px-5 py-20 text-[#15100c] sm:px-8 lg:px-12 lg:py-28"
+        aria-labelledby={successTitleId}
+        aria-live="polite"
+      >
         <div className="mx-auto max-w-3xl text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center border border-[#9a7840]">
             <svg
@@ -57,7 +71,10 @@ export default function UbuntuContactPanel() {
             Message Received
           </p>
 
-          <h2 className="mt-5 font-[var(--font-ubuntu-serif)] text-5xl leading-[0.9] sm:text-6xl">
+          <h2
+            id={successTitleId}
+            className="mt-5 font-[var(--font-ubuntu-serif)] text-5xl leading-[0.9] sm:text-6xl"
+          >
             Thank you for
             <br />
             <span className="italic">reaching out.</span>
@@ -70,11 +87,8 @@ export default function UbuntuContactPanel() {
 
           <button
             type="button"
-            onClick={() => {
-              setForm(initialForm);
-              setSubmitted(false);
-            }}
-            className="mt-9 min-h-12 border border-[#15100c] bg-[#15100c] px-8 text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f7f1e6] transition-all duration-300 hover:border-[#9a7840] hover:bg-[#9a7840] hover:text-[#15100c]"
+            onClick={resetForm}
+            className="mt-9 inline-flex min-h-12 items-center justify-center border border-[#15100c] bg-[#15100c] px-8 text-[9px] font-semibold uppercase tracking-[0.22em] text-[#f7f1e6] transition-all duration-300 hover:border-[#9a7840] hover:bg-[#9a7840] hover:text-[#15100c] focus:outline-none focus:ring-2 focus:ring-[#9a7840] focus:ring-offset-2"
           >
             Send Another Message
           </button>
@@ -84,14 +98,20 @@ export default function UbuntuContactPanel() {
   }
 
   return (
-    <section className="bg-[#f7f1e6] px-5 py-20 text-[#15100c] sm:px-8 lg:px-12 lg:py-28">
+    <section
+      className="bg-[#f7f1e6] px-5 py-20 text-[#15100c] sm:px-8 lg:px-12 lg:py-28"
+      aria-labelledby="contact-panel-title"
+    >
       <div className="mx-auto grid max-w-[1400px] gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:gap-24">
         <div>
           <p className="text-[9px] font-semibold uppercase tracking-[0.35em] text-[#9a7840]">
             Private Enquiries
           </p>
 
-          <h2 className="mt-5 font-[var(--font-ubuntu-serif)] text-5xl leading-[0.9] tracking-[-0.03em] sm:text-6xl">
+          <h2
+            id="contact-panel-title"
+            className="mt-5 font-[var(--font-ubuntu-serif)] text-5xl leading-[0.9] tracking-[-0.03em] sm:text-6xl"
+          >
             Let&apos;s begin
             <br />
             <span className="italic">a conversation.</span>
@@ -123,77 +143,83 @@ export default function UbuntuContactPanel() {
           <div className="grid gap-8 md:grid-cols-2">
             <div>
               <label
-                htmlFor="contact-name"
+                htmlFor={nameId}
                 className="mb-3 block text-[8px] font-semibold uppercase tracking-[0.25em] text-[#15100c]/50"
               >
                 Full Name
               </label>
 
               <input
-                id="contact-name"
+                id={nameId}
                 type="text"
+                name="name"
                 value={form.name}
                 onChange={(event) =>
                   updateField("name", event.target.value)
                 }
                 placeholder="Your full name"
                 required
-                className="h-14 w-full border-b border-[#15100c]/20 bg-transparent px-0 text-sm outline-none transition-colors placeholder:text-[#15100c]/30 focus:border-[#9a7840]"
+                autoComplete="name"
+                className="h-14 w-full border-b border-[#15100c]/20 bg-transparent px-0 text-sm outline-none transition-colors placeholder:text-[#15100c]/30 focus:border-[#9a7840] focus:ring-0"
               />
             </div>
 
             <div>
               <label
-                htmlFor="contact-email"
+                htmlFor={emailId}
                 className="mb-3 block text-[8px] font-semibold uppercase tracking-[0.25em] text-[#15100c]/50"
               >
                 Email Address
               </label>
 
               <input
-                id="contact-email"
+                id={emailId}
                 type="email"
+                name="email"
                 value={form.email}
                 onChange={(event) =>
                   updateField("email", event.target.value)
                 }
                 placeholder="you@example.com"
                 required
-                className="h-14 w-full border-b border-[#15100c]/20 bg-transparent px-0 text-sm outline-none transition-colors placeholder:text-[#15100c]/30 focus:border-[#9a7840]"
+                autoComplete="email"
+                className="h-14 w-full border-b border-[#15100c]/20 bg-transparent px-0 text-sm outline-none transition-colors placeholder:text-[#15100c]/30 focus:border-[#9a7840] focus:ring-0"
               />
             </div>
 
             <div className="md:col-span-2">
               <label
-                htmlFor="contact-subject"
+                htmlFor={subjectId}
                 className="mb-3 block text-[8px] font-semibold uppercase tracking-[0.25em] text-[#15100c]/50"
               >
                 Subject
               </label>
 
               <input
-                id="contact-subject"
+                id={subjectId}
                 type="text"
+                name="subject"
                 value={form.subject}
                 onChange={(event) =>
                   updateField("subject", event.target.value)
                 }
                 placeholder="What would you like to discuss?"
                 required
-                className="h-14 w-full border-b border-[#15100c]/20 bg-transparent px-0 text-sm outline-none transition-colors placeholder:text-[#15100c]/30 focus:border-[#9a7840]"
+                className="h-14 w-full border-b border-[#15100c]/20 bg-transparent px-0 text-sm outline-none transition-colors placeholder:text-[#15100c]/30 focus:border-[#9a7840] focus:ring-0"
               />
             </div>
 
             <div className="md:col-span-2">
               <label
-                htmlFor="contact-message"
+                htmlFor={messageId}
                 className="mb-3 block text-[8px] font-semibold uppercase tracking-[0.25em] text-[#15100c]/50"
               >
                 Message
               </label>
 
               <textarea
-                id="contact-message"
+                id={messageId}
+                name="message"
                 value={form.message}
                 onChange={(event) =>
                   updateField("message", event.target.value)
@@ -201,7 +227,7 @@ export default function UbuntuContactPanel() {
                 placeholder="Tell us about your enquiry..."
                 required
                 rows={7}
-                className="w-full resize-none border-b border-[#15100c]/20 bg-transparent px-0 py-3 text-sm leading-7 outline-none transition-colors placeholder:text-[#15100c]/30 focus:border-[#9a7840]"
+                className="w-full resize-none border-b border-[#15100c]/20 bg-transparent px-0 py-3 text-sm leading-7 outline-none transition-colors placeholder:text-[#15100c]/30 focus:border-[#9a7840] focus:ring-0"
               />
             </div>
           </div>
@@ -214,7 +240,7 @@ export default function UbuntuContactPanel() {
 
             <button
               type="submit"
-              className="inline-flex min-h-12 shrink-0 items-center justify-center border border-[#15100c] bg-[#15100c] px-9 text-[9px] font-semibold uppercase tracking-[0.24em] text-[#f7f1e6] transition-all duration-300 hover:border-[#9a7840] hover:bg-[#9a7840] hover:text-[#15100c]"
+              className="inline-flex min-h-12 shrink-0 items-center justify-center border border-[#15100c] bg-[#15100c] px-9 text-[9px] font-semibold uppercase tracking-[0.24em] text-[#f7f1e6] transition-all duration-300 hover:border-[#9a7840] hover:bg-[#9a7840] hover:text-[#15100c] focus:outline-none focus:ring-2 focus:ring-[#9a7840] focus:ring-offset-2"
             >
               Send Message
             </button>

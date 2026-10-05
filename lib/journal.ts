@@ -35,7 +35,6 @@ export const journalArticles: JournalArticle[] = [
       "This is African elegance and luxury reimagined—not by removing heritage, but by allowing it to move confidently into the future.",
     ],
   },
-
   {
     slug: "the-art-of-cow-horn-jewellery",
     category: "Craftsmanship",
@@ -53,7 +52,6 @@ export const journalArticles: JournalArticle[] = [
       "That balance between origin and reinvention is central to the Ubuntu Couture House philosophy.",
     ],
   },
-
   {
     slug: "maasai-beadwork-reimagined",
     category: "Heritage",
@@ -71,7 +69,6 @@ export const journalArticles: JournalArticle[] = [
       "Through contemporary jewellery and styling, beadwork becomes part of a broader story about identity, confidence, community, and the movement of African heritage across generations.",
     ],
   },
-
   {
     slug: "the-power-of-the-headpiece",
     category: "African Luxury",
@@ -89,7 +86,6 @@ export const journalArticles: JournalArticle[] = [
       "The headpiece is therefore not simply an accessory. It becomes a statement: I know who I am, I know where I come from, and I am prepared to be seen.",
     ],
   },
-
   {
     slug: "a-mothers-courage-a-daughters-vision",
     category: "Women & Legacy",
@@ -110,7 +106,6 @@ export const journalArticles: JournalArticle[] = [
       "Ubuntu Couture House brings these journeys together through a shared belief that heritage can become strength, identity can become expression, and personal history can become art.",
     ],
   },
-
   {
     slug: "rare-gems-symbols-of-strength",
     category: "Craftsmanship",
@@ -130,16 +125,18 @@ export const journalArticles: JournalArticle[] = [
   },
 ];
 
+const articlesBySlug = new Map(
+  journalArticles.map((article) => [article.slug, article]),
+);
+
 export function getJournalArticle(
   slug: string,
 ): JournalArticle | undefined {
-  return journalArticles.find(
-    (article) => article.slug === slug,
-  );
+  return articlesBySlug.get(slug);
 }
 
 export function getFeaturedJournalArticles(): JournalArticle[] {
-  return journalArticles.filter((article) => article.featured);
+  return journalArticles.filter((article) => article.featured === true);
 }
 
 export function getJournalArticlesByCategory(
@@ -151,5 +148,5 @@ export function getJournalArticlesByCategory(
 }
 
 export function getAllJournalArticles(): JournalArticle[] {
-  return journalArticles;
+  return [...journalArticles];
 }

@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import { useEffect } from "react";
 
@@ -23,19 +23,37 @@ export default function UbuntuSecurity() {
       }
     };
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        ["s", "u"].includes(key)
+      ) {
+        event.preventDefault();
+      }
+
+      if (
+        event.ctrlKey &&
+        event.shiftKey &&
+        ["i", "j"].includes(key)
+      ) {
+        event.preventDefault();
+      }
+
+      if (key === "f12") {
+        event.preventDefault();
+      }
+    };
+
     document.addEventListener("contextmenu", handleContextMenu);
     document.addEventListener("dragstart", handleDragStart);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener(
-        "contextmenu",
-        handleContextMenu
-      );
-
-      document.removeEventListener(
-        "dragstart",
-        handleDragStart
-      );
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("dragstart", handleDragStart);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 

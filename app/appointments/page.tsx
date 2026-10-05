@@ -53,7 +53,9 @@ export default function AppointmentsPage() {
             <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.9] md:text-7xl">
               A conversation
               <br />
-              <span className="italic text-[#a17c3f]">before a creation.</span>
+              <span className="italic text-[#a17c3f]">
+                before a creation.
+              </span>
             </h2>
 
             <p className="mt-8 text-sm leading-8 text-[#716559]">
@@ -64,9 +66,21 @@ export default function AppointmentsPage() {
 
             <div className="mt-10 space-y-6 border-t border-black/10 pt-7">
               {[
-                ["01", "Discover", "Explore the house and find pieces that speak to you."],
-                ["02", "Discuss", "Tell us what you are looking for and how we can assist."],
-                ["03", "Create", "Together, discover a piece that carries your story."],
+                [
+                  "01",
+                  "Discover",
+                  "Explore the house and find pieces that speak to you.",
+                ],
+                [
+                  "02",
+                  "Discuss",
+                  "Tell us what you are looking for and how we can assist.",
+                ],
+                [
+                  "03",
+                  "Create",
+                  "Together, discover a piece that carries your story.",
+                ],
               ].map(([number, title, text]) => (
                 <div key={number} className="flex gap-5">
                   <span className="pt-1 text-[8px] tracking-[0.25em] text-[#a17c3f]">
@@ -75,6 +89,7 @@ export default function AppointmentsPage() {
 
                   <div>
                     <h3 className="ubuntu-serif text-2xl">{title}</h3>
+
                     <p className="mt-2 text-sm leading-7 text-[#75695d]">
                       {text}
                     </p>
@@ -105,7 +120,7 @@ export default function AppointmentsPage() {
                 <button
                   type="button"
                   onClick={() => setSubmitted(false)}
-                  className="mt-9 border border-[#17110d] px-8 py-4 text-[8px] uppercase tracking-[0.3em] transition hover:bg-[#17110d] hover:text-white"
+                  className="mt-9 min-h-[52px] rounded-md border border-[#17110d] px-8 py-4 text-[8px] font-semibold uppercase tracking-[0.3em] transition duration-500 hover:-translate-y-0.5 hover:bg-[#17110d] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a17c3f] focus-visible:ring-offset-2"
                 >
                   Send Another Request
                 </button>
@@ -124,14 +139,16 @@ export default function AppointmentsPage() {
 
                 <div className="grid gap-6 sm:grid-cols-2">
                   <Field label="Full Name" name="name" required />
-                  <Field label="Email Address" name="email" type="email" required />
+
+                  <Field
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    required
+                  />
                 </div>
 
-                <Field
-                  label="Phone Number"
-                  name="phone"
-                  type="tel"
-                />
+                <Field label="Phone Number" name="phone" type="tel" />
 
                 <div>
                   <label
@@ -150,8 +167,11 @@ export default function AppointmentsPage() {
                     <option value="" disabled>
                       Select an area
                     </option>
+
                     <option value="couture">Couture Fashion</option>
-                    <option value="jewellery">Contemporary Jewellery</option>
+                    <option value="jewellery">
+                      Contemporary Jewellery
+                    </option>
                     <option value="rare-gems">Rare Gems</option>
                     <option value="beadwork">Maasai Beadwork</option>
                     <option value="headpieces">Royal Headpieces</option>
@@ -194,7 +214,7 @@ export default function AppointmentsPage() {
 
                 <button
                   type="submit"
-                  className="flex min-h-[56px] w-full items-center justify-center bg-[#17110d] px-8 text-[8px] font-semibold uppercase tracking-[0.35em] text-[#dfc27c] transition hover:bg-[#a98448] hover:text-[#17110d]"
+                  className="flex min-h-[56px] w-full items-center justify-center rounded-md bg-[#17110d] px-8 text-[8px] font-semibold uppercase tracking-[0.35em] text-[#dfc27c] transition duration-500 hover:-translate-y-0.5 hover:bg-[#a98448] hover:text-[#17110d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a17c3f] focus-visible:ring-offset-2"
                 >
                   Request Private Consultation
                 </button>
@@ -228,7 +248,7 @@ export default function AppointmentsPage() {
 
           <Link
             href="/collections/catalogue"
-            className="mt-9 inline-flex border border-[#17110d] px-8 py-4 text-[8px] uppercase tracking-[0.3em] transition hover:bg-[#17110d] hover:text-white"
+            className="mt-9 inline-flex min-h-[52px] items-center justify-center rounded-md border border-[#17110d] bg-[#e9dfcf] px-8 py-4 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#17110d] transition duration-500 hover:-translate-y-0.5 hover:bg-[#17110d] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a17c3f] focus-visible:ring-offset-2"
           >
             Explore The Collections
           </Link>

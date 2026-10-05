@@ -138,17 +138,17 @@ export default function HomePage() {
               house of heritage, courage and purpose.
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <div className="relative z-20 mt-9 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/collections/catalogue"
-                className="inline-flex min-h-[54px] items-center justify-center bg-[#c9a45d] px-8 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#17110d] transition duration-500 hover:bg-white"
+                className="relative z-20 isolate inline-flex min-h-[54px] items-center justify-center border border-[#c9a45d] !bg-[#c9a45d] px-8 text-[8px] font-semibold uppercase tracking-[0.3em] !text-[#17110d] shadow-[0_12px_35px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:!border-[#dfc27c] hover:!bg-[#b88f48] hover:!text-[#17110d] focus-visible:outline-2 focus-visible:outline-[#dfc27c] focus-visible:outline-offset-4"
               >
                 Shop New Arrivals →
               </Link>
 
               <Link
                 href="#story"
-                className="inline-flex min-h-[54px] items-center justify-center border border-white/25 px-8 text-[8px] uppercase tracking-[0.3em] text-white transition duration-500 hover:border-[#d8b66a] hover:bg-white/10"
+                className="relative z-20 isolate inline-flex min-h-[54px] items-center justify-center border border-[#dfc27c]/70 !bg-[#17110d]/35 px-8 text-[8px] font-semibold uppercase tracking-[0.3em] !text-white shadow-[0_12px_35px_rgba(0,0,0,0.18)] backdrop-blur-[2px] transition-all duration-300 hover:-translate-y-0.5 hover:!border-[#dfc27c] hover:!bg-[#c9a45d] hover:!text-[#17110d] focus-visible:outline-2 focus-visible:outline-[#dfc27c] focus-visible:outline-offset-4"
               >
                 Explore The Story
               </Link>
@@ -295,7 +295,7 @@ export default function HomePage() {
               <Link
                 key={collection.category}
                 href={`/collections/catalogue?category=${collection.category}`}
-                className="group"
+                className="group focus-visible:outline-2 focus-visible:outline-[#a17c3f] focus-visible:outline-offset-4"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-[#d4c8b7]">
                   <Image
@@ -382,7 +382,7 @@ export default function HomePage() {
 
             <Link
               href="/global-story"
-              className="mt-9 inline-flex w-fit border border-[#c9a45d]/50 px-7 py-4 text-[8px] uppercase tracking-[0.3em] text-[#d8b66a] transition duration-500 hover:bg-[#c9a45d] hover:text-[#17110d]"
+              className="relative z-10 isolate mt-9 inline-flex min-h-[52px] w-fit items-center justify-center border border-[#c9a45d]/70 !bg-transparent px-7 py-4 text-[8px] font-semibold uppercase tracking-[0.3em] !text-[#d8b66a] transition-all duration-300 hover:-translate-y-0.5 hover:!bg-[#c9a45d] hover:!text-[#17110d] focus-visible:outline-2 focus-visible:outline-[#dfc27c] focus-visible:outline-offset-4"
             >
               Enter The Story →
             </Link>
@@ -440,7 +440,7 @@ export default function HomePage() {
               <Link
                 key={material.title}
                 href="/craftsmanship"
-                className="group relative min-h-[480px] overflow-hidden"
+                className="group relative min-h-[480px] overflow-hidden focus-visible:outline-2 focus-visible:outline-[#a17c3f] focus-visible:outline-offset-4"
               >
                 <Image
                   src={material.image}
@@ -572,7 +572,7 @@ export default function HomePage() {
 
                 <Link
                   href="/global-story"
-                  className="mt-12 inline-flex w-fit border-b border-[#d7b76f] pb-2 text-[8px] uppercase tracking-[0.3em] text-[#d7b76f]"
+                  className="mt-12 inline-flex w-fit border-b border-[#d7b76f] pb-2 text-[8px] uppercase tracking-[0.3em] text-[#d7b76f] transition hover:text-white focus-visible:outline-2 focus-visible:outline-[#dfc27c] focus-visible:outline-offset-4"
                 >
                   Follow The Journey →
                 </Link>
@@ -712,7 +712,7 @@ export default function HomePage() {
 
             <Link
               href="/journal"
-              className="w-fit border-b border-[#a17b3c] pb-2 text-[8px] uppercase tracking-[0.3em] text-[#76572a]"
+              className="w-fit border-b border-[#a17b3c] pb-2 text-[8px] uppercase tracking-[0.3em] text-[#76572a] focus-visible:outline-2 focus-visible:outline-[#a17c3f] focus-visible:outline-offset-4"
             >
               Visit The Journal →
             </Link>
@@ -723,7 +723,7 @@ export default function HomePage() {
               <Link
                 key={story.title}
                 href={story.href}
-                className="group"
+                className="group focus-visible:outline-2 focus-visible:outline-[#a17c3f] focus-visible:outline-offset-4"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-[#d8ccba]">
                   <Image
@@ -759,9 +759,9 @@ export default function HomePage() {
       {/* ========================================================= */}
 
       <section className="relative overflow-hidden bg-[#c9a45d] px-6 py-28 lg:px-12 lg:py-36">
-        <div className="absolute right-[-10%] top-[-50%] h-[700px] w-[700px] rounded-full border border-black/10" />
+        <div className="pointer-events-none absolute right-[-10%] top-[-50%] h-[700px] w-[700px] rounded-full border border-black/10" />
 
-        <div className="relative mx-auto max-w-[1300px]">
+        <div className="relative z-10 mx-auto max-w-[1300px]">
           <p className="text-[8px] uppercase tracking-[0.45em] text-black/50">
             The Final Invitation
           </p>
@@ -780,17 +780,17 @@ export default function HomePage() {
               from and who you are becoming.
             </p>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="relative z-20 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/collections/catalogue"
-                className="inline-flex min-h-[52px] items-center justify-center bg-[#17110d] px-8 text-[8px] uppercase tracking-[0.35em] text-[#dfc27c] transition hover:bg-white hover:text-[#17110d]"
+                className="relative z-20 isolate inline-flex min-h-[52px] items-center justify-center border border-[#17110d] !bg-[#17110d] px-8 text-[8px] font-semibold uppercase tracking-[0.35em] !text-[#dfc27c] shadow-[0_10px_30px_rgba(23,17,13,0.18)] transition-all duration-300 hover:-translate-y-0.5 hover:!border-[#17110d] hover:!bg-[#f7f1e6] hover:!text-[#17110d] focus-visible:outline-2 focus-visible:outline-[#17110d] focus-visible:outline-offset-4"
               >
                 Explore Collections
               </Link>
 
               <Link
                 href="/appointments"
-                className="inline-flex min-h-[52px] items-center justify-center border border-[#17110d]/30 px-8 text-[8px] uppercase tracking-[0.35em] text-[#17110d] transition hover:bg-[#17110d] hover:text-white"
+                className="relative z-20 isolate inline-flex min-h-[52px] items-center justify-center border border-[#17110d]/50 !bg-transparent px-8 text-[8px] font-semibold uppercase tracking-[0.35em] !text-[#17110d] transition-all duration-300 hover:-translate-y-0.5 hover:!border-[#17110d] hover:!bg-[#17110d] hover:!text-white focus-visible:outline-2 focus-visible:outline-[#17110d] focus-visible:outline-offset-4"
               >
                 Private Appointment
               </Link>

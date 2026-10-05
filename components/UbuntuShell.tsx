@@ -1,32 +1,27 @@
- "use client";
+ // components/UbuntuShell.tsx
 
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import UbuntuSocialLinks from "@/components/UbuntuSocialLinks";
 import { useWishlist } from "@/components/WishlistProvider";
 
+const CONTACT = {
+  address: "4th Floor, Lenana Rd, Nairobi",
+  email: "info@ubuntocouture.com",
+  phone: "+254792817272",
+  whatsapp: "254792817272",
+};
+
 const collectionLinks = [
-  {
-    label: "Couture Fashion",
-    category: "couture",
-  },
-  {
-    label: "Contemporary Jewellery",
-    category: "jewellery",
-  },
-  {
-    label: "Rare Gems",
-    category: "rare-gems",
-  },
-  {
-    label: "Maasai Beadwork",
-    category: "beadwork",
-  },
-  {
-    label: "Royal Headpieces",
-    category: "headpieces",
-  },
+  { label: "Couture Fashion", category: "couture" },
+  { label: "Contemporary Jewellery", category: "jewellery" },
+  { label: "Rare Gems", category: "rare-gems" },
+  { label: "Maasai Beadwork", category: "beadwork" },
+  { label: "Royal Headpieces", category: "headpieces" },
 ];
 
 const navigation = [
@@ -37,53 +32,50 @@ const navigation = [
   ["Journal", "/journal"],
   ["Our Story", "/global-story"],
   ["Contact", "/contact"],
-];
+] as const;
+
+type UbuntuShellProps = {
+  children: React.ReactNode;
+};
 
 export default function UbuntuShell({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: UbuntuShellProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [progress, setProgress] = useState(0);
-
   const { wishlistCount } = useWishlist();
 
   useEffect(() => {
     const updateProgress = () => {
-      const scrollTop = window.scrollY;
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
 
-      const documentHeight =
-        document.documentElement.scrollHeight -
-        window.innerHeight;
-
-      const value =
-        documentHeight > 0
-          ? (scrollTop / documentHeight) * 100
-          : 0;
-
-      setProgress(Math.min(100, Math.max(0, value)));
+      setProgress(
+        scrollable > 0
+          ? Math.min(
+              100,
+              Math.max(0, (window.scrollY / scrollable) * 100),
+            )
+          : 0,
+      );
     };
 
     updateProgress();
 
-    window.addEventListener(
-      "scroll",
-      updateProgress,
-      { passive: true }
-    );
+    window.addEventListener("scroll", updateProgress, {
+      passive: true,
+    });
 
-    return () =>
-      window.removeEventListener(
-        "scroll",
-        updateProgress
-      );
+    window.addEventListener("resize", updateProgress);
+
+    return () => {
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen
-      ? "hidden"
-      : "";
+    document.body.style.overflow = menuOpen ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -91,24 +83,17 @@ export default function UbuntuShell({
   }, [menuOpen]);
 
   useEffect(() => {
-    const handleKeyboard = (
-      event: KeyboardEvent
-    ) => {
+    const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setMenuOpen(false);
       }
     };
 
-    window.addEventListener(
-      "keydown",
-      handleKeyboard
-    );
+    window.addEventListener("keydown", handleEscape);
 
-    return () =>
-      window.removeEventListener(
-        "keydown",
-        handleKeyboard
-      );
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
   }, []);
 
   const closeMenu = () => {
@@ -117,69 +102,91 @@ export default function UbuntuShell({
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#f7f1e6] text-[#17110d]">
-
-      {/* TOP CONSTANT BRAND BAR */}
-
-      <div className="fixed left-0 right-0 top-0 z-[120] h-[3px] bg-[#c9a45d]">
+      <div
+        className="fixed left-0 right-0 top-0 z-[140] h-[2px] bg-[#c9a45d]"
+        aria-hidden="true"
+      >
         <div
-          className="h-full origin-left bg-[#8d6a32]"
-          style={{
-            width: `${progress}%`,
-          }}
+          className="h-full bg-[#80602d] transition-[width] duration-150"
+          style={{ width: `${progress}%` }}
         />
       </div>
 
-      {/* CONSTANT HEADER */}
-
-      <header className="fixed left-0 right-0 top-[3px] z-[110] border-b border-[#17110d]/10 bg-[#f7f1e6] shadow-[0_8px_35px_rgba(23,17,13,0.07)]">
-
-        <div className="mx-auto flex min-h-[78px] max-w-[1700px] items-center justify-between gap-5 px-4 sm:px-7 lg:px-10">
-
-          {/* LOGO */}
-
+      <header className="fixed left-0 right-0 top-[2px] z-[130] border-b border-[#17110d]/10 bg-[#f7f1e6]/96 shadow-[0_10px_35px_rgba(23,17,13,0.08)] backdrop-blur-md">
+        <div className="mx-auto flex min-h-[88px] max-w-[1750px] items-center gap-6 px-4 sm:px-6 lg:px-8">
           <Link
             href="/"
             onClick={closeMenu}
-            className="flex shrink-0 items-center gap-3"
+            aria-label="Ubuntu Couture House home"
+            className="group flex shrink-0 items-center gap-3 focus-visible:outline-2 focus-visible:outline-[#c9a45d] focus-visible:outline-offset-4"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#92713d] font-[var(--font-ubuntu-serif)] text-sm">
-              UB
-            </span>
+            <div className="relative flex h-[76px] w-[76px] items-center justify-center overflow-hidden rounded-[3px] bg-[#100b08] shadow-[0_8px_28px_rgba(23,17,13,0.18)] ring-1 ring-[#c9a45d]/35 transition-all duration-500 group-hover:ring-[#c9a45d]/80">
+              <div
+                className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(201,164,93,0.22),transparent_62%)]"
+                aria-hidden="true"
+              />
 
-            <span className="hidden sm:block">
-              <span className="block font-[var(--font-ubuntu-serif)] text-xl leading-none">
-                Ubuntu
-              </span>
+              <Image
+                src="/images/ubuntu-couture-logo.png"
+                alt="Ubuntu Couture House"
+                width={500}
+                height={500}
+                priority
+                sizes="76px"
+                className="relative z-10 h-full w-full object-contain transition-transform duration-700 group-hover:scale-[1.04]"
+              />
 
-              <span className="mt-1 block text-[7px] uppercase tracking-[0.34em] text-[#75695d]">
-                Couture House
-              </span>
-            </span>
+              <span
+                className="absolute inset-1 border border-[#c9a45d]/20"
+                aria-hidden="true"
+              />
+            </div>
+
+            <div className="hidden min-w-0 sm:block">
+              <div className="flex items-center gap-2">
+                <span className="h-px w-5 bg-[#c9a45d]" />
+
+                <span className="text-[7px] font-bold uppercase tracking-[0.34em] text-[#92713d]">
+                  The House
+                </span>
+              </div>
+
+              <p className="mt-2 max-w-[185px] font-[var(--font-ubuntu-serif)] text-[14px] leading-[1.1] text-[#17110d]">
+                Where heritage
+                <br />
+                becomes couture.
+              </p>
+
+              <p className="mt-2 text-[6px] font-medium uppercase tracking-[0.25em] text-[#75695d]">
+                Identity · Craft · Legacy
+              </p>
+            </div>
           </Link>
 
-          {/* DESKTOP NAVIGATION */}
-
-          <nav className="hidden items-center justify-center gap-5 xl:flex 2xl:gap-8">
+          <nav
+            aria-label="Primary navigation"
+            className="hidden min-w-0 flex-1 items-center justify-center gap-4 xl:flex 2xl:gap-7"
+          >
             {navigation.map(([label, href]) => (
               <Link
                 key={href}
                 href={href}
-                className="group relative whitespace-nowrap py-3 text-[8px] font-medium uppercase tracking-[0.2em] text-[#51483e] transition duration-300 hover:text-[#a27d3c]"
+                className="group relative whitespace-nowrap py-3 text-[8px] font-bold uppercase tracking-[0.2em] text-[#2a211b] transition-colors duration-300 hover:text-[#967039] focus-visible:outline-2 focus-visible:outline-[#a17c3f] focus-visible:outline-offset-4 2xl:text-[9px]"
               >
                 {label}
 
-                <span className="absolute bottom-0 left-0 h-px w-0 bg-[#b28b47] transition-all duration-500 group-hover:w-full" />
+                <span
+                  className="absolute bottom-[2px] left-0 h-px w-0 bg-[#a17c3f] transition-all duration-300 group-hover:w-full"
+                  aria-hidden="true"
+                />
               </Link>
             ))}
           </nav>
 
-          {/* DESKTOP ACTIONS */}
-
-          <div className="hidden shrink-0 items-center gap-2 lg:flex">
-
+          <div className="hidden shrink-0 items-center gap-3 md:flex">
             <Link
               href="/wishlist"
-              className="flex min-h-10 items-center border border-[#17110d]/15 px-3 text-[8px] uppercase tracking-[0.16em] transition hover:border-[#c9a45d]"
+              className="inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-full border border-[#92713d] bg-transparent px-4 text-[8px] font-bold uppercase tracking-[0.15em] text-[#17110d] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#eee3d1] focus-visible:outline-2 focus-visible:outline-[#a17c3f] focus-visible:outline-offset-4 lg:px-5"
             >
               Selection
 
@@ -192,27 +199,18 @@ export default function UbuntuShell({
 
             <Link
               href="/appointments"
-              className="ubuntu-header-button flex min-h-10 items-center justify-center bg-[#17110d] px-4 text-[8px] font-semibold uppercase tracking-[0.15em] text-[#f7f1e6] transition hover:bg-[#c9a45d] hover:text-[#17110d] xl:px-5"
+              className="inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-full border border-[#17110d] bg-[#17110d] px-4 text-[8px] font-bold uppercase tracking-[0.14em] text-[#f7f1e6] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#c9a45d] hover:bg-[#c9a45d] hover:text-[#17110d] focus-visible:outline-2 focus-visible:outline-[#c9a45d] focus-visible:outline-offset-4 lg:px-5"
             >
               Private Appointment
             </Link>
-
           </div>
-
-          {/* TABLET / MOBILE MENU */}
 
           <button
             type="button"
-            onClick={() =>
-              setMenuOpen((current) => !current)
-            }
-            aria-label={
-              menuOpen
-                ? "Close navigation"
-                : "Open navigation"
-            }
+            onClick={() => setMenuOpen((current) => !current)}
+            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
             aria-expanded={menuOpen}
-            className="flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-1.5 border border-[#17110d]/15 bg-transparent lg:hidden"
+            className="ml-auto flex h-11 w-11 shrink-0 flex-col items-center justify-center gap-1.5 rounded-full border border-[#17110d]/20 lg:hidden focus-visible:outline-2 focus-visible:outline-[#a17c3f] focus-visible:outline-offset-4"
           >
             <span
               className={`h-px w-5 bg-[#17110d] transition ${
@@ -233,24 +231,22 @@ export default function UbuntuShell({
         </div>
       </header>
 
-      {/* MOBILE MENU */}
-
       <div
-        className={`fixed inset-0 z-[105] bg-[#17110d] text-[#f7f1e6] transition-all duration-500 lg:hidden ${
+        className={`fixed inset-0 z-[125] bg-[#17110d] text-[#f7f1e6] transition-all duration-500 lg:hidden ${
           menuOpen
             ? "visible opacity-100"
             : "pointer-events-none invisible opacity-0"
         }`}
+        aria-hidden={!menuOpen}
       >
         <div className="flex h-full flex-col overflow-y-auto px-6 pb-8 pt-28 sm:px-10">
-
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between gap-6">
             <div>
-              <p className="text-[8px] uppercase tracking-[0.35em] text-[#c9a45d]">
+              <p className="text-[8px] font-bold uppercase tracking-[0.35em] text-[#c9a45d]">
                 Ubuntu Couture House
               </p>
 
-              <h2 className="mt-4 font-[var(--font-ubuntu-serif)] text-4xl font-light leading-none">
+              <h2 className="mt-4 font-[var(--font-ubuntu-serif)] text-4xl leading-none">
                 African elegance.
                 <br />
                 <span className="italic text-[#d8b66a]">
@@ -263,44 +259,88 @@ export default function UbuntuShell({
               type="button"
               onClick={closeMenu}
               aria-label="Close menu"
-              className="flex h-11 w-11 items-center justify-center border border-white/20 text-2xl"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-2xl focus-visible:outline-2 focus-visible:outline-[#d8b66a]"
             >
               ×
             </button>
           </div>
 
-          <nav className="mt-10">
-            {navigation.map(
-              ([label, href], index) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={closeMenu}
-                  className="flex items-center justify-between border-t border-white/10 py-5"
+          <nav
+            aria-label="Mobile navigation"
+            className="mt-10"
+          >
+            {navigation.map(([label, href], index) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={closeMenu}
+                className="flex items-center justify-between border-t border-white/10 py-5 focus-visible:outline-2 focus-visible:outline-[#d8b66a]"
+              >
+                <span className="flex items-center gap-4">
+                  <span className="text-[8px] font-bold tracking-[0.2em] text-[#c9a45d]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <span className="text-lg font-bold uppercase tracking-[0.16em]">
+                    {label}
+                  </span>
+                </span>
+
+                <span
+                  className="text-[#c9a45d]"
+                  aria-hidden="true"
                 >
-                  <span className="flex items-center gap-4">
-                    <span className="text-[8px] tracking-[0.2em] text-[#c9a45d]">
-                      {String(index + 1).padStart(
-                        2,
-                        "0"
-                      )}
-                    </span>
-
-                    <span className="font-[var(--font-ubuntu-serif)] text-2xl">
-                      {label}
-                    </span>
-                  </span>
-
-                  <span className="text-[#c9a45d]">
-                    →
-                  </span>
-                </Link>
-              )
-            )}
+                  →
+                </span>
+              </Link>
+            ))}
           </nav>
 
+          <div className="mt-8 border-t border-white/10 pt-7">
+            <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-white/35">
+              The House
+            </p>
+
+            <div className="mt-5 space-y-4 text-sm text-white/65">
+              <a
+                href={`tel:${CONTACT.phone}`}
+                onClick={closeMenu}
+                className="block transition hover:text-[#c9a45d]"
+              >
+                {CONTACT.phone}
+              </a>
+
+              <a
+                href={`mailto:${CONTACT.email}`}
+                onClick={closeMenu}
+                className="block transition hover:text-[#c9a45d]"
+              >
+                {CONTACT.email}
+              </a>
+
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=4th+Floor%2C+Lenana+Rd%2C+Nairobi"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMenu}
+                className="block transition hover:text-[#c9a45d]"
+              >
+                {CONTACT.address}
+              </a>
+
+              <a
+                href={`https://wa.me/${CONTACT.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex rounded-full border border-[#c9a45d]/50 px-5 py-3 text-[8px] font-bold uppercase tracking-[0.22em] text-[#c9a45d] transition hover:bg-[#c9a45d] hover:text-[#17110d]"
+              >
+                WhatsApp The House →
+              </a>
+            </div>
+          </div>
+
           <div className="mt-8">
-            <p className="text-[8px] uppercase tracking-[0.3em] text-white/35">
+            <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-white/35">
               Collections
             </p>
 
@@ -310,7 +350,7 @@ export default function UbuntuShell({
                   key={item.category}
                   href={`/collections/catalogue?category=${item.category}`}
                   onClick={closeMenu}
-                  className="border border-white/10 px-4 py-4 text-[8px] uppercase tracking-[0.15em] text-white/65 transition hover:border-[#c9a45d] hover:text-[#c9a45d]"
+                  className="rounded-full border border-white/10 px-4 py-4 text-[8px] font-bold uppercase tracking-[0.15em] text-white/65 transition hover:border-[#c9a45d] hover:text-[#c9a45d]"
                 >
                   {item.label}
                 </Link>
@@ -322,7 +362,7 @@ export default function UbuntuShell({
             <Link
               href="/wishlist"
               onClick={closeMenu}
-              className="flex min-h-12 items-center justify-center border border-white/20 px-5 text-[8px] uppercase tracking-[0.18em]"
+              className="flex min-h-12 items-center justify-center rounded-full border border-white/20 px-5 text-[8px] font-bold uppercase tracking-[0.18em]"
             >
               Private Selection
               {wishlistCount > 0 &&
@@ -332,14 +372,14 @@ export default function UbuntuShell({
             <Link
               href="/appointments"
               onClick={closeMenu}
-              className="flex min-h-12 items-center justify-center bg-[#c9a45d] px-5 text-[8px] font-semibold uppercase tracking-[0.18em] text-[#17110d]"
+              className="flex min-h-12 items-center justify-center rounded-full border border-[#c9a45d] bg-[#c9a45d] px-5 text-[8px] font-bold uppercase tracking-[0.18em] text-[#17110d]"
             >
               Private Appointment
             </Link>
           </div>
 
           <div className="mt-auto border-t border-white/10 pt-7">
-            <p className="mb-4 text-[8px] uppercase tracking-[0.25em] text-white/35">
+            <p className="mb-4 text-[8px] font-bold uppercase tracking-[0.25em] text-white/35">
               Follow the house
             </p>
 
@@ -348,25 +388,21 @@ export default function UbuntuShell({
         </div>
       </div>
 
-      {/* CONTENT */}
-
-      <div className="relative min-h-screen">
+      <main className="relative min-h-screen">
         {children}
-      </div>
-
-      {/* FLOATING WHATSAPP */}
+      </main>
 
       <a
-        href="https://wa.me/?text=Hello%20Ubuntu%20Couture%20House"
+        href={`https://wa.me/${CONTACT.whatsapp}?text=Hello%20Ubuntu%20Couture%20House`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Contact Ubuntu Couture House on WhatsApp"
-        title="WhatsApp"
-        className="ubuntu-whatsapp fixed bottom-5 right-5 z-[80] flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-[#17110d] text-white shadow-[0_15px_40px_rgba(23,17,13,0.25)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#c9a45d] hover:text-[#17110d]"
+        title="WhatsApp Ubuntu Couture House"
+        className="fixed bottom-6 right-6 z-[150] flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#25D366] bg-[#25D366] text-white shadow-[0_12px_35px_rgba(0,0,0,0.3)] transition hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-[#25D366] focus-visible:outline-offset-4"
       >
         <svg
           viewBox="0 0 24 24"
-          className="h-6 w-6"
+          className="h-7 w-7"
           fill="currentColor"
           aria-hidden="true"
         >

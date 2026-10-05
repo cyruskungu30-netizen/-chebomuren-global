@@ -1,7 +1,12 @@
-"use client";
+ "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 type Chapter = {
   id: string;
@@ -92,77 +97,91 @@ export default function HouseStoryExperience() {
   const [playing, setPlaying] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [direction, setDirection] = useState<"next" | "previous">("next");
 
   const touchStart = useRef<number | null>(null);
   const progressTimer = useRef<number | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const chapter = chapters[active];
 
-  const chapterPercent = useMemo(
-    () => ((active + 1) / chapters.length) * 100,
-    [active],
-  );
-
   const goTo = useCallback(
-    (index: number, moveDirection: "next" | "previous" = "next") => {
-      setDirection(moveDirection);
+    (index: number) => {
+      const normalized =
+        ((index % chapters.length) + chapters.length) %
+        chapters.length;
 
-      if (index < 0) {
-        setActive(chapters.length - 1);
-      } else if (index >= chapters.length) {
-        setActive(0);
-      } else {
-        setActive(index);
-      }
-
+      setActive(normalized);
       setProgress(0);
     },
     [],
   );
 
   const next = useCallback(() => {
-    goTo(active + 1, "next");
+    goTo(active + 1);
   }, [active, goTo]);
 
   const previous = useCallback(() => {
-    goTo(active - 1, "previous");
+    goTo(active - 1);
   }, [active, goTo]);
 
   useEffect(() => {
-    if (!playing || expanded) return;
+    if (!playing || expanded) {
+      return;
+    }
 
     setProgress(0);
 
-    const started = Date.now();
+    const started = performance.now();
     const duration = 9000;
 
-    const tick = () => {
-      const elapsed = Date.now() - started;
+    const tick = (time: number) => {
+      const elapsed = time - started;
       const value = Math.min((elapsed / duration) * 100, 100);
 
       setProgress(value);
 
       if (value >= 100) {
         next();
-      } else {
-        progressTimer.current = window.requestAnimationFrame(tick);
+        return;
       }
+
+      progressTimer.current =
+        window.requestAnimationFrame(tick);
     };
 
-    progressTimer.current = window.requestAnimationFrame(tick);
+    progressTimer.current =
+      window.requestAnimationFrame(tick);
 
     return () => {
       if (progressTimer.current !== null) {
         window.cancelAnimationFrame(progressTimer.current);
+        progressTimer.current = null;
       }
     };
   }, [active, expanded, next, playing]);
 
   useEffect(() => {
     const keyboard = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") next();
-      if (event.key === "ArrowLeft") previous();
+      const target = event.target as HTMLElement | null;
+
+      if (
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.tagName === "SELECT" ||
+        target?.isContentEditable
+      ) {
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        next();
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        previous();
+      }
 
       if (event.key === " ") {
         event.preventDefault();
@@ -176,17 +195,44 @@ export default function HouseStoryExperience() {
 
     window.addEventListener("keydown", keyboard);
 
-    return () => window.removeEventListener("keydown", keyboard);
+    return () => {
+      window.removeEventListener("keydown", keyboard);
+    };
   }, [next, previous]);
 
-  const handleTouchStart = (event: React.TouchEvent) => {
-    touchStart.current = event.touches[0]?.clientX ?? null;
+  useEffect(() => {
+    if (!expanded) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    closeButtonRef.current?.focus();
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [expanded]);
+
+  const handleTouchStart = (
+    event: React.TouchEvent,
+  ) => {
+    touchStart.current =
+      event.touches[0]?.clientX ?? null;
   };
 
-  const handleTouchEnd = (event: React.TouchEvent) => {
-    if (touchStart.current === null) return;
+  const handleTouchEnd = (
+    event: React.TouchEvent,
+  ) => {
+    if (touchStart.current === null) {
+      return;
+    }
 
-    const end = event.changedTouches[0]?.clientX ?? touchStart.current;
+    const end =
+      event.changedTouches[0]?.clientX ??
+      touchStart.current;
+
     const distance = touchStart.current - end;
 
     if (Math.abs(distance) > 60) {
@@ -206,19 +252,26 @@ export default function HouseStoryExperience() {
         className="relative overflow-hidden bg-[#120e0b] text-white"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        aria-labelledby="house-story-title"
       >
         <div className="mx-auto max-w-[1550px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
           <div className="mb-12 flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <span className="h-px w-10 bg-[#d5b36a]" />
+                <span
+                  className="h-px w-10 bg-[#d5b36a]"
+                  aria-hidden="true"
+                />
 
                 <span className="text-[9px] uppercase tracking-[0.5em] text-[#d5b36a]">
                   The House Story
                 </span>
               </div>
 
-              <h2 className="ubuntu-serif mt-6 text-5xl leading-[0.9] tracking-[-0.04em] sm:text-7xl lg:text-8xl">
+              <h2
+                id="house-story-title"
+                className="ubuntu-serif mt-6 text-5xl leading-[0.9] tracking-[-0.04em] sm:text-7xl lg:text-8xl"
+              >
                 Seven chapters.
                 <br />
                 <span className="italic text-[#d5b36a]">
@@ -231,15 +284,19 @@ export default function HouseStoryExperience() {
               <button
                 type="button"
                 onClick={previous}
-                className="flex h-12 w-12 items-center justify-center border border-white/10 text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                aria-label="Previous chapter"
+                className="flex h-12 w-12 items-center justify-center border border-white/10 text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a] focus:outline-none focus:ring-2 focus:ring-[#d5b36a] focus:ring-offset-2 focus:ring-offset-[#120e0b]"
               >
                 ←
               </button>
 
               <button
                 type="button"
-                onClick={() => setPlaying((value) => !value)}
-                className="h-12 border border-white/10 px-5 text-[8px] uppercase tracking-[0.3em] text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                onClick={() =>
+                  setPlaying((value) => !value)
+                }
+                aria-pressed={playing}
+                className="h-12 border border-white/10 px-5 text-[8px] uppercase tracking-[0.3em] text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a] focus:outline-none focus:ring-2 focus:ring-[#d5b36a] focus:ring-offset-2 focus:ring-offset-[#120e0b]"
               >
                 {playing ? "Pause" : "Play"}
               </button>
@@ -247,7 +304,8 @@ export default function HouseStoryExperience() {
               <button
                 type="button"
                 onClick={next}
-                className="flex h-12 w-12 items-center justify-center border border-white/10 text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                aria-label="Next chapter"
+                className="flex h-12 w-12 items-center justify-center border border-white/10 text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a] focus:outline-none focus:ring-2 focus:ring-[#d5b36a] focus:ring-offset-2 focus:ring-offset-[#120e0b]"
               >
                 →
               </button>
@@ -255,73 +313,99 @@ export default function HouseStoryExperience() {
           </div>
 
           <div className="mb-10 hidden lg:block">
-            <div className="relative h-px bg-white/10">
+            <div
+              className="relative h-px bg-white/10"
+              aria-hidden="true"
+            >
               <div
                 className="absolute left-0 top-0 h-px bg-[#d5b36a] transition-all duration-500"
-                style={{ width: `${chapterPercent}%` }}
+                style={{
+                  width: `${
+                    ((active + 1) / chapters.length) * 100
+                  }%`,
+                }}
               />
             </div>
 
             <div className="mt-6 grid grid-cols-7 gap-4">
-              {chapters.map((item, index) => (
-                <button
-                  type="button"
-                  key={item.id}
-                  onClick={() => goTo(index)}
-                  className="group text-left"
-                >
-                  <span
-                    className={`mb-4 block h-2.5 w-2.5 rounded-full border transition ${
-                      active === index
-                        ? "border-[#d5b36a] bg-[#d5b36a]"
-                        : "border-white/25 group-hover:border-[#d5b36a]"
-                    }`}
-                  />
+              {chapters.map((item, index) => {
+                const isActive = active === index;
 
-                  <span
-                    className={`block text-[8px] uppercase tracking-[0.22em] ${
-                      active === index
-                        ? "text-[#d5b36a]"
-                        : "text-white/30 group-hover:text-white/60"
-                    }`}
+                return (
+                  <button
+                    type="button"
+                    key={item.id}
+                    onClick={() => goTo(index)}
+                    aria-label={`Go to chapter ${item.number}: ${item.title}`}
+                    aria-current={
+                      isActive ? "step" : undefined
+                    }
+                    className="group text-left focus:outline-none"
                   >
-                    {item.number}
-                  </span>
+                    <span
+                      className={`mb-4 block h-2.5 w-2.5 rounded-full border transition ${
+                        isActive
+                          ? "border-[#d5b36a] bg-[#d5b36a]"
+                          : "border-white/25 group-hover:border-[#d5b36a]"
+                      }`}
+                      aria-hidden="true"
+                    />
 
-                  <span
-                    className={`mt-2 block text-[9px] ${
-                      active === index
-                        ? "text-white/80"
-                        : "text-white/25 group-hover:text-white/50"
-                    }`}
-                  >
-                    {item.eyebrow}
-                  </span>
-                </button>
-              ))}
+                    <span
+                      className={`block text-[8px] uppercase tracking-[0.22em] ${
+                        isActive
+                          ? "text-[#d5b36a]"
+                          : "text-white/30 group-hover:text-white/60"
+                      }`}
+                    >
+                      {item.number}
+                    </span>
+
+                    <span
+                      className={`mt-2 block text-[9px] ${
+                        isActive
+                          ? "text-white/80"
+                          : "text-white/25 group-hover:text-white/50"
+                      }`}
+                    >
+                      {item.eyebrow}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div className="mb-6 overflow-x-auto lg:hidden">
             <div className="flex min-w-max gap-2">
-              {chapters.map((item, index) => (
-                <button
-                  type="button"
-                  key={item.id}
-                  onClick={() => goTo(index)}
-                  className={`border px-4 py-3 text-[8px] uppercase tracking-[0.25em] ${
-                    active === index
-                      ? "border-[#d5b36a] bg-[#d5b36a] text-[#120e0b]"
-                      : "border-white/10 text-white/35"
-                  }`}
-                >
-                  {item.number} · {item.eyebrow}
-                </button>
-              ))}
+              {chapters.map((item, index) => {
+                const isActive = active === index;
+
+                return (
+                  <button
+                    type="button"
+                    key={item.id}
+                    onClick={() => goTo(index)}
+                    aria-current={
+                      isActive ? "step" : undefined
+                    }
+                    className={`border px-4 py-3 text-[8px] uppercase tracking-[0.25em] transition focus:outline-none focus:ring-2 focus:ring-[#d5b36a] ${
+                      isActive
+                        ? "border-[#d5b36a] bg-[#d5b36a] text-[#120e0b]"
+                        : "border-white/10 text-white/35 hover:border-white/25 hover:text-white/60"
+                    }`}
+                  >
+                    {item.number} · {item.eyebrow}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="grid overflow-hidden border border-white/10 bg-[#1c1612] lg:grid-cols-[1.15fr_0.85fr]">
+          <div
+            className="grid overflow-hidden border border-white/10 bg-[#1c1612] lg:grid-cols-[1.15fr_0.85fr]"
+            aria-live="polite"
+          >
             <div className="relative min-h-[620px] overflow-hidden sm:min-h-[720px] lg:min-h-[800px]">
               {chapters.map((item, index) => (
                 <div
@@ -331,6 +415,7 @@ export default function HouseStoryExperience() {
                       ? "scale-100 opacity-100"
                       : "pointer-events-none scale-105 opacity-0"
                   }`}
+                  aria-hidden={active !== index}
                 >
                   <Image
                     src={item.image}
@@ -341,14 +426,20 @@ export default function HouseStoryExperience() {
                     className="object-cover"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent" />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent"
+                    aria-hidden="true"
+                  />
 
-                  <div className="absolute left-6 right-6 top-6 flex justify-between sm:left-10 sm:right-10 sm:top-10">
+                  <div className="absolute left-6 right-6 top-6 flex justify-between gap-4 sm:left-10 sm:right-10 sm:top-10">
                     <span className="border border-white/15 bg-black/10 px-4 py-2 text-[8px] uppercase tracking-[0.3em] backdrop-blur">
                       {item.location}
                     </span>
 
-                    <span className="ubuntu-serif text-6xl text-white/20">
+                    <span
+                      className="ubuntu-serif text-6xl text-white/20"
+                      aria-hidden="true"
+                    >
                       {item.number}
                     </span>
                   </div>
@@ -367,14 +458,11 @@ export default function HouseStoryExperience() {
             </div>
 
             <div
-              className={`flex flex-col justify-between p-7 sm:p-10 lg:p-14 ${
-                direction === "next"
-                  ? "animate-[fadeIn_0.8s_ease]"
-                  : "animate-[fadeIn_0.8s_ease]"
-              }`}
+              key={chapter.id}
+              className="flex flex-col justify-between p-7 animate-[fadeIn_0.8s_ease] sm:p-10 lg:p-14"
             >
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-5">
                   <span className="text-[8px] uppercase tracking-[0.4em] text-[#d5b36a]">
                     {chapter.eyebrow}
                   </span>
@@ -388,7 +476,10 @@ export default function HouseStoryExperience() {
                   {chapter.title}
                 </h3>
 
-                <div className="mt-8 h-px w-16 bg-[#d5b36a]" />
+                <div
+                  className="mt-8 h-px w-16 bg-[#d5b36a]"
+                  aria-hidden="true"
+                />
 
                 <p className="mt-8 text-sm leading-8 text-white/55">
                   {chapter.text}
@@ -406,9 +497,16 @@ export default function HouseStoryExperience() {
                   </span>
                 </div>
 
-                <div className="h-px bg-white/10">
+                <div
+                  className="h-px bg-white/10"
+                  role="progressbar"
+                  aria-label="Current chapter progress"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(progress)}
+                >
                   <div
-                    className="h-px bg-[#d5b36a] transition-none"
+                    className="h-px bg-[#d5b36a]"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -417,7 +515,7 @@ export default function HouseStoryExperience() {
                   <button
                     type="button"
                     onClick={previous}
-                    className="border border-white/10 px-5 py-4 text-[8px] uppercase tracking-[0.3em] text-white/45 transition hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                    className="border border-white/10 px-5 py-4 text-[8px] uppercase tracking-[0.3em] text-white/45 transition hover:border-[#d5b36a] hover:text-[#d5b36a] focus:outline-none focus:ring-2 focus:ring-[#d5b36a] focus:ring-offset-2 focus:ring-offset-[#1c1612]"
                   >
                     ← Previous
                   </button>
@@ -425,7 +523,7 @@ export default function HouseStoryExperience() {
                   <button
                     type="button"
                     onClick={next}
-                    className="border border-[#d5b36a] px-5 py-4 text-[8px] uppercase tracking-[0.3em] text-[#d5b36a] transition hover:bg-[#d5b36a] hover:text-[#120e0b]"
+                    className="border border-[#d5b36a] px-5 py-4 text-[8px] uppercase tracking-[0.3em] text-[#d5b36a] transition hover:bg-[#d5b36a] hover:text-[#120e0b] focus:outline-none focus:ring-2 focus:ring-[#d5b36a] focus:ring-offset-2 focus:ring-offset-[#1c1612]"
                   >
                     Next Chapter →
                   </button>
@@ -434,7 +532,7 @@ export default function HouseStoryExperience() {
                 <button
                   type="button"
                   onClick={() => setExpanded(true)}
-                  className="mt-3 w-full border border-white/10 py-4 text-[8px] uppercase tracking-[0.35em] text-white/30 transition hover:border-white/25 hover:text-white/70"
+                  className="mt-3 w-full border border-white/10 py-4 text-[8px] uppercase tracking-[0.35em] text-white/30 transition hover:border-white/25 hover:text-white/70 focus:outline-none focus:ring-2 focus:ring-[#d5b36a] focus:ring-offset-2 focus:ring-offset-[#1c1612]"
                 >
                   Open Cinematic Story
                 </button>
@@ -445,7 +543,12 @@ export default function HouseStoryExperience() {
       </section>
 
       {expanded && (
-        <div className="fixed inset-0 z-[999] bg-black text-white">
+        <div
+          className="fixed inset-0 z-[999] bg-black text-white"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cinematic-story-title"
+        >
           <div className="absolute inset-0">
             <Image
               src={chapter.image}
@@ -453,9 +556,13 @@ export default function HouseStoryExperience() {
               fill
               sizes="100vw"
               className="object-cover opacity-55"
+              priority
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-black/40" />
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-black/40"
+              aria-hidden="true"
+            />
           </div>
 
           <div className="relative z-10 flex h-full flex-col">
@@ -471,9 +578,11 @@ export default function HouseStoryExperience() {
               </div>
 
               <button
+                ref={closeButtonRef}
                 type="button"
                 onClick={() => setExpanded(false)}
-                className="flex h-12 w-12 items-center justify-center border border-white/15 text-xl text-white/50 hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                aria-label="Close cinematic story"
+                className="flex h-12 w-12 items-center justify-center border border-white/15 text-xl text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a] focus:outline-none focus:ring-2 focus:ring-[#d5b36a] focus:ring-offset-2 focus:ring-offset-black"
               >
                 ×
               </button>
@@ -485,7 +594,10 @@ export default function HouseStoryExperience() {
                   {chapter.eyebrow}
                 </p>
 
-                <h2 className="ubuntu-serif mt-5 max-w-6xl text-5xl leading-[0.88] tracking-[-0.055em] sm:text-7xl lg:text-[8rem]">
+                <h2
+                  id="cinematic-story-title"
+                  className="ubuntu-serif mt-5 max-w-6xl text-5xl leading-[0.88] tracking-[-0.055em] sm:text-7xl lg:text-[8rem]"
+                >
                   {chapter.title}
                 </h2>
 
@@ -501,15 +613,18 @@ export default function HouseStoryExperience() {
                   <button
                     type="button"
                     onClick={previous}
-                    className="border border-white/15 px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-white/50 hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                    className="border border-white/15 px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a] focus:outline-none focus:ring-2 focus:ring-[#d5b36a]"
                   >
                     ← Previous
                   </button>
 
                   <button
                     type="button"
-                    onClick={() => setPlaying((value) => !value)}
-                    className="border border-white/15 px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-white/50 hover:border-[#d5b36a] hover:text-[#d5b36a]"
+                    onClick={() =>
+                      setPlaying((value) => !value)
+                    }
+                    aria-pressed={playing}
+                    className="border border-white/15 px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-white/50 transition hover:border-[#d5b36a] hover:text-[#d5b36a] focus:outline-none focus:ring-2 focus:ring-[#d5b36a]"
                   >
                     {playing ? "Pause" : "Play"}
                   </button>
@@ -517,7 +632,7 @@ export default function HouseStoryExperience() {
                   <button
                     type="button"
                     onClick={next}
-                    className="border border-[#d5b36a] px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-[#d5b36a] hover:bg-[#d5b36a] hover:text-black"
+                    className="border border-[#d5b36a] px-6 py-4 text-[8px] uppercase tracking-[0.3em] text-[#d5b36a] transition hover:bg-[#d5b36a] hover:text-black focus:outline-none focus:ring-2 focus:ring-[#d5b36a]"
                   >
                     Next Chapter →
                   </button>
@@ -537,7 +652,14 @@ export default function HouseStoryExperience() {
                   </span>
                 </div>
 
-                <div className="h-px bg-white/10">
+                <div
+                  className="h-px bg-white/10"
+                  role="progressbar"
+                  aria-label="Current chapter progress"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(progress)}
+                >
                   <div
                     className="h-px bg-[#d5b36a]"
                     style={{ width: `${progress}%` }}

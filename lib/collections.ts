@@ -124,8 +124,7 @@ const products: CollectionProduct[] = [
       "Cow horn becomes a visual language for resilience, earth, transformation, and renewal.",
     craftsmanship:
       "Natural forms are shaped, refined, polished, and transformed into contemporary sculptural jewellery.",
-    origin:
-      "Inspired by East African material culture.",
+    origin: "Inspired by East African material culture.",
     styling:
       "Wear as a focal piece with a clean silhouette to let the natural form lead.",
     featured: true,
@@ -151,8 +150,7 @@ const products: CollectionProduct[] = [
       "Inspired by the artistry, symbolism, colour, and community expressed through Maasai beadwork.",
     craftsmanship:
       "Traditional visual language is carefully translated into a contemporary luxury context.",
-    origin:
-      "Inspired by East African heritage.",
+    origin: "Inspired by East African heritage.",
     styling:
       "Pair with monochrome or neutral fashion for a striking heritage-led statement.",
     featured: true,
@@ -178,8 +176,7 @@ const products: CollectionProduct[] = [
       "Rare gems become symbols of individuality, strength, natural beauty, and resilience.",
     craftsmanship:
       "Selected materials are composed to allow natural character and rarity to remain central to the design.",
-    origin:
-      "Inspired by rare natural beauty across East Africa.",
+    origin: "Inspired by rare natural beauty across East Africa.",
     styling:
       "Designed to become the centrepiece of an evening or formal look.",
     featured: true,
@@ -205,8 +202,7 @@ const products: CollectionProduct[] = [
       "Inspired by African majesty and the symbolism of women who lead with dignity and courage.",
     craftsmanship:
       "Built as a sculptural statement with emphasis on balance, presence, and ceremonial character.",
-    origin:
-      "Inspired by African royal and ceremonial aesthetics.",
+    origin: "Inspired by African royal and ceremonial aesthetics.",
     styling:
       "Designed for couture events, ceremonies, editorial shoots, and moments of extraordinary presence.",
     featured: true,
@@ -258,8 +254,7 @@ const products: CollectionProduct[] = [
       "Inspired by confidence, ceremony, leadership, and the visual power of colour.",
     craftsmanship:
       "A sculptural construction designed to frame the wearer and create a memorable silhouette.",
-    origin:
-      "Inspired by contemporary African luxury.",
+    origin: "Inspired by contemporary African luxury.",
     styling:
       "Best styled as the defining element of an evening or editorial look.",
     featured: true,
@@ -285,37 +280,34 @@ const products: CollectionProduct[] = [
       "Inspired by the movement of African identity across borders and generations.",
     craftsmanship:
       "Contemporary proportions meet heritage-inspired storytelling to create an internationally minded silhouette.",
-    origin:
-      "Ubuntu Couture House.",
+    origin: "Ubuntu Couture House.",
     styling:
       "Designed for fashion-forward occasions, travel, editorial shoots, and statement appearances.",
   },
 ];
 
+const productsBySlug = new Map(
+  products.map((product) => [product.slug, product]),
+);
+
 export function getProduct(
-  slug: string
+  slug: string,
 ): CollectionProduct | undefined {
-  return products.find(
-    (product) => product.slug === slug
-  );
+  return productsBySlug.get(slug);
 }
 
 export function getFeaturedProducts(): CollectionProduct[] {
-  return products.filter(
-    (product) => product.featured
-  );
+  return products.filter((product) => product.featured === true);
 }
 
 export function getProductsByCollection(
-  category: CollectionCategory
+  category: CollectionCategory,
 ): CollectionProduct[] {
-  return products.filter(
-    (product) => product.category === category
-  );
+  return products.filter((product) => product.category === category);
 }
 
 export function getProductsByCategory(
-  category: CollectionCategory
+  category: CollectionCategory,
 ): CollectionProduct[] {
   return getProductsByCollection(category);
 }

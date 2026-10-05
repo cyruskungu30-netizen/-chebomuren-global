@@ -1,4 +1,10 @@
  @import "tailwindcss";
+
+/* =========================================================
+   UBUNTU COUTURE HOUSE
+   GLOBAL DESIGN SYSTEM
+   ========================================================= */
+
 :root {
   --font-ubuntu-serif:
     "Cormorant Garamond",
@@ -12,20 +18,24 @@
     Helvetica,
     Arial,
     sans-serif;
-}
-:root {
+
   --ivory: #f8f3e9;
   --cream: #eee4d3;
+  --cream-deep: #e9dfcf;
   --sand: #d9c8ae;
 
   --espresso: #17110d;
+  --espresso-soft: #211912;
   --brown: #34251d;
+  --brown-light: #5f4735;
 
   --gold: #c9a45d;
   --gold-light: #e2c785;
   --gold-dark: #85652e;
+  --gold-muted: #927039;
 
-  --muted: #76695d;
+  --muted: #75695d;
+  --muted-light: #a59a8d;
 
   --ubuntu-cream: #f7f1e6;
   --ubuntu-cream-deep: #e9dfcf;
@@ -38,26 +48,38 @@
   --ubuntu-muted: #75695d;
 }
 
-* {
+/* =========================================================
+   RESET
+   ========================================================= */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
+  overflow-x: hidden;
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
+  min-width: 320px;
   margin: 0;
+  overflow-x: hidden;
   background: var(--ivory);
   color: var(--espresso);
-  font-family: var(--font-ubuntu-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-ubuntu-sans);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button,
@@ -65,19 +87,36 @@ input,
 textarea,
 select {
   font: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
   cursor: pointer;
+  touch-action: manipulation;
 }
 
-img {
+button:disabled {
+  cursor: not-allowed;
+}
+
+img,
+svg {
   display: block;
+  max-width: 100%;
+}
+
+section {
+  max-width: 100%;
 }
 
 ::selection {
   background: var(--gold);
   color: var(--espresso);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
 }
 
 ::-webkit-scrollbar {
@@ -92,6 +131,14 @@ img {
   background: var(--gold-dark);
 }
 
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+
 .ubuntu-serif {
   font-family:
     var(--font-ubuntu-serif),
@@ -102,9 +149,27 @@ img {
   letter-spacing: -0.035em;
 }
 
+.gold-text {
+  color: var(--gold-light);
+}
+
+.letter-wide {
+  letter-spacing: 0.32em;
+}
+
+.ubuntu-eyebrow {
+  display: inline-block;
+  color: var(--ubuntu-gold);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
 /* =========================================================
-   GLOBAL LUXURY SYSTEM
-========================================================= */
+   GLOBAL LUXURY IMAGE SYSTEM
+   ========================================================= */
 
 .luxury-image {
   position: relative;
@@ -113,12 +178,12 @@ img {
 }
 
 .luxury-image::after {
-  content: "";
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.08);
   z-index: 4;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  content: "";
+  pointer-events: none;
 }
 
 .luxury-image img {
@@ -132,57 +197,140 @@ img {
   filter: saturate(1.04) contrast(1.02);
 }
 
-.luxury-button {
+/* =========================================================
+   BUTTON SYSTEM
+   ========================================================= */
+
+.luxury-button,
+.luxury-button-dark,
+.ubuntu-header-button {
   position: relative;
   display: inline-flex;
+  min-height: 50px;
+  max-width: 100%;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  min-height: 50px;
-  padding: 0 28px;
   border: 1px solid rgba(201, 164, 93, 0.65);
-  color: var(--espresso);
+  border-radius: 0;
+  padding: 0 28px;
+  white-space: nowrap;
+  text-align: center;
   font-size: 8px;
   font-weight: 500;
   letter-spacing: 0.3em;
+  line-height: 1.2;
   text-transform: uppercase;
   transition:
-    color 0.5s ease,
-    background-color 0.5s ease,
-    border-color 0.5s ease,
-    transform 0.5s ease;
+    color 0.4s ease,
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-.luxury-button::before {
-  content: "";
+.luxury-button::before,
+.luxury-button-dark::before {
   position: absolute;
-  inset: 0;
   z-index: -1;
+  inset: 0;
   background: var(--gold);
+  content: "";
   transform: translateY(100%);
   transition:
     transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.luxury-button:hover {
+.luxury-button {
   color: var(--espresso);
-  border-color: var(--gold);
+}
+
+.luxury-button:hover,
+.luxury-button-dark:hover,
+.ubuntu-header-button:hover {
   transform: translateY(-2px);
 }
 
-.luxury-button:hover::before {
+.luxury-button:hover {
+  border-color: var(--gold);
+  color: var(--espresso);
+}
+
+.luxury-button:hover::before,
+.luxury-button-dark:hover::before {
   transform: translateY(0);
 }
 
 .luxury-button-dark {
-  background: var(--espresso);
   border-color: var(--espresso);
+  background: var(--espresso);
   color: var(--ivory);
 }
 
 .luxury-button-dark:hover {
   color: var(--espresso);
 }
+
+.luxury-button:active,
+.luxury-button-dark:active,
+.ubuntu-header-button:active {
+  transform: translateY(0);
+}
+
+.luxury-button:focus-visible,
+.luxury-button-dark:focus-visible,
+.ubuntu-header-button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.ubuntu-button {
+  display: inline-flex;
+  min-height: 54px;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  border: 1px solid var(--ubuntu-gold);
+  padding: 0 30px;
+  background: transparent;
+  color: var(--ubuntu-black);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    transform 0.35s ease;
+}
+
+.ubuntu-button:hover {
+  border-color: var(--ubuntu-gold);
+  background: var(--ubuntu-gold);
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+.ubuntu-button-dark {
+  border-color: var(--ubuntu-black);
+  background: var(--ubuntu-black);
+  color: var(--ubuntu-cream);
+}
+
+.ubuntu-button-dark:hover {
+  border-color: var(--ubuntu-gold);
+  background: var(--ubuntu-gold);
+  color: #fff;
+}
+
+.ubuntu-button-full {
+  width: 100%;
+}
+
+/* =========================================================
+   CARDS / SHARED ELEMENTS
+   ========================================================= */
 
 .luxury-card {
   transition:
@@ -201,29 +349,18 @@ img {
   background: var(--gold);
 }
 
-.gold-text {
-  color: var(--gold-light);
-}
-
-.letter-wide {
-  letter-spacing: 0.32em;
-}
-
 /* =========================================================
-   ANIMATIONS
-========================================================= */
+   CORE ANIMATIONS
+   ========================================================= */
 
 @keyframes slowZoom {
-  0% {
+  0%,
+  100% {
     transform: scale(1);
   }
 
   50% {
     transform: scale(1.045);
-  }
-
-  100% {
-    transform: scale(1);
   }
 }
 
@@ -262,10 +399,10 @@ img {
       #9c783c 60%
     );
   background-size: 200% auto;
-  -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   animation: ubuntuShimmer 5s linear infinite;
+  -webkit-background-clip: text;
 }
 
 @keyframes ubuntuFloat {
@@ -355,8 +492,8 @@ img {
 }
 
 /* =========================================================
-   HERO
-========================================================= */
+   HERO SYSTEM
+   ========================================================= */
 
 .ubuntu-hero {
   --hero-shift: 0px;
@@ -366,8 +503,7 @@ img {
   transform:
     translateY(var(--hero-shift))
     scale(1.04);
-  transition:
-    transform 0.1s linear;
+  transition: transform 0.1s linear;
   animation:
     ubuntuHeroImage 2s cubic-bezier(0.16, 1, 0.3, 1)
     both;
@@ -387,7 +523,7 @@ img {
 
 /* =========================================================
    PARTICLES
-========================================================= */
+   ========================================================= */
 
 .ubuntu-particle {
   position: absolute;
@@ -395,8 +531,7 @@ img {
   border-radius: 999px;
   background: #dfc27c;
   opacity: 0;
-  box-shadow:
-    0 0 12px rgba(223, 194, 124, 0.7);
+  box-shadow: 0 0 12px rgba(223, 194, 124, 0.7);
   animation:
     ubuntuParticleFloat 8s ease-in-out infinite;
 }
@@ -434,7 +569,7 @@ img {
 
 /* =========================================================
    HERO ORBIT
-========================================================= */
+   ========================================================= */
 
 .ubuntu-hero-orbit {
   animation:
@@ -453,7 +588,7 @@ img {
 
 /* =========================================================
    AUDIO
-========================================================= */
+   ========================================================= */
 
 .ubuntu-audio-bar {
   height: 14px;
@@ -473,7 +608,7 @@ img {
 
 /* =========================================================
    MANIFESTO
-========================================================= */
+   ========================================================= */
 
 .ubuntu-orbit-decoration {
   animation:
@@ -496,7 +631,7 @@ img {
 
 /* =========================================================
    EDITORIAL
-========================================================= */
+   ========================================================= */
 
 .ubuntu-editorial-card {
   overflow: hidden;
@@ -532,7 +667,7 @@ img {
 
 /* =========================================================
    LOOKBOOK
-========================================================= */
+   ========================================================= */
 
 .ubuntu-lookbook-image {
   transform-origin: center center;
@@ -551,7 +686,6 @@ img {
 }
 
 .ubuntu-lookbook-thumb::after {
-  content: "";
   position: absolute;
   inset: 0;
   background:
@@ -560,6 +694,7 @@ img {
       rgba(0, 0, 0, 0.4),
       transparent
     );
+  content: "";
   pointer-events: none;
 }
 
@@ -626,65 +761,17 @@ img {
 }
 
 /* =========================================================
-   APPOINTMENT
-========================================================= */
+   SHARED CONTAINER
+   ========================================================= */
 
 .ubuntu-container {
   width: min(1380px, calc(100% - 80px));
   margin: 0 auto;
 }
 
-.ubuntu-eyebrow {
-  display: inline-block;
-  color: var(--ubuntu-gold);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  line-height: 1.5;
-  text-transform: uppercase;
-}
-
-.ubuntu-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  min-height: 54px;
-  padding: 0 30px;
-  border: 1px solid var(--ubuntu-gold);
-  background: transparent;
-  color: var(--ubuntu-black);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition:
-    background 0.35s ease,
-    color 0.35s ease,
-    transform 0.35s ease;
-}
-
-.ubuntu-button:hover {
-  background: var(--ubuntu-gold);
-  color: #fff;
-  transform: translateY(-3px);
-}
-
-.ubuntu-button-dark {
-  background: var(--ubuntu-black);
-  border-color: var(--ubuntu-black);
-  color: var(--ubuntu-cream);
-}
-
-.ubuntu-button-dark:hover {
-  background: var(--ubuntu-gold);
-  border-color: var(--ubuntu-gold);
-  color: #fff;
-}
-
-.ubuntu-button-full {
-  width: 100%;
-}
+/* =========================================================
+   APPOINTMENT
+   ========================================================= */
 
 .ubuntu-appointment-section {
   position: relative;
@@ -701,10 +788,10 @@ img {
 
 .ubuntu-appointment-glow {
   position: absolute;
-  width: 550px;
-  height: 550px;
   right: -260px;
   bottom: -300px;
+  width: 550px;
+  height: 550px;
   border: 1px solid rgba(185, 154, 97, 0.35);
   border-radius: 50%;
 }
@@ -720,7 +807,10 @@ img {
 
 .ubuntu-appointment-copy h2 {
   margin: 20px 0 28px;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: clamp(58px, 7vw, 110px);
   font-weight: 400;
   line-height: 0.84;
@@ -756,12 +846,18 @@ img {
 .ubuntu-appointment-details span {
   grid-row: span 2;
   color: var(--ubuntu-gold);
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 22px;
 }
 
 .ubuntu-appointment-details strong {
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 22px;
   font-weight: 500;
 }
@@ -776,10 +872,9 @@ img {
 .ubuntu-appointment-card {
   position: relative;
   padding: 60px;
-  background: rgba(250, 248, 242, 0.9);
   border: 1px solid rgba(52, 39, 30, 0.1);
-  box-shadow:
-    0 30px 90px rgba(24, 19, 15, 0.08);
+  background: rgba(250, 248, 242, 0.9);
+  box-shadow: 0 30px 90px rgba(24, 19, 15, 0.08);
 }
 
 .ubuntu-form-heading {
@@ -788,7 +883,10 @@ img {
 
 .ubuntu-form-heading h3 {
   margin: 12px 0 0;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: clamp(42px, 4vw, 65px);
   font-weight: 400;
   line-height: 0.9;
@@ -823,10 +921,10 @@ img {
 .ubuntu-appointment-form select,
 .ubuntu-appointment-form textarea {
   width: 100%;
-  padding: 14px 0;
   border: 0;
   border-bottom: 1px solid rgba(52, 39, 30, 0.16);
   outline: 0;
+  padding: 14px 0;
   background: transparent;
   color: var(--ubuntu-black);
   font-size: 14px;
@@ -846,19 +944,19 @@ img {
 }
 
 .ubuntu-success-state {
-  min-height: 550px;
   display: flex;
+  min-height: 550px;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  flex-direction: column;
 }
 
 .ubuntu-success-mark {
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 65px;
   height: 65px;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 30px;
   border: 1px solid var(--ubuntu-gold);
   border-radius: 50%;
@@ -868,7 +966,10 @@ img {
 
 .ubuntu-success-state h3 {
   margin: 18px 0;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: clamp(42px, 4vw, 68px);
   font-weight: 400;
   line-height: 0.9;
@@ -883,13 +984,13 @@ img {
   max-width: 500px;
   margin: 0 0 35px;
   color: var(--ubuntu-muted);
-  line-height: 1.8;
   font-size: 14px;
+  line-height: 1.8;
 }
 
 /* =========================================================
    NEWSLETTER
-========================================================= */
+   ========================================================= */
 
 .ubuntu-newsletter {
   position: relative;
@@ -903,24 +1004,24 @@ img {
 .ubuntu-newsletter::before,
 .ubuntu-newsletter::after {
   position: absolute;
-  content: "";
   border: 1px solid rgba(216, 195, 155, 0.18);
   border-radius: 50%;
+  content: "";
   pointer-events: none;
 }
 
 .ubuntu-newsletter::before {
+  top: -250px;
+  left: -330px;
   width: 600px;
   height: 600px;
-  left: -330px;
-  top: -250px;
 }
 
 .ubuntu-newsletter::after {
-  width: 500px;
-  height: 500px;
   right: -250px;
   bottom: -250px;
+  width: 500px;
+  height: 500px;
 }
 
 .ubuntu-newsletter-inner {
@@ -932,20 +1033,26 @@ img {
 
 .ubuntu-newsletter-symbol {
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 54px;
   height: 54px;
+  align-items: center;
+  justify-content: center;
   margin: 0 auto 35px;
   border: 1px solid var(--ubuntu-gold);
   color: var(--ubuntu-gold);
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 27px;
 }
 
 .ubuntu-newsletter h2 {
   margin: 18px 0;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: clamp(48px, 6vw, 82px);
   font-weight: 400;
   line-height: 0.88;
@@ -975,9 +1082,9 @@ img {
 .ubuntu-newsletter-form input {
   flex: 1;
   min-width: 0;
-  padding: 17px 0;
   border: 0;
   outline: 0;
+  padding: 17px 0;
   background: transparent;
   color: var(--ubuntu-cream);
   font-size: 13px;
@@ -1013,10 +1120,10 @@ img {
 
 .ubuntu-newsletter-success {
   display: flex;
+  max-width: 580px;
   align-items: center;
   justify-content: center;
   gap: 15px;
-  max-width: 580px;
   margin: 45px auto 25px;
   padding: 20px;
   border: 1px solid rgba(216, 195, 155, 0.4);
@@ -1028,17 +1135,17 @@ img {
 
 .ubuntu-newsletter-success span {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 25px;
   height: 25px;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--ubuntu-gold);
   border-radius: 50%;
 }
 
 /* =========================================================
    FOOTER
-========================================================= */
+   ========================================================= */
 
 .ubuntu-footer {
   background: #100d0a;
@@ -1056,7 +1163,10 @@ img {
 
 .ubuntu-footer-brand h2 {
   margin: 0;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 48px;
   font-weight: 400;
   line-height: 0.8;
@@ -1069,18 +1179,22 @@ img {
 
 .ubuntu-footer-monogram {
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 60px;
   height: 60px;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 28px;
   border: 1px solid var(--ubuntu-gold);
   color: var(--ubuntu-gold);
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 30px;
 }
 
 .ubuntu-footer-brand p {
+  max-width: 420px;
   margin-top: 35px;
   color: rgba(250, 248, 242, 0.48);
   font-size: 12px;
@@ -1135,16 +1249,19 @@ img {
 
 .ubuntu-footer-philosophy p {
   margin: 0;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 22px;
 }
 
 .ubuntu-footer-bottom {
   display: flex;
+  width: min(1380px, calc(100% - 80px));
   align-items: center;
   justify-content: space-between;
   gap: 25px;
-  width: min(1380px, calc(100% - 80px));
   margin: auto;
   padding: 25px 0;
   color: rgba(250, 248, 242, 0.3);
@@ -1155,7 +1272,12 @@ img {
 
 .ubuntu-footer-bottom div {
   display: flex;
+  flex-wrap: wrap;
   gap: 25px;
+}
+
+.ubuntu-footer-bottom a {
+  transition: color 0.3s ease;
 }
 
 .ubuntu-footer-bottom a:hover {
@@ -1164,7 +1286,7 @@ img {
 
 /* =========================================================
    SCROLL TOP
-========================================================= */
+   ========================================================= */
 
 .ubuntu-scroll-top {
   position: fixed;
@@ -1172,17 +1294,18 @@ img {
   right: 28px;
   bottom: 28px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 48px;
   height: 48px;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(185, 154, 97, 0.7);
   background: rgba(24, 19, 15, 0.92);
   color: var(--ubuntu-gold-light);
   font-size: 18px;
   backdrop-filter: blur(15px);
   transition:
-    background 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease,
     transform 0.3s ease;
 }
 
@@ -1193,8 +1316,8 @@ img {
 }
 
 /* =========================================================
-   LEGAL
-========================================================= */
+   LEGAL PAGES
+   ========================================================= */
 
 .ubuntu-legal-page {
   min-height: 100vh;
@@ -1221,7 +1344,10 @@ img {
 
 .ubuntu-legal-hero h1 {
   margin: 22px 0 0;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: clamp(70px, 10vw, 150px);
   font-weight: 400;
   line-height: 0.78;
@@ -1242,7 +1368,10 @@ img {
 .ubuntu-legal-intro {
   max-width: 750px;
   margin: 0 0 90px;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 32px;
   line-height: 1.25;
 }
@@ -1257,15 +1386,22 @@ img {
 
 .ubuntu-legal-content section > span {
   color: var(--ubuntu-gold);
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 22px;
 }
 
 .ubuntu-legal-content h2 {
   margin: 0 0 12px;
-  font-family: var(--font-ubuntu-serif), Georgia, serif;
+  font-family:
+    var(--font-ubuntu-serif),
+    Georgia,
+    serif;
   font-size: 32px;
   font-weight: 500;
+  line-height: 1;
 }
 
 .ubuntu-legal-content section p {
@@ -1277,8 +1413,90 @@ img {
 }
 
 /* =========================================================
-   RESPONSIVE
-========================================================= */
+   SOCIAL SYSTEM
+   ========================================================= */
+
+.ubuntu-social-icon {
+  flex: 0 0 auto;
+  backdrop-filter: blur(8px);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.ubuntu-social-icon:hover {
+  box-shadow:
+    0 10px 25px rgba(201, 164, 93, 0.18);
+  transform: translateY(-2px);
+}
+
+.ubuntu-whatsapp {
+  animation: ubuntuWhatsappPulse 4s ease-in-out infinite;
+}
+
+@keyframes ubuntuWhatsappPulse {
+  0%,
+  70%,
+  100% {
+    box-shadow:
+      0 15px 40px rgba(23, 17, 13, 0.25);
+  }
+
+  80% {
+    box-shadow:
+      0 15px 40px rgba(23, 17, 13, 0.25),
+      0 0 0 8px rgba(201, 164, 93, 0.08);
+  }
+}
+
+/* =========================================================
+   APP / NETWORK STATES
+   ========================================================= */
+
+.ubuntu-data-saver video,
+.ubuntu-slow-network video {
+  display: none;
+}
+
+.ubuntu-slow-network [data-heavy-animation="true"] {
+  animation: none !important;
+  transition: none !important;
+}
+
+.ubuntu-page-ready body {
+  opacity: 1;
+}
+
+/* =========================================================
+   HIGH CONTRAST
+   ========================================================= */
+
+html.ubuntu-high-contrast body {
+  background: #fff;
+  color: #090705;
+}
+
+html.ubuntu-high-contrast a,
+html.ubuntu-high-contrast button {
+  outline-offset: 3px;
+}
+
+html.ubuntu-high-contrast a:focus-visible,
+html.ubuntu-high-contrast button:focus-visible,
+html.ubuntu-high-contrast input:focus-visible,
+html.ubuntu-high-contrast textarea:focus-visible,
+html.ubuntu-high-contrast select:focus-visible {
+  outline: 3px solid #000;
+}
+
+html.ubuntu-high-contrast img {
+  filter: contrast(1.08);
+}
+
+/* =========================================================
+   RESPONSIVE — LARGE TABLET
+   ========================================================= */
 
 @media (max-width: 1000px) {
   .ubuntu-appointment-grid {
@@ -1295,6 +1513,33 @@ img {
   }
 }
 
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .luxury-button,
+  .luxury-button-dark {
+    min-height: 50px;
+  }
+
+  .ubuntu-container {
+    width: min(100% - 48px, 1380px);
+  }
+
+  .ubuntu-appointment-grid {
+    gap: 70px;
+  }
+
+  .ubuntu-footer-main {
+    gap: 45px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
 @media (max-width: 767px) {
   .ubuntu-container {
     width: min(100% - 38px, 1380px);
@@ -1304,12 +1549,12 @@ img {
     animation: none;
   }
 
-  .ubuntu-hero-image {
-    transform: scale(1.08);
-  }
-
   .ubuntu-hero {
     min-height: 100svh;
+  }
+
+  .ubuntu-hero-image {
+    transform: scale(1.08);
   }
 
   .ubuntu-appointment-section {
@@ -1334,8 +1579,8 @@ img {
 
   .ubuntu-newsletter-form {
     flex-direction: column;
-    border-bottom: 0;
     gap: 15px;
+    border-bottom: 0;
   }
 
   .ubuntu-newsletter-form input {
@@ -1352,8 +1597,8 @@ img {
   .ubuntu-footer-main {
     grid-template-columns: 1fr 1fr;
     width: calc(100% - 38px);
-    padding: 70px 0;
     gap: 50px 25px;
+    padding: 70px 0;
   }
 
   .ubuntu-footer-brand {
@@ -1367,6 +1612,7 @@ img {
   .ubuntu-footer-philosophy {
     flex-direction: column;
     gap: 8px;
+    text-align: center;
   }
 
   .ubuntu-footer-bottom {
@@ -1391,8 +1637,8 @@ img {
   }
 
   .ubuntu-legal-intro {
-    font-size: 25px;
     margin-bottom: 60px;
+    font-size: 25px;
   }
 
   .ubuntu-legal-content section {
@@ -1404,19 +1650,110 @@ img {
     font-size: 27px;
   }
 
-  .ubuntu-scroll-top {
-    right: 16px;
-    bottom: 16px;
-  }
-
   .ubuntu-lookbook-image {
     transition-duration: 900ms;
   }
+
+  .luxury-button,
+  .luxury-button-dark {
+    width: 100%;
+    min-height: 52px;
+    padding-right: 18px;
+    padding-left: 18px;
+    white-space: normal;
+  }
+
+  .ubuntu-whatsapp {
+    right: 18px;
+    bottom: 18px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .ubuntu-social-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .ubuntu-newsletter-form {
+    max-width: 100%;
+  }
 }
+
+/* =========================================================
+   RESPONSIVE — SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+  html {
+    scroll-padding-top: 80px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    overflow-wrap: break-word;
+  }
+
+  .ubuntu-container {
+    width: calc(100% - 38px);
+  }
+
+  .ubuntu-footer-main {
+    width: calc(100% - 38px);
+  }
+
+  .ubuntu-footer-bottom {
+    width: calc(100% - 38px);
+  }
+}
+
+@media (max-width: 480px) {
+  .ubuntu-whatsapp {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .ubuntu-social-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ubuntu-appointment-copy h2 {
+    font-size: 52px;
+  }
+
+  .ubuntu-appointment-details > div {
+    grid-template-columns: 36px 1fr;
+    column-gap: 12px;
+  }
+
+  .ubuntu-appointment-details strong {
+    font-size: 20px;
+  }
+}
+
+/* =========================================================
+   PERFORMANCE
+   ========================================================= */
+
+@media (min-width: 1024px) {
+  img {
+    content-visibility: auto;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto;
+    scroll-behavior: auto !important;
   }
 
   *,
@@ -1424,6 +1761,7 @@ img {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
 
@@ -1434,7 +1772,8 @@ img {
   .ubuntu-hero-image,
   .ubuntu-lookbook-image,
   .ubuntu-lookbook-fullscreen,
-  .ubuntu-lookbook-enter {
+  .ubuntu-lookbook-enter,
+  .ubuntu-whatsapp {
     animation: none !important;
   }
 
@@ -1442,217 +1781,10 @@ img {
     transform: none !important;
   }
 }
-html.ubuntu-reduced-motion *,
-html.ubuntu-reduced-motion *::before,
-html.ubuntu-reduced-motion *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  scroll-behavior: auto !important;
-  transition-duration: 0.01ms !important;
-}
 
-html.ubuntu-high-contrast body {
-  background: #ffffff;
-  color: #090705;
-}
-
-html.ubuntu-high-contrast a,
-html.ubuntu-high-contrast button {
-  outline-offset: 3px;
-}
-
-html.ubuntu-high-contrast a:focus-visible,
-html.ubuntu-high-contrast button:focus-visible,
-html.ubuntu-high-contrast input:focus-visible,
-html.ubuntu-high-contrast textarea:focus-visible,
-html.ubuntu-high-contrast select:focus-visible {
-  outline: 3px solid #000000;
-}
-
-html.ubuntu-high-contrast img {
-  filter: contrast(1.08);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto !important;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-:focus-visible {
-  outline: 2px solid #a98448;
-  outline-offset: 3px;
-}
-
-::selection {
-  background: #b99a5d;
-  color: #17110d;
-}
-
-img {
-  max-width: 100%;
-}
-
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-.ubuntu-data-saver video,
-.ubuntu-slow-network video {
-  display: none;
-}
-
-.ubuntu-slow-network [data-heavy-animation="true"] {
-  animation: none !important;
-  transition: none !important;
-}
-
-.ubuntu-page-ready body {
-  opacity: 1;
-}
-
-html {
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
-
-body {
-  overflow-x: hidden;
-}
-
-@media (max-width: 640px) {
-  html {
-    scroll-padding-top: 80px;
-  }
-}
-
-@media (min-width: 1024px) {
-  img {
-    content-visibility: auto;
-  }
-}
-
-@media print {
-  nav,
-  footer,
-  button,
-  video,
-  [aria-hidden="true"] {
-    display: none !important;
-  }
-
-  body {
-    background: white !important;
-    color: black !important;
-  }
-}
-/* =========================================
-   UBUNTU FINAL PRODUCTION POLISH
-   ========================================= */
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  overflow-x: hidden;
-  background: #f7f1e6;
-}
-
-a,
-button,
-input,
-textarea,
-select {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button,
-a {
-  touch-action: manipulation;
-}
-
-img {
-  max-width: 100%;
-}
-
-::selection {
-  background: #c9a45d;
-  color: #17110d;
-}
-
-:focus-visible {
-  outline: 2px solid #c9a45d;
-  outline-offset: 4px;
-}
-
-html.ubuntu-reduced-motion *,
-html.ubuntu-reduced-motion *::before,
-html.ubuntu-reduced-motion *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  scroll-behavior: auto !important;
-  transition-duration: 0.01ms !important;
-}
-
-html.ubuntu-high-contrast body {
-  background: #ffffff;
-  color: #000000;
-}
-
-html.ubuntu-high-contrast
-  a:focus-visible,
-html.ubuntu-high-contrast
-  button:focus-visible,
-html.ubuntu-high-contrast
-  input:focus-visible,
-html.ubuntu-high-contrast
-  textarea:focus-visible {
-  outline: 3px solid #000000;
-}
-
-.ubuntu-data-saver video,
-.ubuntu-slow-network video {
-  display: none;
-}
-
-.ubuntu-slow-network [data-heavy-animation="true"] {
-  animation: none !important;
-  transition: none !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto !important;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-@media (max-width: 640px) {
-  html {
-    scroll-padding-top: 80px;
-  }
-
-  body {
-    min-width: 320px;
-  }
-}
+/* =========================================================
+   PRINT
+   ========================================================= */
 
 @media print {
   header,
@@ -1665,225 +1797,7 @@ html.ubuntu-high-contrast
   }
 
   body {
-    background: #ffffff !important;
-    color: #000000 !important;
-  }
-}
-/* =========================================================
-   FINAL RESPONSIVE / BUTTON / SOCIAL POLISH
-   ========================================================= */
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  overflow-x: hidden;
-  background: #f7f1e6;
-  color: #17110d;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-img,
-svg {
-  max-width: 100%;
-}
-
-button,
-a,
-input,
-textarea,
-select {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
-}
-
-a {
-  text-decoration: none;
-}
-
-::selection {
-  background: #c9a45d;
-  color: #17110d;
-}
-
-/* =========================================================
-   BUTTON SYSTEM
-   ========================================================= */
-
-.luxury-button,
-.luxury-button-dark,
-.ubuntu-header-button {
-  position: relative;
-  display: inline-flex;
-  min-height: 48px;
-  align-items: center;
-  justify-content: center;
-  max-width: 100%;
-  overflow: hidden;
-  border-radius: 0;
-  white-space: nowrap;
-  text-align: center;
-  line-height: 1.2;
-  transition:
-    transform 0.3s ease,
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.luxury-button:hover,
-.luxury-button-dark:hover,
-.ubuntu-header-button:hover {
-  transform: translateY(-2px);
-}
-
-.luxury-button:active,
-.luxury-button-dark:active,
-.ubuntu-header-button:active {
-  transform: translateY(0);
-}
-
-.luxury-button:focus-visible,
-.luxury-button-dark:focus-visible,
-.ubuntu-header-button:focus-visible {
-  outline: 2px solid #c9a45d;
-  outline-offset: 3px;
-}
-
-/* =========================================================
-   SOCIAL ICONS
-   ========================================================= */
-
-.ubuntu-social-icon {
-  flex: 0 0 auto;
-  backdrop-filter: blur(8px);
-}
-
-.ubuntu-social-icon:hover {
-  box-shadow:
-    0 10px 25px rgba(201, 164, 93, 0.18);
-}
-
-.ubuntu-whatsapp {
-  animation: ubuntuWhatsappPulse 4s ease-in-out infinite;
-}
-
-@keyframes ubuntuWhatsappPulse {
-  0%,
-  70%,
-  100% {
-    box-shadow:
-      0 15px 40px rgba(23, 17, 13, 0.25);
-  }
-
-  80% {
-    box-shadow:
-      0 15px 40px rgba(23, 17, 13, 0.25),
-      0 0 0 8px rgba(201, 164, 93, 0.08);
-  }
-}
-
-/* =========================================================
-   RESPONSIVE CONTAINERS
-   ========================================================= */
-
-section {
-  max-width: 100%;
-}
-
-@media (max-width: 1024px) {
-  .luxury-button,
-  .luxury-button-dark {
-    min-height: 50px;
-  }
-}
-
-@media (max-width: 768px) {
-  .luxury-button,
-  .luxury-button-dark {
-    width: 100%;
-    min-height: 52px;
-    padding-left: 18px;
-    padding-right: 18px;
-    white-space: normal;
-  }
-
-  .ubuntu-whatsapp {
-    bottom: 18px;
-    right: 18px;
-    height: 52px;
-    width: 52px;
-  }
-
-  .ubuntu-social-icon {
-    height: 42px;
-    width: 42px;
-  }
-}
-
-@media (max-width: 480px) {
-  .ubuntu-whatsapp {
-    bottom: 14px;
-    right: 14px;
-  }
-
-  .ubuntu-social-icon {
-    height: 40px;
-    width: 40px;
-  }
-}
-
-/* =========================================================
-   MOBILE TEXT SAFETY
-   ========================================================= */
-
-@media (max-width: 640px) {
-  h1,
-  h2,
-  h3 {
-    overflow-wrap: anywhere;
-  }
-
-  p {
-    overflow-wrap: break-word;
-  }
-}
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-
-  .ubuntu-whatsapp {
-    animation: none;
+    background: #fff !important;
+    color: #000 !important;
   }
 }

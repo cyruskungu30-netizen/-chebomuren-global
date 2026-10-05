@@ -1,6 +1,6 @@
-"use client";
+ "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 const testimonials = [
   {
@@ -25,6 +25,7 @@ const testimonials = [
 
 export default function UbuntuTestimonials() {
   const [active, setActive] = useState(0);
+  const headingId = useId();
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -37,15 +38,30 @@ export default function UbuntuTestimonials() {
   const testimonial = testimonials[active];
 
   return (
-    <section className="ubuntu-testimonials">
-      <div className="ubuntu-testimonials-decoration">
+    <section
+      className="ubuntu-testimonials"
+      aria-labelledby={headingId}
+      aria-live="polite"
+    >
+      <div
+        className="ubuntu-testimonials-decoration"
+        aria-hidden="true"
+      >
         <span>U</span>
       </div>
 
       <div className="ubuntu-testimonials-inner">
-        <span className="ubuntu-eyebrow">From The House</span>
+        <span
+          id={headingId}
+          className="ubuntu-eyebrow"
+        >
+          From The House
+        </span>
 
-        <blockquote key={active}>
+        <blockquote
+          key={active}
+          className="transition-opacity duration-500"
+        >
           “{testimonial.quote}”
         </blockquote>
 
@@ -54,18 +70,83 @@ export default function UbuntuTestimonials() {
           <span>{testimonial.role}</span>
         </div>
 
-        <div className="ubuntu-testimonial-controls">
-          {testimonials.map((item, index) => (
-            <button
-              key={item.role}
-              type="button"
-              aria-label={`View statement ${index + 1}`}
-              className={index === active ? "is-active" : ""}
-              onClick={() => setActive(index)}
-            >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-            </button>
-          ))}
+        <div
+          className="ubuntu-testimonial-controls"
+          role="tablist"
+          aria-label="House statements"
+        >
+          {testimonials.map((item, index) => {
+            const isActive = index === active;
+
+            return (
+              <button
+                key={item.role}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-label={`View statement ${index + 1}: ${item.role}`}
+                tabIndex={isActive ? 0 : -1}
+                className={isActive ? "is-active" : ""}
+                onClick={() => setActive(index)}
+                onKeyDown={(event) => {
+                  if (
+                    event.key === "ArrowRight" ||
+                    event.key === "ArrowDown"
+                  ) {
+                    event.preventDefault();
+
+                    const nextIndex =
+                      (index + 1) % testimonials.length;
+
+                    setActive(nextIndex);
+
+                    requestAnimationFrame(() => {
+                      document
+                        .querySelector<HTMLButtonElement>(
+                          `[aria-label="View statement ${nextIndex + 1}: ${testimonials[nextIndex].role}"]`,
+                        )
+                        ?.focus();
+                    });
+                  }
+
+                  if (
+                    event.key === "ArrowLeft" ||
+                    event.key === "ArrowUp"
+                  ) {
+                    event.preventDefault();
+
+                    const previousIndex =
+                      (index - 1 + testimonials.length) %
+                      testimonials.length;
+
+                    setActive(previousIndex);
+
+                    requestAnimationFrame(() => {
+                      document
+                        .querySelector<HTMLButtonElement>(
+                          `[aria-label="View statement ${previousIndex + 1}: ${testimonials[previousIndex].role}"]`,
+                        )
+                        ?.focus();
+                    });
+                  }
+
+                  if (event.key === "Home") {
+                    event.preventDefault();
+                    setActive(0);
+                  }
+
+                  if (event.key === "End") {
+                    event.preventDefault();
+                    setActive(testimonials.length - 1);
+                  }
+                }}
+              >
+                <span>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>

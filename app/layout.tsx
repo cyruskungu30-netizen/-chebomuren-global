@@ -48,22 +48,26 @@ export const metadata: Metadata = {
   ],
 
   creator: "Ubuntu Couture House",
-
   publisher: "Ubuntu Couture House",
+
+  alternates: {
+    canonical: "/",
+  },
 
   openGraph: {
     title: "Ubuntu Couture House",
     description:
-      "African Elegance and Luxury Reimagined.",
+      "African Elegance and Luxury Reimagined. Discover couture, jewellery, rare gems, beadwork and royal headpieces rooted in African heritage.",
     siteName: "Ubuntu Couture House",
     type: "website",
-    locale: "en_US",
+    locale: "en_KE",
+    url: siteUrl,
     images: [
       {
         url: "/images/ubuntu-global-lookbook.jpeg",
         width: 1200,
         height: 800,
-        alt: "Ubuntu Couture House",
+        alt: "Ubuntu Couture House African luxury fashion editorial",
       },
     ],
   },
@@ -110,9 +114,7 @@ export default function RootLayout({
         <UbuntuSecurity />
 
         <WishlistProvider>
-          <UbuntuShell>
-            {children}
-          </UbuntuShell>
+          <UbuntuShell>{children}</UbuntuShell>
 
           <UbuntuFooter />
 

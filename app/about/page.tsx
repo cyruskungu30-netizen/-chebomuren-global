@@ -1314,14 +1314,17 @@ export default function AboutPage() {
                 and carry the spirit of Ubuntu into the future.
               </p>
 
-              <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-                <Link href="/collections" className="luxury-button">
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Link
+                  href="/collections"
+                  className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-[#d5b36a] bg-[#d5b36a] sm:w-auto px-7 py-3 text-center text-[9px] font-semibold uppercase tracking-[0.28em] text-[#17110d] shadow-[0_12px_35px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#e2c785] hover:border-[#e2c785] hover:shadow-[0_18px_45px_rgba(201,164,93,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e2c785] focus-visible:ring-offset-2 focus-visible:ring-offset-[#120e0b]"
+                >
                   Shop Ubuntu Couture House
                 </Link>
 
                 <Link
                   href="/contact"
-                  className="luxury-button luxury-button-outline"
+                  className="inline-flex min-h-[52px] w-full items-center justify-center rounded-full border border-[#d5b36a]/80 sm:w-auto bg-[#17120f]/55 px-7 py-3 text-center text-[9px] font-semibold uppercase tracking-[0.28em] text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#d5b36a] hover:text-[#17110d] hover:border-[#d5b36a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e2c785] focus-visible:ring-offset-2 focus-visible:ring-offset-[#120e0b]"
                 >
                   Private Enquiries
                 </Link>

@@ -28,6 +28,19 @@ type WishlistProviderProps = {
   children: ReactNode;
 };
 
+function normalizeWishlist(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const validIds = value.filter(
+    (item): item is string =>
+      typeof item === "string" && item.trim().length > 0,
+  );
+
+  return Array.from(new Set(validIds));
+}
+
 export default function WishlistProvider({
   children,
 }: WishlistProviderProps) {
@@ -38,17 +51,13 @@ export default function WishlistProvider({
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
 
-      if (stored) {
-        const parsed: unknown = JSON.parse(stored);
-
-        if (Array.isArray(parsed)) {
-          const validIds = parsed.filter(
-            (item): item is string => typeof item === "string",
-          );
-
-          setWishlist(Array.from(new Set(validIds)));
-        }
+      if (!stored) {
+        setWishlist([]);
+        return;
       }
+
+      const parsed: unknown = JSON.parse(stored);
+      setWishlist(normalizeWishlist(parsed));
     } catch {
       setWishlist([]);
     } finally {
@@ -67,7 +76,7 @@ export default function WishlistProvider({
         JSON.stringify(wishlist),
       );
     } catch {
-      // Local storage may be unavailable in restricted environments.
+      // Local storage may be unavailable or restricted.
     }
   }, [wishlist, hydrated]);
 
@@ -79,12 +88,18 @@ export default function WishlistProvider({
   );
 
   const toggleWishlist = useCallback((productId: string) => {
+    const normalizedId = productId.trim();
+
+    if (!normalizedId) {
+      return;
+    }
+
     setWishlist((current) => {
-      if (current.includes(productId)) {
-        return current.filter((id) => id !== productId);
+      if (current.includes(normalizedId)) {
+        return current.filter((id) => id !== normalizedId);
       }
 
-      return [...current, productId];
+      return [...current, normalizedId];
     });
   }, []);
 

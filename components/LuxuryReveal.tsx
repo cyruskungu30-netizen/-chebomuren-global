@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import {
   ReactNode,
@@ -33,7 +33,6 @@ export default function LuxuryReveal({
   className = "",
 }: LuxuryRevealProps) {
   const elementRef = useRef<HTMLDivElement | null>(null);
-
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -43,27 +42,34 @@ export default function LuxuryReveal({
       return;
     }
 
+    if (
+      typeof window !== "undefined" &&
+      !("IntersectionObserver" in window)
+    ) {
+      setVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      ([entry]) => {
+        if (!entry) {
+          return;
+        }
 
-          if (entry.isIntersecting) {
-            setVisible(true);
+        if (entry.isIntersecting) {
+          setVisible(true);
 
-            if (once) {
-              observer.unobserve(element);
-            }
-
-          } else if (!once) {
-            setVisible(false);
+          if (once) {
+            observer.unobserve(entry.target);
           }
-
-        });
+        } else if (!once) {
+          setVisible(false);
+        }
       },
       {
         threshold: 0.12,
         rootMargin: "0px 0px -60px 0px",
-      }
+      },
     );
 
     observer.observe(element);
@@ -73,29 +79,30 @@ export default function LuxuryReveal({
     };
   }, [once]);
 
-  const transform = {
-    up: visible
-      ? "translate3d(0,0,0)"
-      : "translate3d(0,70px,0)",
+  const transform =
+    {
+      up: visible
+        ? "translate3d(0,0,0)"
+        : "translate3d(0,70px,0)",
 
-    down: visible
-      ? "translate3d(0,0,0)"
-      : "translate3d(0,-70px,0)",
+      down: visible
+        ? "translate3d(0,0,0)"
+        : "translate3d(0,-70px,0)",
 
-    left: visible
-      ? "translate3d(0,0,0)"
-      : "translate3d(-70px,0,0)",
+      left: visible
+        ? "translate3d(0,0,0)"
+        : "translate3d(-70px,0,0)",
 
-    right: visible
-      ? "translate3d(0,0,0)"
-      : "translate3d(70px,0,0)",
+      right: visible
+        ? "translate3d(0,0,0)"
+        : "translate3d(70px,0,0)",
 
-    scale: visible
-      ? "scale(1)"
-      : "scale(.92)",
+      scale: visible
+        ? "scale(1)"
+        : "scale(0.92)",
 
-    fade: "none",
-  }[direction];
+      fade: "none",
+    }[direction];
 
   return (
     <div
@@ -104,13 +111,12 @@ export default function LuxuryReveal({
       style={{
         opacity: visible ? 1 : 0,
         transform,
-        transitionProperty:
-          "opacity, transform",
-        transitionDuration: `${duration}ms`,
+        transitionProperty: "opacity, transform",
+        transitionDuration: `${Math.max(0, duration)}ms`,
         transitionTimingFunction:
           "cubic-bezier(0.16, 1, 0.3, 1)",
-        transitionDelay: `${delay}ms`,
-        willChange: "opacity, transform",
+        transitionDelay: `${Math.max(0, delay)}ms`,
+        willChange: visible ? "auto" : "opacity, transform",
       }}
     >
       {children}

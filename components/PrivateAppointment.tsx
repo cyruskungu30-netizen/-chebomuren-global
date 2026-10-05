@@ -1,6 +1,6 @@
  "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 const appointmentTypes = [
   "Private Collection Viewing",
@@ -13,20 +13,29 @@ const appointmentTypes = [
 export default function PrivateAppointment() {
   const [submitted, setSubmitted] = useState(false);
 
+  const nameId = useId();
+  const emailId = useId();
+  const typeId = useId();
+  const messageId = useId();
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitted(true);
   }
 
   return (
-    <section className="ubuntu-appointment-section" id="appointment">
-      <div className="ubuntu-appointment-glow" />
+    <section
+      className="ubuntu-appointment-section"
+      id="appointment"
+      aria-labelledby="private-appointment-title"
+    >
+      <div className="ubuntu-appointment-glow" aria-hidden="true" />
 
       <div className="ubuntu-container ubuntu-appointment-grid">
         <div className="ubuntu-appointment-copy">
           <span className="ubuntu-eyebrow">Private Client Services</span>
 
-          <h2>
+          <h2 id="private-appointment-title">
             Enter the
             <br />
             <em>world of Ubuntu.</em>
@@ -40,19 +49,19 @@ export default function PrivateAppointment() {
 
           <div className="ubuntu-appointment-details">
             <div>
-              <span>01</span>
+              <span aria-hidden="true">01</span>
               <strong>Private Viewing</strong>
               <p>Explore selected pieces in an intimate setting.</p>
             </div>
 
             <div>
-              <span>02</span>
+              <span aria-hidden="true">02</span>
               <strong>Bespoke Creation</strong>
               <p>Work with the House to create something uniquely yours.</p>
             </div>
 
             <div>
-              <span>03</span>
+              <span aria-hidden="true">03</span>
               <strong>International Enquiries</strong>
               <p>Our House welcomes clients from around the world.</p>
             </div>
@@ -61,8 +70,17 @@ export default function PrivateAppointment() {
 
         <div className="ubuntu-appointment-card">
           {submitted ? (
-            <div className="ubuntu-success-state">
-              <div className="ubuntu-success-mark">✓</div>
+            <div
+              className="ubuntu-success-state"
+              role="status"
+              aria-live="polite"
+            >
+              <div
+                className="ubuntu-success-mark"
+                aria-hidden="true"
+              >
+                ✓
+              </div>
 
               <span className="ubuntu-eyebrow">Enquiry Received</span>
 
@@ -89,6 +107,7 @@ export default function PrivateAppointment() {
             <form
               onSubmit={handleSubmit}
               className="ubuntu-appointment-form"
+              noValidate={false}
             >
               <div className="ubuntu-form-heading">
                 <span className="ubuntu-eyebrow">Private Enquiry</span>
@@ -100,30 +119,39 @@ export default function PrivateAppointment() {
                 </h3>
               </div>
 
-              <label>
+              <label htmlFor={nameId}>
                 <span>Full Name</span>
                 <input
+                  id={nameId}
                   required
                   type="text"
                   name="name"
                   placeholder="Your full name"
+                  autoComplete="name"
                 />
               </label>
 
-              <label>
+              <label htmlFor={emailId}>
                 <span>Email Address</span>
                 <input
+                  id={emailId}
                   required
                   type="email"
                   name="email"
                   placeholder="you@example.com"
+                  autoComplete="email"
                 />
               </label>
 
-              <label>
+              <label htmlFor={typeId}>
                 <span>Enquiry Type</span>
 
-                <select required name="type" defaultValue="">
+                <select
+                  id={typeId}
+                  required
+                  name="type"
+                  defaultValue=""
+                >
                   <option value="" disabled>
                     Select an enquiry
                   </option>
@@ -136,10 +164,11 @@ export default function PrivateAppointment() {
                 </select>
               </label>
 
-              <label>
+              <label htmlFor={messageId}>
                 <span>Message</span>
 
                 <textarea
+                  id={messageId}
                   required
                   name="message"
                   rows={5}
@@ -152,7 +181,7 @@ export default function PrivateAppointment() {
                 className="ubuntu-button ubuntu-button-dark ubuntu-button-full"
               >
                 Send Private Enquiry
-                <span>↗</span>
+                <span aria-hidden="true">↗</span>
               </button>
             </form>
           )}

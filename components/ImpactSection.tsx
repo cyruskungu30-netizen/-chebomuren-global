@@ -30,90 +30,90 @@ const meanings = [
 
 export default function ImpactSection() {
   return (
-    <section className="bg-[#eee4d3]">
-
+    <section
+      className="relative overflow-hidden bg-[#eee4d3] text-[#17110d]"
+      aria-labelledby="impact-title"
+    >
       <div className="grid lg:grid-cols-2">
-
-        <div className="luxury-image relative min-h-[700px]">
-
+        <div className="luxury-image relative min-h-[620px] overflow-hidden sm:min-h-[700px] lg:min-h-[820px]">
           <Image
             src="/images/ubuntu-brand-portrait.jpeg"
             alt="Ubuntu Couture House"
             fill
-            className="object-cover"
-            sizes="50vw"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover transition duration-[1400ms] hover:scale-[1.025]"
           />
 
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"
+            aria-hidden="true"
+          />
+
+          <div className="absolute bottom-7 left-7 sm:bottom-10 sm:left-10">
+            <p className="text-[8px] font-semibold uppercase tracking-[0.35em] text-white/75">
+              Ubuntu Couture House
+            </p>
+
+            <div className="mt-3 h-px w-12 bg-[#e2c785]" />
+          </div>
         </div>
 
-        <div className="px-7 py-24 lg:px-20 lg:py-32">
-
-          <p className="text-[9px] uppercase tracking-[0.4em] text-[#967333]">
+        <div className="flex flex-col justify-center px-7 py-24 sm:px-10 lg:px-20 lg:py-32">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.4em] text-[#967333]">
             Meaning Behind Every Creation
           </p>
 
-          <h2 className="ubuntu-serif mt-6 text-5xl leading-none md:text-7xl">
-
+          <h2
+            id="impact-title"
+            className="ubuntu-serif mt-6 text-5xl leading-[0.92] tracking-[-0.035em] md:text-7xl"
+          >
             You don&apos;t just
-
             <br />
-
             wear it.
-
             <br />
-
             <span className="italic text-[#a17b3b]">
               You live it.
             </span>
-
           </h2>
 
-          <div className="mt-12">
-
+          <div className="mt-12 border-t border-black/10">
             {meanings.map((meaning) => (
-
-              <div
+              <article
                 key={meaning.number}
-                className="border-t border-black/10 py-7"
+                className="group border-b border-black/10 py-7 transition-colors duration-300 hover:bg-black/[0.025]"
               >
-
-                <div className="flex gap-7">
-
-                  <span className="text-[8px] tracking-[0.25em] text-[#967333]">
+                <div className="flex gap-6 sm:gap-8">
+                  <span
+                    className="pt-1 text-[8px] font-semibold tracking-[0.25em] text-[#967333]"
+                    aria-hidden="true"
+                  >
                     {meaning.number}
                   </span>
 
-                  <div>
-
-                    <h3 className="ubuntu-serif text-2xl">
+                  <div className="min-w-0">
+                    <h3 className="ubuntu-serif text-2xl transition-colors duration-300 group-hover:text-[#967333] sm:text-3xl">
                       {meaning.title}
                     </h3>
 
-                    <p className="mt-3 text-sm leading-7 text-[#706257]">
+                    <p className="mt-3 max-w-xl text-sm leading-7 text-[#706257]">
                       {meaning.description}
                     </p>
-
                   </div>
-
                 </div>
-
-              </div>
-
+              </article>
             ))}
-
           </div>
 
-          <Link
-            href="/collections"
-            className="luxury-button luxury-button-dark mt-8"
-          >
-            Explore The Collections
-          </Link>
-
+          <div className="mt-8">
+            <Link
+              href="/collections"
+              className="luxury-button luxury-button-dark focus:outline-none focus:ring-2 focus:ring-[#967333] focus:ring-offset-2 focus:ring-offset-[#eee4d3]"
+            >
+              Explore The Collections
+            </Link>
+          </div>
         </div>
-
       </div>
-
     </section>
   );
 }

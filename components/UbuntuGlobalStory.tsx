@@ -1,8 +1,8 @@
-"use client";
+ "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 const chapters = [
   {
@@ -53,41 +53,49 @@ const chapters = [
 
 export default function UbuntuGlobalStory() {
   const [active, setActive] = useState(0);
+  const headingId = useId();
+  const panelId = useId();
 
   const chapter = chapters[active];
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowRight") {
-        setActive(
-          (current) => (current + 1) % chapters.length
-        );
+        event.preventDefault();
+        setActive((current) => (current + 1) % chapters.length);
       }
 
       if (event.key === "ArrowLeft") {
+        event.preventDefault();
         setActive(
           (current) =>
-            (current - 1 + chapters.length) %
-            chapters.length
+            (current - 1 + chapters.length) % chapters.length,
         );
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
 
-    return () =>
+    return () => {
       window.removeEventListener("keydown", onKeyDown);
+    };
   }, []);
 
   return (
-    <section className="overflow-hidden bg-[#100c09] px-5 py-24 text-[#f7f1e6] sm:px-8 lg:px-12 lg:py-32">
+    <section
+      className="overflow-hidden bg-[#100c09] px-5 py-24 text-[#f7f1e6] sm:px-8 lg:px-12 lg:py-32"
+      aria-labelledby={headingId}
+    >
       <div className="mx-auto max-w-[1500px]">
         <div className="mb-16 max-w-4xl">
           <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#c8aa6b]">
             Ubuntu Around The World
           </p>
 
-          <h2 className="mt-6 font-[var(--font-ubuntu-serif)] text-5xl font-light leading-[0.9] tracking-[-0.03em] sm:text-6xl lg:text-8xl">
+          <h2
+            id={headingId}
+            className="mt-6 font-[var(--font-ubuntu-serif)] text-5xl font-light leading-[0.9] tracking-[-0.03em] sm:text-6xl lg:text-8xl"
+          >
             One heritage.
             <br />
             Many horizons.
@@ -108,58 +116,66 @@ export default function UbuntuGlobalStory() {
               </p>
             </div>
 
-            {chapters.map((item, index) => {
-              const selected = index === active;
+            <div role="tablist" aria-label="Ubuntu global story chapters">
+              {chapters.map((item, index) => {
+                const selected = index === active;
+                const tabId = `global-story-tab-${item.id}`;
+                const currentPanelId = `${panelId}-${item.id}`;
 
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setActive(index)}
-                  className={`group flex w-full items-center gap-4 border-b border-white/10 px-6 py-6 text-left transition duration-500 ${
-                    selected
-                      ? "bg-[#c8aa6b]/10"
-                      : "hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <span
-                    className={`text-[10px] tracking-[0.2em] ${
+                return (
+                  <button
+                    key={item.id}
+                    id={tabId}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    aria-controls={currentPanelId}
+                    tabIndex={selected ? 0 : -1}
+                    onClick={() => setActive(index)}
+                    className={`group flex w-full items-center gap-4 border-b border-white/10 px-6 py-6 text-left transition duration-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#c8aa6b] ${
                       selected
-                        ? "text-[#c8aa6b]"
-                        : "text-white/30"
+                        ? "bg-[#c8aa6b]/10"
+                        : "hover:bg-white/[0.04]"
                     }`}
                   >
-                    {item.number}
-                  </span>
-
-                  <span className="flex-1">
                     <span
-                      className={`block font-[var(--font-ubuntu-serif)] text-2xl ${
+                      className={`text-[10px] tracking-[0.2em] ${
                         selected
-                          ? "text-white"
-                          : "text-white/55"
+                          ? "text-[#c8aa6b]"
+                          : "text-white/30"
                       }`}
                     >
-                      {item.place}
+                      {item.number}
                     </span>
 
-                    <span className="mt-1 block text-[8px] uppercase tracking-[0.22em] text-white/30">
-                      {item.accent}
-                    </span>
-                  </span>
+                    <span className="flex-1">
+                      <span
+                        className={`block font-[var(--font-ubuntu-serif)] text-2xl ${
+                          selected ? "text-white" : "text-white/55"
+                        }`}
+                      >
+                        {item.place}
+                      </span>
 
-                  <span
-                    className={`text-xl ${
-                      selected
-                        ? "text-[#c8aa6b]"
-                        : "text-white/20"
-                    }`}
-                  >
-                    →
-                  </span>
-                </button>
-              );
-            })}
+                      <span className="mt-1 block text-[8px] uppercase tracking-[0.22em] text-white/30">
+                        {item.accent}
+                      </span>
+                    </span>
+
+                    <span
+                      className={`text-xl transition-transform duration-300 ${
+                        selected
+                          ? "translate-x-0 text-[#c8aa6b]"
+                          : "text-white/20 group-hover:translate-x-1"
+                      }`}
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
 
             <div className="px-6 py-8">
               <p className="font-[var(--font-ubuntu-serif)] text-xl italic text-[#d9d0c3]">
@@ -172,7 +188,12 @@ export default function UbuntuGlobalStory() {
             </div>
           </div>
 
-          <div className="relative min-h-[620px] overflow-hidden">
+          <div
+            id={`${panelId}-${chapter.id}`}
+            role="tabpanel"
+            aria-labelledby={`global-story-tab-${chapter.id}`}
+            className="relative min-h-[620px] overflow-hidden"
+          >
             <Image
               key={chapter.image}
               src={chapter.image}
@@ -183,8 +204,15 @@ export default function UbuntuGlobalStory() {
               className="object-cover transition duration-700"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#100c09] via-[#100c09]/20 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#100c09]/45 to-transparent" />
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-[#100c09] via-[#100c09]/20 to-transparent"
+              aria-hidden="true"
+            />
+
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-[#100c09]/45 to-transparent"
+              aria-hidden="true"
+            />
 
             <div className="absolute left-6 top-6">
               <span className="border border-[#c8aa6b]/60 px-4 py-2 text-[8px] uppercase tracking-[0.28em] text-[#e1c98f]">
@@ -225,7 +253,7 @@ export default function UbuntuGlobalStory() {
 
           <Link
             href="/about"
-            className="w-fit border border-[#c8aa6b]/60 px-7 py-4 text-[9px] font-semibold uppercase tracking-[0.22em] transition hover:bg-[#c8aa6b] hover:text-[#100c09]"
+            className="w-fit border border-[#c8aa6b]/60 px-7 py-4 text-[9px] font-semibold uppercase tracking-[0.22em] transition hover:bg-[#c8aa6b] hover:text-[#100c09] focus:outline-none focus:ring-2 focus:ring-[#c8aa6b] focus:ring-offset-2 focus:ring-offset-[#100c09]"
           >
             Explore the story →
           </Link>
